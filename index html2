@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Café 3D</title>
+<style>
+*{box-sizing:border-box}body{margin:0;overflow:hidden;background:#17110d;font-family:Arial}
+#ui{position:fixed;z-index:5;top:25px;left:30px;color:white}
+h1{font-size:34px;margin:0 0 5px}
+p{margin:0 0 15px;color:#ddd}
+button{padding:12px 20px;border:0;border-radius:25px;background:#d99a5b;color:white;cursor:pointer}
+#menu{position:fixed;z-index:5;right:25px;top:25px;background:#fff;color:#222;padding:18px;border-radius:18px;display:none}
+#menu h2{margin:0 0 10px}
+</style>
+</head>
+<body>
+
+<div id="ui">
+<h1>CAFÉ 3D</h1>
+<p>Welcome to your virtual café</p>
+<button id="menuBtn">EXPLORE MENU</button>
+</div>
+
+<div id="menu">
+<h2>☕ Our Menu</h2>
+<div>☕ Cappuccino — ₹180</div>
+<div>🍰 Chocolate Cake — ₹220</div>
+<div>🍕 Pizza — ₹299</div>
+<div>🍔 Classic Burger — ₹249</div>
+</div>
+
+<script type="module">
+import * as THREE from
+'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js/+esm';
+
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x17110d);
+scene.fog=new THREE.Fog(0x17110d,8,30);
+
+const camera=new THREE.PerspectiveCamera(65,innerWidth/innerHeight,.1,100);
+camera.position.set(0,5,12);
+
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(innerWidth,innerHeight);
+renderer.shadowMap.enabled=true;
+document.body.appendChild(renderer.domElement);
+
+const mat=c=>new THREE.MeshStandardMaterial({color:c});
+
+scene.add(new THREE.HemisphereLight(0xffddbb,0x332211,2));
+
+const light=new THREE.PointLight(0xffb36b,40,25);
+light.position.set(0,7,2);
+light.castShadow=true;
+scene.add(light);
+
+function box(x,y,z,w,h,d,c){
+ let m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(c));
+ m.position.set(x,y,z);m.castShadow=true;scene.add(m);return m;
+}
+
+function cyl(x,y,z,r,h,c){
+ let m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,32),mat(c));
+ m.position.set(x,y,z);m.castShadow=true;scene.add(m);return m;
+}
+
+/* FLOOR */
+box(0,-.25,0,24,.5,24,0x593b2c);
+
+/* WALLS */
+box(0,4,-8,24,8,.3,0x302019);
+box(-12,4,0,.3,8,16,0x302019);
+box(12,4,0,.3,8,16,0x302019);
+
+/* COUNTER */
+box(0,1,-6,9,2,1.5,0x8b4f2b);
+box(0,2.3,-6,9,.25,1.7,0xd19a62);
+
+/* TABLES */
+for(let x of [-5,5]){
+ box(x,1,0,3,.25,3,0x9a6038);
+ for(let a of [-1,1])for(let b of [-1,1])
+   box(x+a,0.45,b,0.18,1,.18,0x633b26);
+}
+
+/* CHAIRS */
+for(let x of [-5,5]){
+ for(let z of [-2.5,2.5]){
+   box(x,z>0?0.9:0.9,z,1.4,.2,.7,0x75442c);
+   box(x,z>0?1.5:1.5,z+(z>0?.3:-.3),1.4,.9,.15,0x75442c);
+ }
+}
+
+/* COFFEE CUPS */
+for(let x of [-5,5]){
+ cyl(x,1.35,0,.42,.65,0xf4eee5);
+ cyl(x,1.68,0,.34,.05,0x3b2114);
+}
+
+/* CAKES */
+cyl(-3.5,1.5,-5.35,.65,.35,0xd98282);
+cyl(-3.5,1.75,-5.35,.55,.2,0xf1d2c5);
+
+/* PLANTS */
+cyl(8,1,-5.2,.55,1.4,0x684126);
+for(let i=0;i<7;i++)
+ cyl(8+(Math.random()-.5),2+Math.random(),-5.2+(Math.random()-.5),.22,.8,0x496b45);
+
+/* LIGHTS */
+for(let x of [-6,0,6]){
+ let l=new THREE.PointLight(0xffb36b,18,8);
+ l.position.set(x,5,-2);scene.add(l);
+}
+
+/* MOVEMENT */
+let targetX=0,targetY=5;
+addEventListener('mousemove',e=>{
+ targetX=(e.clientX/innerWidth-.5)*3;
+ targetY=4+(1-e.clientY/innerHeight)*2;
+});
+
+function animate(){
+ requestAnimationFrame(animate);
+ camera.position.x+=(targetX-camera.position.x)*.03;
+ camera.position.y+=(targetY-camera.position.y)*.03;
+ camera.lookAt(0,2,-2);
+ renderer.render(scene,camera);
+}
+animate();
+
+document.getElementById('menuBtn').onclick=()=>{
+ let m=document.getElementById('menu');
+ m.style.display=m.style.display==='block'?'none':'block';
+};
+
+addEventListener('resize',()=>{
+ camera.aspect=innerWidth/innerHeight;
+ camera.updateProjectionMatrix();
+ renderer.setSize(innerWidth,innerHeight);
+});
+</script>
+</body>
+</html>

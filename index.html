@@ -2,302 +2,515 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Café 3D</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ASTRO CAFE — 3D Food Experience</title>
 
 <style>
-*{
-  box-sizing:border-box;
+*{box-sizing:border-box}
+
+html{
+scroll-behavior:smooth;
 }
 
-html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  font-family:Arial,sans-serif;
-  background:#120c08;
+body{
+margin:0;
+background:#08030b;
+color:#fff;
+font-family:Arial,Helvetica,sans-serif;
+overflow-x:hidden;
 }
 
 canvas{
-  display:block;
+position:fixed;
+inset:0;
+width:100%;
+height:100%;
+z-index:1;
 }
 
-/* NAVIGATION */
+#loading{
+position:fixed;
+inset:0;
+z-index:100;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#08030b;
+font-size:20px;
+letter-spacing:4px;
+}
 
-.nav{
-  position:fixed;
-  z-index:10;
-  top:18px;
-  left:50%;
-  transform:translateX(-50%);
-  width:min(94%,1100px);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:14px 20px;
-  border:1px solid rgba(255,255,255,.15);
-  border-radius:20px;
-  background:rgba(20,13,9,.75);
-  backdrop-filter:blur(14px);
-  color:white;
+#loading span{
+color:#ffb000;
+}
+
+nav{
+position:fixed;
+top:20px;
+left:50%;
+transform:translateX(-50%);
+width:min(92%,1200px);
+z-index:20;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:15px 22px;
+border:1px solid rgba(255,255,255,.15);
+border-radius:18px;
+background:rgba(10,5,12,.68);
+backdrop-filter:blur(18px);
 }
 
 .logo{
-  font-size:22px;
-  font-weight:bold;
-  color:#f3b36b;
+font-size:20px;
+font-weight:800;
+letter-spacing:2px;
+color:#ffc329;
 }
 
-.links{
-  display:flex;
-  gap:25px;
+.navlinks{
+display:flex;
+gap:25px;
 }
 
-.links button{
-  background:none;
-  border:0;
-  color:white;
-  cursor:pointer;
-  font-size:14px;
+.navlinks a{
+color:#fff;
+text-decoration:none;
+font-size:13px;
+cursor:pointer;
 }
 
-.links button:hover{
-  color:#f3b36b;
+.navlinks a:hover{
+color:#ffc329;
 }
 
-/* HERO */
-
-.hero{
-  position:fixed;
-  z-index:5;
-  top:27%;
-  left:6%;
-  width:min(500px,88%);
-  color:white;
-  pointer-events:none;
+.scroll{
+position:fixed;
+right:25px;
+top:50%;
+transform:translateY(-50%);
+z-index:15;
+display:flex;
+flex-direction:column;
+gap:8px;
 }
 
-.hero h1{
-  margin:0;
-  font-size:clamp(45px,7vw,85px);
-  line-height:.9;
-  letter-spacing:-3px;
+.scroll i{
+width:5px;
+height:28px;
+border-radius:10px;
+background:#ffffff44;
+transition:.3s;
 }
 
-.hero h1 span{
-  color:#f0a45b;
+.scroll i.active{
+background:#ffc329;
+height:45px;
 }
 
-.hero p{
-  color:#ddd;
-  font-size:17px;
-  line-height:1.6;
-  margin:22px 0;
-  max-width:440px;
+.sceneText{
+position:relative;
+z-index:10;
+min-height:100vh;
+width:100%;
+pointer-events:none;
 }
 
-.mainButton{
-  pointer-events:auto;
-  border:0;
-  padding:15px 25px;
-  border-radius:30px;
-  background:#efa45c;
-  color:#21130a;
-  font-weight:bold;
-  cursor:pointer;
-  transition:.3s;
+.panel{
+min-height:100vh;
+display:flex;
+align-items:center;
+padding:10vh 8%;
 }
 
-.mainButton:hover{
-  transform:translateY(-3px);
-  box-shadow:0 10px 30px rgba(239,164,92,.35);
+.content{
+width:min(470px,90vw);
 }
 
-/* MENU */
-
-.menu{
-  position:fixed;
-  z-index:20;
-  right:25px;
-  top:90px;
-  width:min(340px,88%);
-  padding:22px;
-  border-radius:20px;
-  background:white;
-  color:#21130a;
-  display:none;
-  box-shadow:0 20px 60px rgba(0,0,0,.5);
+.tag{
+font-size:12px;
+letter-spacing:4px;
+color:#ffc329;
+margin-bottom:18px;
 }
 
-.menu h2{
-  margin:0 0 15px;
+h1{
+font-size:clamp(48px,8vw,100px);
+line-height:.88;
+margin:0;
+letter-spacing:-5px;
 }
 
-.food{
-  display:flex;
-  justify-content:space-between;
-  padding:13px 0;
-  border-bottom:1px solid #ddd;
+h1 span{
+color:#ff5c2d;
 }
 
-.food:last-child{
-  border-bottom:0;
+h2{
+font-size:clamp(38px,6vw,72px);
+margin:0 0 18px;
 }
 
-/* HINT */
-
-.hint{
-  position:fixed;
-  z-index:5;
-  bottom:22px;
-  left:50%;
-  transform:translateX(-50%);
-  padding:10px 18px;
-  border-radius:30px;
-  background:rgba(20,13,9,.75);
-  color:#ddd;
-  font-size:13px;
-  white-space:nowrap;
+p{
+font-size:17px;
+line-height:1.7;
+color:#ddd;
 }
 
-@media(max-width:600px){
+.button{
+display:inline-block;
+margin-top:20px;
+padding:15px 25px;
+border-radius:30px;
+background:#ffc329;
+color:#180b02;
+font-weight:800;
+border:0;
+cursor:pointer;
+pointer-events:auto;
+}
 
-  .nav{
-    top:10px;
-    padding:11px 13px;
-  }
+.button:hover{
+transform:translateY(-3px);
+}
 
-  .logo{
-    font-size:17px;
-  }
+.combo{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:12px;
+margin-top:25px;
+pointer-events:auto;
+}
 
-  .links{
-    gap:8px;
-  }
+.comboCard{
+padding:16px;
+border:1px solid #ffffff22;
+border-radius:16px;
+background:#ffffff0d;
+backdrop-filter:blur(8px);
+cursor:pointer;
+}
 
-  .links button{
-    font-size:11px;
-  }
+.comboCard:hover{
+border-color:#ffc329;
+}
 
-  .hero{
-    top:25%;
-    left:6%;
-  }
+.comboCard strong{
+display:block;
+margin-bottom:6px;
+}
 
-  .hero h1{
-    font-size:50px;
-  }
+.comboCard small{
+color:#aaa;
+}
 
-  .hero p{
-    font-size:14px;
-    max-width:330px;
-  }
+.orderBox{
+position:fixed;
+right:25px;
+bottom:25px;
+z-index:20;
+padding:14px 18px;
+border-radius:15px;
+background:#151018dd;
+border:1px solid #ffffff1c;
+backdrop-filter:blur(15px);
+display:none;
+}
 
-  .hint{
-    font-size:10px;
-    bottom:12px;
-  }
+.orderBox b{
+color:#ffc329;
+}
+
+.progress{
+position:fixed;
+left:0;
+bottom:0;
+height:4px;
+width:0%;
+background:#ffc329;
+z-index:30;
+}
+
+footer{
+min-height:70vh;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+position:relative;
+z-index:10;
+padding:50px;
+}
+
+@media(max-width:700px){
+
+nav{
+top:10px;
+padding:12px 14px;
+}
+
+.logo{
+font-size:16px;
+}
+
+.navlinks{
+gap:10px;
+}
+
+.navlinks a{
+font-size:10px;
+}
+
+.panel{
+padding:100px 7%;
+align-items:flex-end;
+padding-bottom:16vh;
+}
+
+.content{
+width:100%;
+}
+
+h1{
+font-size:55px;
+letter-spacing:-3px;
+}
+
+p{
+font-size:14px;
+}
+
+.combo{
+grid-template-columns:1fr;
+}
+
+.comboCard{
+padding:12px;
+}
+
+.scroll{
+right:10px;
+}
+
+}
+
+@media(max-width:430px){
+
+h1{
+font-size:47px;
+}
+
+h2{
+font-size:42px;
+}
+
+.panel{
+padding-bottom:13vh;
+}
+
 }
 </style>
 </head>
 
 <body>
 
-<!-- NAVIGATION -->
+<div id="loading">
+LOADING <span>ASTRO CAFE</span>
+</div>
 
-<nav class="nav">
+<nav>
+<div class="logo">ASTRO CAFE</div>
 
-  <div class="logo">
-    ☕ CAFÉ 3D
-  </div>
-
-  <div class="links">
-
-    <button id="homeBtn">
-      HOME
-    </button>
-
-    <button id="menuBtn">
-      MENU
-    </button>
-
-    <button id="aboutBtn">
-      ABOUT
-    </button>
-
-  </div>
-
+<div class="navlinks">
+<a href="#home">HOME</a>
+<a href="#menu">MENU</a>
+<a href="#story">STORY</a>
+<a href="#visit">VISIT</a>
+</div>
 </nav>
 
+<div class="scroll">
+<i class="active"></i>
+<i></i>
+<i></i>
+<i></i>
+<i></i>
+</div>
 
-<!-- HERO -->
+<div class="progress"></div>
 
-<section class="hero">
+<main class="sceneText">
 
-  <h1>
-    Taste<br>
-    <span>the Magic.</span>
-  </h1>
+<section class="panel" id="home">
 
-  <p>
-    Welcome to our immersive 3D café.
-    Explore delicious coffee, desserts and
-    food in a completely new way.
-  </p>
+<div class="content">
 
-  <button class="mainButton" id="exploreBtn">
-    EXPLORE MENU
-  </button>
+<div class="tag">WELCOME TO THE FUTURE OF FOOD</div>
+
+<h1>
+FOOD
+<br>
+<span>BEYOND</span>
+<br>
+EARTH.
+</h1>
+
+<p>
+A next-generation café experience where
+food, imagination and technology come together.
+</p>
+
+<button class="button" onclick="goMenu()">
+EXPLORE MENU
+</button>
+
+</div>
 
 </section>
 
 
-<!-- MENU -->
+<section class="panel" id="menu">
 
-<div class="menu" id="menu">
+<div class="content">
 
-  <h2>
-    Our Menu ☕
-  </h2>
+<div class="tag">01 — CHOOSE YOUR COMBO</div>
 
-  <div class="food">
-    <span>☕ Cappuccino</span>
-    <strong>₹180</strong>
-  </div>
+<h2>
+BUILD
+<br>
+YOUR
+<br>
+MEAL.
+</h2>
 
-  <div class="food">
-    <span>🍫 Chocolate Cake</span>
-    <strong>₹220</strong>
-  </div>
+<p>
+Pick your favourite combination and watch
+your meal come together inside our 3D world.
+</p>
 
-  <div class="food">
-    <span>🍕 Italian Pizza</span>
-    <strong>₹299</strong>
-  </div>
+<div class="combo">
 
-  <div class="food">
-    <span>🍔 Classic Burger</span>
-    <strong>₹249</strong>
-  </div>
+<div class="comboCard" onclick="choose('Cosmic Burger')">
+<strong>🍔 Cosmic Burger</strong>
+<small>₹299</small>
+</div>
 
-  <div class="food">
-    <span>🥤 Cold Coffee</span>
-    <strong>₹160</strong>
-  </div>
+<div class="comboCard" onclick="choose('Galaxy Pizza')">
+<strong>🍕 Galaxy Pizza</strong>
+<small>₹349</small>
+</div>
 
-  <div class="food">
-    <span>🍩 Donut</span>
-    <strong>₹120</strong>
-  </div>
+<div class="comboCard" onclick="choose('Rocket Coffee')">
+<strong>☕ Rocket Coffee</strong>
+<small>₹199</small>
+</div>
 
 </div>
 
-
-<div class="hint">
-  Move your mouse or finger to explore the café
 </div>
+
+</section>
+
+
+<section class="panel" id="story">
+
+<div class="content">
+
+<div class="tag">02 — THE EXPERIENCE</div>
+
+<h2>
+MADE
+<br>
+FOR
+<br>
+MEMORIES.
+</h2>
+
+<p>
+Scroll through our world and watch the order
+assemble piece by piece — food, drink,
+dessert and finally your delivery box.
+</p>
+
+</div>
+
+</section>
+
+
+<section class="panel">
+
+<div class="content">
+
+<div class="tag">03 — FRESH FROM THE KITCHEN</div>
+
+<h2>
+GOOD
+<br>
+FOOD.
+<br>
+BIG
+<br>
+ENERGY.
+</h2>
+
+<p>
+Premium ingredients. Fresh preparation.
+A playful experience designed around every bite.
+</p>
+
+<button class="button" onclick="choose('Chef Special')">
+ORDER CHEF SPECIAL
+</button>
+
+</div>
+
+</section>
+
+
+<section class="panel" id="visit">
+
+<div class="content">
+
+<div class="tag">04 — FIND US</div>
+
+<h2>
+YOUR
+<br>
+NEXT
+<br>
+STOP.
+</h2>
+
+<p>
+Come experience Astro Café in person.
+Great food, great coffee and an environment
+built for unforgettable moments.
+</p>
+
+<button class="button">
+BOOK A TABLE
+</button>
+
+</div>
+
+</section>
+
+</main>
+
+
+<div class="orderBox" id="orderBox">
+Selected: <b id="selected"></b>
+</div>
+
+
+<footer>
+
+<div>
+<div class="tag">ASTRO CAFE</div>
+<h2>SEE YOU<br>IN SPACE.</h2>
+<p>Food • Coffee • Experience</p>
+</div>
+
+</footer>
 
 
 <script type="module">
@@ -308,661 +521,676 @@ import * as THREE from
 
 /* SCENE */
 
-const scene = new THREE.Scene();
+const scene =
+new THREE.Scene();
 
 scene.background =
-  new THREE.Color(0x120c08);
+new THREE.Color(0x08030b);
 
 scene.fog =
-  new THREE.Fog(0x120c08,8,30);
+new THREE.Fog(
+0x08030b,
+8,
+35
+);
 
 
 /* CAMERA */
 
 const camera =
-  new THREE.PerspectiveCamera(
-    60,
-    window.innerWidth /
-    window.innerHeight,
-    .1,
-    100
-  );
+new THREE.PerspectiveCamera(
+55,
+innerWidth/innerHeight,
+.1,
+100
+);
 
 camera.position.set(
-  0,
-  4.5,
-  12
+0,
+1.8,
+9
 );
 
 
 /* RENDERER */
 
 const renderer =
-  new THREE.WebGLRenderer({
-    antialias:true,
-    powerPreference:"high-performance"
-  });
+new THREE.WebGLRenderer({
+antialias:true,
+alpha:false,
+powerPreference:"high-performance"
+});
 
 renderer.setPixelRatio(
-  Math.min(window.devicePixelRatio,2)
+Math.min(devicePixelRatio,2)
 );
 
 renderer.setSize(
-  window.innerWidth,
-  window.innerHeight
+innerWidth,
+innerHeight
 );
 
 renderer.shadowMap.enabled=true;
 
 document.body.appendChild(
-  renderer.domElement
+renderer.domElement
 );
+
+
+/* LIGHTS */
+
+scene.add(
+new THREE.HemisphereLight(
+0xffe0bd,
+0x170a20,
+2.5
+)
+);
+
+const keyLight =
+new THREE.PointLight(
+0xffb000,
+35,
+30
+);
+
+keyLight.position.set(
+3,
+7,
+5
+);
+
+keyLight.castShadow=true;
+
+scene.add(keyLight);
+
+const redLight =
+new THREE.PointLight(
+0xff3c18,
+20,
+25
+);
+
+redLight.position.set(
+-5,
+2,
+-5
+);
+
+scene.add(redLight);
 
 
 /* MATERIAL */
 
-function material(
-  color,
-  roughness=.7
+function mat(
+color,
+rough=.7
 ){
 
-  return new THREE.MeshStandardMaterial({
-    color:color,
-    roughness:roughness,
-    metalness:.05
-  });
+return new THREE.MeshStandardMaterial({
+color,
+roughness:rough,
+metalness:.05
+});
 
 }
 
 
-/* BOX */
+/* GROUP */
 
-function box(
-  x,y,z,
-  w,h,d,
-  color
-){
+const food =
+new THREE.Group();
 
-  const object =
-    new THREE.Mesh(
-      new THREE.BoxGeometry(
-        w,h,d
-      ),
-      material(color)
-    );
-
-  object.position.set(
-    x,y,z
-  );
-
-  object.castShadow=true;
-  object.receiveShadow=true;
-
-  scene.add(object);
-
-  return object;
-
-}
+scene.add(food);
 
 
-/* CYLINDER */
+/* BURGER */
 
-function cylinder(
-  x,y,z,
-  radius,height,
-  color
-){
+const burger =
+new THREE.Group();
 
-  const object =
-    new THREE.Mesh(
-      new THREE.CylinderGeometry(
-        radius,
-        radius,
-        height,
-        32
-      ),
-      material(color)
-    );
-
-  object.position.set(
-    x,y,z
-  );
-
-  object.castShadow=true;
-  object.receiveShadow=true;
-
-  scene.add(object);
-
-  return object;
-
-}
-
-
-/* LIGHTING */
-
-scene.add(
-  new THREE.HemisphereLight(
-    0xffddbb,
-    0x24130c,
-    2.5
-  )
+const bunBottom =
+new THREE.Mesh(
+new THREE.CylinderGeometry(
+1.5,1.5,.45,48
+),
+mat(0xb85a1d)
 );
 
-const mainLight =
-  new THREE.PointLight(
-    0xffa45c,
-    45,
-    25
-  );
+bunBottom.position.y=.3;
 
-mainLight.position.set(
-  0,6,2
+burger.add(bunBottom);
+
+
+const patty =
+new THREE.Mesh(
+new THREE.CylinderGeometry(
+1.42,1.42,.35,48
+),
+mat(0x30140d)
 );
 
-mainLight.castShadow=true;
+patty.position.y=.7;
 
-scene.add(mainLight);
+burger.add(patty);
 
 
-/* FLOOR */
+const cheese =
+new THREE.Mesh(
+new THREE.CylinderGeometry(
+1.55,1.55,.15,48
+),
+mat(0xffc51c)
+);
 
-box(
-  0,-.3,0,
-  24,.6,24,
-  0x503426
+cheese.position.y=.95;
+
+burger.add(cheese);
+
+
+const bunTop =
+new THREE.Mesh(
+new THREE.SphereGeometry(
+1.55,48,24
+),
+mat(0xd97b28)
+);
+
+bunTop.scale.y=.5;
+
+bunTop.position.y=1.35;
+
+burger.add(bunTop);
+
+burger.position.set(
+0,
+-3,
+0
+);
+
+food.add(burger);
+
+
+/* FRIES */
+
+const fries =
+new THREE.Group();
+
+const box =
+new THREE.Mesh(
+new THREE.BoxGeometry(
+1.7,
+1.2,
+1.2
+),
+mat(0xe43118)
+);
+
+box.position.y=.45;
+
+fries.add(box);
+
+for(
+let i=0;
+i<12;
+i++
+){
+
+const fry =
+new THREE.Mesh(
+new THREE.BoxGeometry(
+.16,
+1.5,
+.16
+),
+mat(0xffcf27)
+);
+
+fry.position.set(
+(Math.random()-.5)*1.2,
+1.4+Math.random()*.35,
+(Math.random()-.5)*.7
+);
+
+fry.rotation.z=
+(Math.random()-.5)*.15;
+
+fries.add(fry);
+
+}
+
+fries.position.set(
+3,
+-3,
+-.5
+);
+
+food.add(fries);
+
+
+/* DRINK */
+
+const drink =
+new THREE.Group();
+
+const cup =
+new THREE.Mesh(
+new THREE.CylinderGeometry(
+.65,.55,1.8,40
+),
+mat(0xf3eee3)
+);
+
+cup.position.y=.8;
+
+drink.add(cup);
+
+const straw =
+new THREE.Mesh(
+new THREE.CylinderGeometry(
+.07,.07,2.5,16
+),
+mat(0xff5b26)
+);
+
+straw.position.set(
+.25,
+2,
+0
+);
+
+straw.rotation.z=.2;
+
+drink.add(straw);
+
+drink.position.set(
+-3,
+-3,
+-.5
+);
+
+food.add(drink);
+
+
+/* DESSERT */
+
+const dessert =
+new THREE.Group();
+
+const cake =
+new THREE.Mesh(
+new THREE.CylinderGeometry(
+1,1,.7,40
+),
+mat(0xff8c91)
+);
+
+cake.position.y=.4;
+
+dessert.add(cake);
+
+const cream =
+new THREE.Mesh(
+new THREE.SphereGeometry(
+.75,32,20
+),
+mat(0xffeee5)
+);
+
+cream.scale.y=.35;
+
+cream.position.y=.85;
+
+dessert.add(cream);
+
+dessert.position.set(
+0,
+-3,
+-2
+);
+
+food.add(dessert);
+
+
+/* DELIVERY BOX */
+
+const delivery =
+new THREE.Mesh(
+new THREE.BoxGeometry(
+3.5,
+2.3,
+3
+),
+mat(0xf4a629)
+);
+
+delivery.position.set(
+0,
+-3,
+-4
+);
+
+food.add(delivery);
+
+
+/* PLANET */
+
+const planet =
+new THREE.Mesh(
+new THREE.SphereGeometry(
+5,
+64,
+64
+),
+mat(0x260e45)
+);
+
+planet.position.set(
+0,
+-7,
+-4
+);
+
+scene.add(planet);
+
+
+/* STARS */
+
+const starGeo =
+new THREE.BufferGeometry();
+
+const starCount=1200;
+
+const starPos =
+new Float32Array(
+starCount*3
+);
+
+for(
+let i=0;
+i<starCount*3;
+i++
+){
+
+starPos[i]=
+(Math.random()-.5)*70;
+
+}
+
+starGeo.setAttribute(
+"position",
+new THREE.BufferAttribute(
+starPos,
+3
+)
+);
+
+const stars =
+new THREE.Points(
+starGeo,
+new THREE.PointsMaterial({
+color:0xffffff,
+size:.035
+})
+);
+
+scene.add(stars);
+
+
+/* SCROLL */
+
+let scrollProgress=0;
+
+function updateScroll(){
+
+const max =
+document.body.scrollHeight -
+innerHeight;
+
+scrollProgress =
+max>0
+?scrollY/max
+:0;
+
+document.querySelector(
+".progress"
+).style.width=
+(scrollProgress*100)+"%";
+
+const sections =
+document.querySelectorAll(
+".panel"
+);
+
+const index =
+Math.min(
+4,
+Math.floor(
+scrollProgress*5
+)
+);
+
+document
+.querySelectorAll(".scroll i")
+.forEach(
+(x,i)=>{
+x.classList.toggle(
+"active",
+i===index
+);
+}
 );
 
 
-/* WALLS */
+/* FOOD ANIMATION */
 
-box(
-  0,4,-8,
-  24,8,.3,
-  0x2b1a13
+const p =
+scrollProgress;
+
+burger.position.y =
+THREE.MathUtils.lerp(
+-3,
+1.2,
+Math.min(p*4,1)
 );
 
-box(
-  -12,4,0,
-  .3,8,16,
-  0x24150f
+burger.rotation.y =
+p*Math.PI*2;
+
+
+fries.position.y =
+THREE.MathUtils.lerp(
+-3,
+1.1,
+Math.max(
+0,
+Math.min((p-.2)*4,1)
+)
 );
 
-box(
-  12,4,0,
-  .3,8,16,
-  0x24150f
+fries.rotation.y =
+-p*3;
+
+
+drink.position.y =
+THREE.MathUtils.lerp(
+-3,
+1.2,
+Math.max(
+0,
+Math.min((p-.4)*4,1)
+)
 );
 
 
-/* COUNTER */
-
-box(
-  0,1,-6,
-  9,2,1.5,
-  0x704025
-);
-
-box(
-  0,2.2,-6,
-  9,.3,1.7,
-  0xc98952
+dessert.position.y =
+THREE.MathUtils.lerp(
+-3,
+1.3,
+Math.max(
+0,
+Math.min((p-.55)*4,1)
+)
 );
 
 
-/* TABLES */
-
-for(
-  const x of [-5,5]
-){
-
-  box(
-    x,1,0,
-    3,.25,3,
-    0x8d542f
-  );
-
-  for(
-    const sx of [-1,1]
-  ){
-
-    for(
-      const sz of [-1,1]
-    ){
-
-      box(
-        x+sx,
-        .5,
-        sz,
-        .18,
-        1,
-        .18,
-        0x5b351f
-      );
-
-    }
-
-  }
-
-}
-
-
-/* CHAIRS */
-
-for(
-  const x of [-5,5]
-){
-
-  for(
-    const z of [-2.5,2.5]
-  ){
-
-    box(
-      x,.8,z,
-      1.5,.18,.7,
-      0x784526
-    );
-
-    box(
-      x,
-      1.45,
-      z+(z>0?.28:-.28),
-      1.5,
-      1,
-      .16,
-      0x784526
-    );
-
-  }
-
-}
-
-
-/* COFFEE */
-
-const cups=[];
-
-for(
-  const x of [-5,5]
-){
-
-  const cup =
-    cylinder(
-      x,
-      1.38,
-      0,
-      .43,
-      .65,
-      0xf5eee5
-    );
-
-  cylinder(
-    x,
-    1.72,
-    0,
-    .35,
-    .05,
-    0x3a1c0d
-  );
-
-  cups.push(cup);
-
-}
-
-
-/* CAKES */
-
-for(
-  const x of [-2.8,2.8]
-){
-
-  cylinder(
-    x,
-    1.48,
-    -5.35,
-    .65,
-    .35,
-    0xb96b61
-  );
-
-  cylinder(
-    x,
-    1.72,
-    -5.35,
-    .52,
-    .15,
-    0xf2d0c0
-  );
-
-}
-
-
-/* DONUTS */
-
-for(
-  const x of [-1.4,1.4]
-){
-
-  const donut =
-    new THREE.Mesh(
-      new THREE.TorusGeometry(
-        .35,
-        .13,
-        16,
-        40
-      ),
-      material(0xd98b58)
-    );
-
-  donut.position.set(
-    x,
-    1.5,
-    -5.35
-  );
-
-  donut.rotation.x =
-    Math.PI/2;
-
-  scene.add(donut);
-
-}
-
-
-/* PLANTS */
-
-for(
-  const x of [-8,8]
-){
-
-  cylinder(
-    x,
-    1,
-    -5.7,
-    .5,
-    1.3,
-    0x654026
-  );
-
-  for(
-    let i=0;
-    i<6;
-    i++
-  ){
-
-    const leaf =
-      cylinder(
-        x+(Math.random()-.5),
-        2+Math.random()*1.3,
-        -5.7+(Math.random()-.5),
-        .18,
-        .8,
-        0x456744
-      );
-
-    leaf.rotation.z =
-      (Math.random()-.5)*.8;
-
-  }
-
-}
-
-
-/* HANGING LIGHTS */
-
-for(
-  const x of [-6,0,6]
-){
-
-  box(
-    x,5,-1,
-    .06,2,.06,
-    0x222222
-  );
-
-  cylinder(
-    x,
-    4,
-    -1,
-    .45,
-    .3,
-    0xe5a15d
-  );
-
-  const glow =
-    new THREE.PointLight(
-      0xffa45c,
-      14,
-      6
-    );
-
-  glow.position.set(
-    x,4,-1
-  );
-
-  scene.add(glow);
-
-}
-
-
-/* WINDOWS */
-
-for(
-  const x of [-8,8]
-){
-
-  box(
-    x,
-    3.5,
-    -7.7,
-    2.8,
-    2.5,
-    .12,
-    0x6b91a3
-  );
-
-}
-
-
-/* FLOATING PARTICLES */
-
-const particleGeometry =
-  new THREE.BufferGeometry();
-
-const count=350;
-
-const positions =
-  new Float32Array(
-    count*3
-  );
-
-for(
-  let i=0;
-  i<count*3;
-  i++
-){
-
-  positions[i] =
-    (Math.random()-.5)*25;
-
-}
-
-particleGeometry.setAttribute(
-  "position",
-  new THREE.BufferAttribute(
-    positions,
-    3
-  )
+delivery.position.y =
+THREE.MathUtils.lerp(
+-3,
+1,
+Math.max(
+0,
+Math.min((p-.72)*5,1)
+)
 );
 
-const particles =
-  new THREE.Points(
-    particleGeometry,
-    new THREE.PointsMaterial({
-      color:0xf2b36b,
-      size:.035,
-      transparent:true,
-      opacity:.5
-    })
-  );
-
-scene.add(particles);
+delivery.rotation.y =
+p*Math.PI;
 
 
-/* CAMERA MOVEMENT */
+/* CAMERA */
 
-let targetX=0;
-let targetY=4.5;
+camera.position.z =
+THREE.MathUtils.lerp(
+9,
+5,
+p
+);
+
+camera.position.y =
+THREE.MathUtils.lerp(
+2,
+3.5,
+p
+);
+
+camera.lookAt(
+0,
+.5,
+-1
+);
+
+}
 
 window.addEventListener(
-  "mousemove",
-  function(event){
-
-    targetX =
-      (event.clientX /
-      window.innerWidth -.5)*5;
-
-    targetY =
-      3.5+
-      (1-event.clientY /
-      window.innerHeight)*2;
-
-  }
+"scroll",
+updateScroll
 );
 
 
-/* MOBILE TOUCH */
+/* MOUSE */
+
+let mouseX=0;
+let mouseY=0;
 
 window.addEventListener(
-  "touchmove",
-  function(event){
+"mousemove",
+e=>{
 
-    if(!event.touches[0])
-      return;
+mouseX =
+(e.clientX/innerWidth-.5);
 
-    targetX =
-      (event.touches[0].clientX /
-      window.innerWidth -.5)*5;
-
-  }
-);
-
-
-/* MENU */
-
-const menu =
-  document.getElementById("menu");
-
-function toggleMenu(){
-
-  menu.style.display =
-    menu.style.display === "block"
-    ? "none"
-    : "block";
+mouseY =
+(e.clientY/innerHeight-.5);
 
 }
-
-document
-  .getElementById("menuBtn")
-  .addEventListener(
-    "click",
-    toggleMenu
-  );
-
-document
-  .getElementById("exploreBtn")
-  .addEventListener(
-    "click",
-    toggleMenu
-  );
-
-document
-  .getElementById("homeBtn")
-  .addEventListener(
-    "click",
-    function(){
-
-      menu.style.display="none";
-
-      camera.position.z=12;
-
-    }
-  );
-
-document
-  .getElementById("aboutBtn")
-  .addEventListener(
-    "click",
-    function(){
-
-      alert(
-        "Welcome to Café 3D — an immersive virtual café experience."
-      );
-
-    }
-  );
+);
 
 
 /* ANIMATION */
 
 function animate(){
 
-  requestAnimationFrame(
-    animate
-  );
+requestAnimationFrame(
+animate
+);
 
-  camera.position.x +=
-    (targetX-camera.position.x)
-    *.025;
+food.rotation.y +=
+.002;
 
-  camera.position.y +=
-    (targetY-camera.position.y)
-    *.025;
+stars.rotation.y +=
+.00008;
 
-  camera.lookAt(
-    0,
-    2,
-    -2
-  );
+camera.position.x +=
+(
+mouseX*1.5 -
+camera.position.x
+)*.02;
 
-  particles.rotation.y +=
-    .0005;
+camera.position.y +=
+(
+2.5 -
+mouseY*1.2 -
+camera.position.y
+)*.02;
 
-  cups.forEach(
-    (cup,index)=>{
+updateScroll();
 
-      cup.rotation.y +=
-        .005+(index*.002);
-
-    }
-  );
-
-  renderer.render(
-    scene,
-    camera
-  );
+renderer.render(
+scene,
+camera
+);
 
 }
 
 animate();
 
 
-/* RESPONSIVE */
+/* BUTTONS */
+
+window.goMenu=function(){
+
+document
+.getElementById("menu")
+.scrollIntoView({
+behavior:"smooth"
+});
+
+};
+
+
+window.choose=function(name){
+
+document
+.getElementById("selected")
+.textContent=name;
+
+document
+.getElementById("orderBox")
+.style.display="block";
+
+};
+
+
+/* RESIZE */
 
 window.addEventListener(
-  "resize",
-  function(){
+"resize",
+()=>{
 
-    camera.aspect =
-      window.innerWidth /
-      window.innerHeight;
+camera.aspect =
+innerWidth/innerHeight;
 
-    camera.updateProjectionMatrix();
+camera.updateProjectionMatrix();
 
-    renderer.setSize(
-      window.innerWidth,
-      window.innerHeight
-    );
+renderer.setSize(
+innerWidth,
+innerHeight
+);
 
-  }
+}
+);
+
+
+/* LOADING */
+
+setTimeout(
+()=>{
+document
+.getElementById("loading")
+.style.display="none";
+},
+1200
 );
 
 </script>

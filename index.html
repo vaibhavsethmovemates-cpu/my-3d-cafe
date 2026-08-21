@@ -2,874 +2,1048 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>CHEF & CO. — 3D Food Experience</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Maison Café | Premium Food Experience</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-font-family:Inter,Arial,sans-serif;
-background:#fff;
-color:#18130f;
-overflow-x:hidden
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
-button,input,select{font-family:inherit}
-button{cursor:pointer}
-a{text-decoration:none;color:inherit}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#fff;
+    color:#21170f;
+    overflow-x:hidden;
+}
 
 :root{
---orange:#ef7d22;
---gold:#ffc65b;
---dark:#18130f;
---cream:#fff7ed;
---soft:#fff1df;
---muted:#716860;
---line:#ece5dd;
+    --orange:#ed7b22;
+    --gold:#f5b83d;
+    --cream:#fff8ef;
+    --brown:#392316;
+    --text:#21170f;
+    --muted:#766b62;
+    --border:#eee5dc;
 }
 
-.nav{
-position:fixed;
-z-index:100;
-top:16px;
-left:50%;
-transform:translateX(-50%);
-width:min(94%,1250px);
-padding:14px 20px;
-border:1px solid #ffffffaa;
-border-radius:22px;
-background:#ffffffdf;
-backdrop-filter:blur(18px);
-box-shadow:0 12px 45px #00000012;
-display:flex;
-align-items:center;
-justify-content:space-between
+button{
+    font-family:inherit;
+    cursor:pointer;
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+/* ================= NAVIGATION ================= */
+
+.navbar{
+    position:fixed;
+    z-index:1000;
+    top:15px;
+    left:50%;
+    transform:translateX(-50%);
+    width:min(94%,1250px);
+    padding:14px 20px;
+    border:1px solid #eee;
+    border-radius:24px;
+    background:rgba(255,255,255,.92);
+    backdrop-filter:blur(20px);
+    box-shadow:0 12px 40px rgba(0,0,0,.08);
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 }
 
 .logo{
-font-size:21px;
-font-weight:950;
-letter-spacing:-1px
+    font-size:21px;
+    font-weight:900;
 }
-.logo span{color:var(--orange)}
+
+.logo span{
+    color:var(--orange);
+}
 
 .navlinks{
-display:flex;
-gap:24px
+    display:flex;
+    gap:25px;
 }
+
 .navlinks a{
-font-size:12px;
-font-weight:850;
-text-transform:uppercase
-}
-.navlinks a:hover{color:var(--orange)}
-
-.navOrder{
-border:0;
-padding:11px 18px;
-border-radius:25px;
-background:var(--dark);
-color:white;
-font-weight:850
+    font-size:12px;
+    font-weight:800;
+    text-transform:uppercase;
 }
 
-.hero{
-height:100vh;
-min-height:700px;
-position:relative;
-overflow:hidden;
-display:flex;
-align-items:center;
-padding:120px 7%;
-background:
-radial-gradient(circle at 78% 45%,#ffe4b7 0,#fff8ef 22%,#fff 48%)
+.navlinks a:hover{
+    color:var(--orange);
 }
 
-#hero3d{
-position:absolute;
-inset:0;
-z-index:1
+.navbutton{
+    border:none;
+    background:var(--brown);
+    color:#fff;
+    padding:11px 20px;
+    border-radius:25px;
+    font-weight:800;
 }
 
-.heroContent{
-position:relative;
-z-index:5;
-width:min(590px,90vw)
+/* ================= COMMON ================= */
+
+section{
+    position:relative;
+}
+
+.container{
+    width:min(1200px,90%);
+    margin:auto;
 }
 
 .eyebrow{
-font-size:11px;
-font-weight:900;
-letter-spacing:4px;
-color:var(--orange);
-margin-bottom:18px
+    color:var(--orange);
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:4px;
+    margin-bottom:16px;
 }
 
-.hero h1{
-font-size:clamp(55px,8vw,105px);
-line-height:.86;
-letter-spacing:-6px;
-margin-bottom:25px
-}
-.hero h1 span{color:var(--orange)}
-
-.heroText{
-max-width:530px;
-font-size:18px;
-line-height:1.7;
-color:var(--muted)
+.sectionTitle{
+    font-size:clamp(40px,6vw,72px);
+    line-height:.95;
+    letter-spacing:-3px;
 }
 
-.actions{
-display:flex;
-gap:12px;
-flex-wrap:wrap;
-margin-top:28px
+.sectionTitle span{
+    color:var(--orange);
 }
 
-.primary,.secondary{
-padding:15px 25px;
-border-radius:30px;
-font-weight:900;
-transition:.25s
+.sectionText{
+    color:var(--muted);
+    line-height:1.8;
+    max-width:700px;
+}
+
+.center{
+    text-align:center;
+}
+
+.center .sectionText{
+    margin:auto;
 }
 
 .primary{
-border:0;
-background:var(--orange);
-color:#fff;
-box-shadow:0 12px 35px #ef7d2235
+    border:none;
+    padding:15px 25px;
+    border-radius:30px;
+    background:var(--orange);
+    color:#fff;
+    font-weight:900;
+    box-shadow:0 12px 30px rgba(237,123,34,.25);
+    transition:.3s;
+}
+
+.primary:hover{
+    transform:translateY(-4px);
 }
 
 .secondary{
-background:#fff;
-border:1px solid #ddd
+    border:1px solid #ddd;
+    padding:14px 24px;
+    border-radius:30px;
+    background:#fff;
+    font-weight:800;
 }
 
-.primary:hover,.secondary:hover{
-transform:translateY(-4px)
+section{
+    padding:110px 0;
+}
+
+/* ================= HERO ================= */
+
+.hero{
+    min-height:100vh;
+    padding-top:150px;
+    background:
+        radial-gradient(circle at 75% 30%,#ffe7c1,transparent 30%),
+        radial-gradient(circle at 20% 70%,#fff4e7,transparent 30%),
+        #fff;
+
+    overflow:hidden;
+}
+
+.heroGrid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    align-items:center;
+    gap:40px;
+}
+
+.hero h1{
+    font-size:clamp(55px,8vw,100px);
+    line-height:.87;
+    letter-spacing:-6px;
+    margin-bottom:25px;
+}
+
+.hero h1 span{
+    color:var(--orange);
+}
+
+.heroDescription{
+    font-size:18px;
+    color:var(--muted);
+    line-height:1.7;
+    max-width:530px;
+}
+
+.heroButtons{
+    display:flex;
+    gap:12px;
+    margin-top:28px;
+    flex-wrap:wrap;
 }
 
 .heroStats{
-display:flex;
-gap:30px;
-margin-top:38px
-}
-.stat strong{display:block;font-size:22px}
-.stat small{color:#81776f}
-
-.sceneHint{
-position:absolute;
-right:7%;
-bottom:8%;
-z-index:6;
-background:#ffffffdd;
-padding:11px 16px;
-border-radius:30px;
-font-size:12px;
-font-weight:800;
-box-shadow:0 8px 25px #00000012
+    display:flex;
+    gap:35px;
+    margin-top:35px;
 }
 
-.section{
-position:relative;
-padding:120px 7%
-}
-.container{
-max-width:1250px;
-margin:auto
-}
-.center{text-align:center}
-
-.title{
-font-size:clamp(40px,6vw,72px);
-line-height:.95;
-letter-spacing:-3px;
-margin-bottom:18px
-}
-.title span{color:var(--orange)}
-
-.lead{
-max-width:700px;
-margin:auto;
-color:var(--muted);
-line-height:1.8
+.heroStat strong{
+    display:block;
+    font-size:22px;
 }
 
-/* LIVE EXPERIENCE */
-
-.live{
-background:#15110d;
-color:#fff;
-overflow:hidden
+.heroStat small{
+    color:var(--muted);
 }
 
-.live .lead{color:#c6bbb2}
+/* HERO FOOD */
 
-.liveScene{
-height:600px;
-margin-top:55px;
-border-radius:35px;
-position:relative;
-overflow:hidden;
-background:
-radial-gradient(circle at 50% 20%,#4b301d,#17100c 55%,#090706);
-border:1px solid #ffffff16;
-box-shadow:0 30px 90px #0008
+.heroVisual{
+    height:560px;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
-.liveGlow{
-position:absolute;
-width:450px;
-height:450px;
-border-radius:50%;
-background:#ff9d2e18;
-filter:blur(20px);
-left:50%;
-top:0;
-transform:translateX(-50%)
+.heroPlate{
+    width:430px;
+    height:430px;
+    border-radius:50%;
+    background:
+        radial-gradient(circle,#fff 0 50%,#f8f3ee 51% 55%,#fff 56%);
+    box-shadow:
+        0 35px 80px rgba(0,0,0,.13),
+        inset 0 0 30px rgba(0,0,0,.05);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    animation:floatPlate 5s ease-in-out infinite;
 }
 
-.floor{
-position:absolute;
-bottom:-80px;
-left:50%;
-transform:translateX(-50%) rotateX(65deg);
-width:1000px;
-height:500px;
-border-radius:50%;
-background:
-repeating-linear-gradient(
-90deg,#211812 0,#211812 80px,#2a1d15 82px
-);
-box-shadow:0 -20px 100px #000
+.heroFood{
+    font-size:170px;
+    filter:drop-shadow(0 25px 20px rgba(0,0,0,.15));
 }
 
-.wall{
-position:absolute;
-left:0;
-right:0;
-top:0;
-height:58%;
-background:
-linear-gradient(#2a1b13cc,#120d09);
-border-bottom:2px solid #5b3a24
+@keyframes floatPlate{
+    0%,100%{
+        transform:translateY(0) rotate(-2deg);
+    }
+    50%{
+        transform:translateY(-15px) rotate(2deg);
+    }
 }
 
-.counter{
-position:absolute;
-bottom:130px;
-left:50%;
-transform:translateX(-50%);
-width:360px;
-height:100px;
-border-radius:15px;
-background:linear-gradient(#b56a2b,#703b1d);
-box-shadow:0 20px 30px #0008
+.floatingCard{
+    position:absolute;
+    background:#fff;
+    border:1px solid #eee;
+    border-radius:18px;
+    padding:15px 18px;
+    box-shadow:0 15px 40px rgba(0,0,0,.1);
+    animation:floatCard 4s ease-in-out infinite;
 }
 
-.counterTop{
-position:absolute;
-top:-15px;
-left:-15px;
-width:390px;
-height:22px;
-border-radius:12px;
-background:#e5aa68
+.cardOne{
+    top:80px;
+    left:5%;
 }
 
-.chef{
-position:absolute;
-bottom:230px;
-left:50%;
-font-size:65px;
-transform:translateX(-50%);
-z-index:6;
-filter:drop-shadow(0 12px 12px #0008)
+.cardTwo{
+    right:3%;
+    bottom:90px;
+    animation-delay:1s;
 }
 
-.customer{
-position:absolute;
-bottom:105px;
-left:-100px;
-font-size:55px;
-z-index:8;
-transition:left 5s cubic-bezier(.2,.8,.2,1);
-filter:drop-shadow(0 10px 10px #000)
+.floatingCard strong{
+    display:block;
 }
 
-.customer.walk{
-left:43%
+.floatingCard small{
+    color:var(--muted);
 }
 
-.foodTray{
-position:absolute;
-bottom:205px;
-left:50%;
-transform:translateX(-50%);
-font-size:45px;
-opacity:0;
-transition:1s;
-z-index:7
+@keyframes floatCard{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-10px)}
 }
 
-.foodTray.show{
-opacity:1;
-transform:translateX(-50%) translateY(-20px)
+/* ================= CUSTOMER JOURNEY ================= */
+
+.journey{
+    background:#fff;
 }
 
-.reviewBubble{
-position:absolute;
-right:6%;
-top:20%;
-max-width:260px;
-padding:18px;
-border-radius:20px;
-background:#ffffffee;
-color:#20170f;
-box-shadow:0 15px 50px #0005;
-opacity:0;
-transform:translateY(15px);
-transition:1s;
-z-index:10
+.journeyHeader{
+    text-align:center;
+    margin-bottom:50px;
 }
 
-.reviewBubble.show{
-opacity:1;
-transform:translateY(0)
+.journeyScene{
+    position:relative;
+    height:600px;
+    border-radius:35px;
+    background:
+        linear-gradient(#fff,#fffaf4);
+    border:1px solid var(--border);
+    overflow:hidden;
+    box-shadow:0 25px 80px rgba(0,0,0,.08);
 }
 
-.reviewBubble .stars{
-color:#efa51d;
-letter-spacing:2px;
-margin-bottom:7px
+/* café wall */
+
+.cafeWall{
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:50%;
+    background:
+        linear-gradient(90deg,#fff,#fff8ef,#fff);
 }
 
-.liveStatus{
-position:absolute;
-left:25px;
-top:25px;
-z-index:10;
-padding:10px 15px;
-border-radius:25px;
-background:#ffffff12;
-border:1px solid #ffffff20;
-backdrop-filter:blur(10px);
-font-size:12px
+.cafeSign{
+    position:absolute;
+    top:45px;
+    left:50%;
+    transform:translateX(-50%);
+    padding:13px 30px;
+    border-radius:30px;
+    background:#fff;
+    border:1px solid #eee;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    font-weight:900;
+    letter-spacing:2px;
 }
 
-.liveStatus b{color:#61e294}
-
-/* STORY */
-
-.story{
-background:var(--cream)
+.cafeSign span{
+    color:var(--orange);
 }
 
-.storyGrid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:70px;
-align-items:center
+/* floor */
+
+.cafeFloor{
+    position:absolute;
+    left:-5%;
+    bottom:-130px;
+    width:110%;
+    height:330px;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #f2e4d6 0,
+            #f2e4d6 100px,
+            #f9efe5 100px,
+            #f9efe5 200px
+        );
+    transform:perspective(500px) rotateX(55deg);
 }
 
-.storyVisual{
-height:500px;
-border-radius:38px;
-background:
-radial-gradient(circle,#fff 5%,#ffe5c0 42%,#f7c985);
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:165px;
-box-shadow:inset 0 0 100px #ffffffaa
+/* counter */
+
+.chefCounter{
+    position:absolute;
+    bottom:145px;
+    left:50%;
+    transform:translateX(-50%);
+    width:370px;
+    height:100px;
+    border-radius:18px;
+    background:linear-gradient(#d59655,#ad6732);
+    box-shadow:0 20px 35px rgba(0,0,0,.15);
 }
 
-.storyText p{
-color:var(--muted);
-line-height:1.8;
-margin:18px 0
-}
-
-.check{
-display:flex;
-gap:12px;
-margin:17px 0
-}
-.check b{
-width:27px;
-height:27px;
-border-radius:50%;
-background:#fff0df;
-color:var(--orange);
-display:flex;
-align-items:center;
-justify-content:center
-}
-.check p{
-margin:5px 0 0
-}
-
-/* MENU */
-
-.menu{
-background:#fff
-}
-
-.categories{
-display:flex;
-justify-content:center;
-gap:10px;
-flex-wrap:wrap;
-margin:35px 0
-}
-
-.category{
-padding:10px 18px;
-border-radius:25px;
-border:1px solid var(--line);
-background:white;
-font-weight:800
-}
-.category.active,
-.category:hover{
-background:var(--dark);
-color:white
-}
-
-.foodGrid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:20px
-}
-
-.foodCard{
-border:1px solid var(--line);
-border-radius:25px;
-overflow:hidden;
-background:#fff;
-box-shadow:0 12px 40px #00000009;
-transition:.3s
-}
-.foodCard:hover{
-transform:translateY(-8px);
-box-shadow:0 25px 55px #00000014
-}
-
-.foodImage{
-height:180px;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:75px;
-background:linear-gradient(135deg,#fff4e7,#fff)
-}
-
-.foodInfo{padding:18px}
-.foodTop{
-display:flex;
-justify-content:space-between;
-gap:10px
-}
-.foodTop h3{font-size:17px}
-.rating{
-color:#e9a21d;
-font-size:12px;
-margin:8px 0
-}
-.foodInfo p{
-font-size:13px;
-color:var(--muted);
-line-height:1.55
-}
-.foodBottom{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-top:16px
-}
-.add{
-border:0;
-background:var(--dark);
-color:white;
-padding:9px 14px;
-border-radius:20px;
-font-weight:800
-}
-.add:hover{background:var(--orange)}
-
-/* ORDER */
-
-.order{
-background:#fff8f0
-}
-
-.orderGrid{
-display:grid;
-grid-template-columns:1.1fr .9fr;
-gap:25px;
-margin-top:50px
-}
-
-.panel{
-background:white;
-border:1px solid var(--line);
-border-radius:28px;
-padding:25px;
-box-shadow:0 15px 50px #0000000b
-}
-
-.orderRow{
-display:flex;
-align-items:center;
-gap:15px;
-padding:17px 0;
-border-bottom:1px solid var(--line)
-}
-
-.orderEmoji{
-width:60px;
-height:60px;
-border-radius:17px;
-background:#fff0df;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:31px
-}
-
-.orderInfo{flex:1}
-.orderInfo strong{display:block}
-.orderInfo small{color:#888}
-
-.plus{
-border:0;
-width:30px;
-height:30px;
-border-radius:50%;
-background:var(--orange);
-color:#fff
-}
-
-.cartPanel{
-position:sticky;
-top:110px;
-height:max-content
-}
-
-.cartLine{
-display:flex;
-justify-content:space-between;
-padding:13px 0;
-border-bottom:1px solid var(--line);
-font-size:14px
-}
-
-.total{
-display:flex;
-justify-content:space-between;
-font-size:23px;
-font-weight:900;
-padding:20px 0
-}
-
-.checkout{
-width:100%;
-border:0;
-padding:16px;
-border-radius:18px;
-background:var(--orange);
-color:#fff;
-font-weight:900
+.chefCounterTop{
+    position:absolute;
+    top:-15px;
+    left:-15px;
+    width:400px;
+    height:22px;
+    border-radius:15px;
+    background:#f0c187;
 }
 
 /* CHEF */
 
+.chefCharacter{
+    position:absolute;
+    z-index:10;
+    left:50%;
+    bottom:235px;
+    transform:translateX(-50%);
+    font-size:82px;
+    filter:drop-shadow(0 12px 10px rgba(0,0,0,.15));
+}
+
+.chefName{
+    position:absolute;
+    z-index:12;
+    left:50%;
+    transform:translateX(-50%);
+    bottom:215px;
+    background:#fff;
+    padding:7px 13px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:900;
+    box-shadow:0 7px 20px rgba(0,0,0,.1);
+}
+
+/* CUSTOMER */
+
+.customerCharacter{
+    position:absolute;
+    z-index:15;
+    bottom:115px;
+    left:-100px;
+    font-size:67px;
+    transition:
+        left 4.5s cubic-bezier(.2,.8,.2,1),
+        transform .5s;
+    filter:drop-shadow(0 12px 10px rgba(0,0,0,.14));
+}
+
+.customerCharacter.walking{
+    left:38%;
+}
+
+.customerLabel{
+    position:absolute;
+    z-index:20;
+    bottom:90px;
+    left:-100px;
+    padding:7px 12px;
+    border-radius:20px;
+    background:#fff;
+    font-size:11px;
+    font-weight:800;
+    transition:left 4.5s cubic-bezier(.2,.8,.2,1);
+    box-shadow:0 7px 20px rgba(0,0,0,.08);
+}
+
+.customerLabel.walking{
+    left:35%;
+}
+
+/* ORDER BUBBLE */
+
+.orderBubble{
+    position:absolute;
+    z-index:30;
+    left:50%;
+    bottom:350px;
+    transform:translateX(-50%) scale(.8);
+    background:#fff;
+    border:1px solid #eee;
+    border-radius:20px;
+    padding:18px 25px;
+    box-shadow:0 20px 50px rgba(0,0,0,.12);
+    opacity:0;
+    transition:1s;
+    text-align:center;
+}
+
+.orderBubble.show{
+    opacity:1;
+    transform:translateX(-50%) scale(1);
+}
+
+.orderBubble strong{
+    display:block;
+}
+
+.orderBubble small{
+    color:var(--muted);
+}
+
+/* FOOD SERVING */
+
+.servedFood{
+    position:absolute;
+    z-index:20;
+    left:50%;
+    bottom:200px;
+    transform:translateX(-50%);
+    font-size:48px;
+    opacity:0;
+    transition:1s;
+}
+
+.servedFood.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(-30px);
+}
+
+/* REVIEW */
+
+.liveReview{
+    position:absolute;
+    z-index:40;
+    top:25px;
+    right:25px;
+    width:260px;
+    padding:18px;
+    background:#fff;
+    border-radius:20px;
+    border:1px solid #eee;
+    box-shadow:0 15px 45px rgba(0,0,0,.12);
+    opacity:0;
+    transform:translateY(-15px);
+    transition:1s;
+}
+
+.liveReview.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+.liveStars{
+    color:#efa81f;
+    margin-bottom:8px;
+}
+
+.liveReview p{
+    font-size:13px;
+    line-height:1.6;
+    color:var(--muted);
+}
+
+.liveDot{
+    position:absolute;
+    left:20px;
+    top:20px;
+    padding:8px 13px;
+    border-radius:20px;
+    background:#fff;
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+    font-size:11px;
+    font-weight:900;
+}
+
+.liveDot span{
+    color:#32a963;
+}
+
+/* ================= PROCESS ================= */
+
+.process{
+    background:var(--cream);
+}
+
+.processGrid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-top:50px;
+}
+
+.processCard{
+    background:#fff;
+    padding:30px;
+    border-radius:25px;
+    border:1px solid var(--border);
+    box-shadow:0 12px 35px rgba(0,0,0,.05);
+}
+
+.processNumber{
+    color:var(--orange);
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:3px;
+    margin-bottom:25px;
+}
+
+.processIcon{
+    font-size:45px;
+    margin-bottom:18px;
+}
+
+.processCard p{
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.7;
+    margin-top:10px;
+}
+
+/* ================= MENU ================= */
+
+.menu{
+    background:#fff;
+}
+
+.categories{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin:35px 0;
+}
+
+.category{
+    padding:10px 18px;
+    border-radius:25px;
+    border:1px solid var(--border);
+    background:#fff;
+    font-weight:800;
+}
+
+.category.active,
+.category:hover{
+    background:var(--brown);
+    color:#fff;
+}
+
+.foodGrid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+}
+
+.foodCard{
+    border:1px solid var(--border);
+    border-radius:25px;
+    overflow:hidden;
+    background:#fff;
+    box-shadow:0 12px 40px rgba(0,0,0,.06);
+    transition:.3s;
+}
+
+.foodCard:hover{
+    transform:translateY(-8px);
+    box-shadow:0 25px 60px rgba(0,0,0,.12);
+}
+
+.foodImage{
+    height:175px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:75px;
+    background:linear-gradient(135deg,#fff4e6,#fff);
+}
+
+.foodInfo{
+    padding:18px;
+}
+
+.foodTop{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.foodTop h3{
+    font-size:17px;
+}
+
+.rating{
+    color:#eda51c;
+    font-size:12px;
+    margin:8px 0;
+}
+
+.foodInfo p{
+    font-size:13px;
+    color:var(--muted);
+    line-height:1.55;
+}
+
+.foodBottom{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:16px;
+}
+
+.add{
+    border:none;
+    background:var(--brown);
+    color:#fff;
+    padding:9px 14px;
+    border-radius:20px;
+    font-weight:800;
+}
+
+.add:hover{
+    background:var(--orange);
+}
+
+/* ================= CHEF ================= */
+
 .chef{
-background:#fff
+    background:var(--cream);
 }
 
 .chefGrid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:70px;
-align-items:center
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    align-items:center;
+    gap:70px;
 }
 
-.chefPhoto{
-height:500px;
-border-radius:40px;
-background:radial-gradient(circle,#fff,#ffd9aa);
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:185px
+.chefImage{
+    height:500px;
+    border-radius:40px;
+    background:
+        radial-gradient(circle,#fff 5%,#ffe2b8 45%,#f8c781);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:180px;
+    box-shadow:inset 0 0 100px rgba(255,255,255,.8);
 }
 
-.chefText p{
-color:var(--muted);
-line-height:1.8;
-margin:18px 0
+.chefInfo p{
+    color:var(--muted);
+    line-height:1.8;
+    margin:18px 0;
 }
 
-.quote{
-padding:20px;
-border-left:3px solid var(--orange);
-font-style:italic
+.chefQuote{
+    padding:20px;
+    border-left:3px solid var(--orange);
+    font-style:italic;
+    margin:25px 0;
 }
 
-/* REVIEWS */
+/* ================= REVIEWS ================= */
 
 .reviews{
-background:#fff
+    background:#fff;
 }
 
 .reviewGrid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:20px;
-margin-top:50px
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+    margin-top:50px;
 }
 
 .review{
-padding:30px;
-border:1px solid var(--line);
-border-radius:25px;
-box-shadow:0 10px 35px #00000008
+    padding:30px;
+    border-radius:25px;
+    border:1px solid var(--border);
+    box-shadow:0 10px 35px rgba(0,0,0,.06);
 }
 
-.stars{
-color:#efa51d;
-letter-spacing:2px;
-margin-bottom:13px
+.reviewStars{
+    color:#efa51d;
+    letter-spacing:2px;
+    margin-bottom:13px;
 }
 
 .review p{
-color:var(--muted);
-font-size:14px;
-line-height:1.7;
-margin-bottom:15px
+    color:var(--muted);
+    line-height:1.7;
+    font-size:14px;
+    margin-bottom:15px;
 }
 
-.reviewLive{
-font-size:11px;
-color:#32a45c;
-font-weight:800
+.verified{
+    color:#35a563;
+    font-size:10px;
+    font-weight:900;
 }
 
-/* RESERVATION */
+/* ================= RESERVATION ================= */
 
 .reservation{
-background:linear-gradient(135deg,#fff,#fff0dd)
+    background:
+        radial-gradient(circle at 80% 20%,#ffe5bd,transparent 35%),
+        #fff8ef;
 }
 
-.reserve{
-max-width:950px;
-margin:auto;
-padding:55px;
-border-radius:35px;
-background:#fff;
-box-shadow:0 25px 80px #00000012
+.reserveBox{
+    max-width:950px;
+    margin:auto;
+    padding:55px;
+    background:#fff;
+    border-radius:35px;
+    box-shadow:0 25px 80px rgba(0,0,0,.1);
 }
 
-.form{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:15px;
-margin-top:30px
+.formGrid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+    margin:30px 0;
 }
 
 .input{
-width:100%;
-padding:15px;
-border:1px solid #ddd;
-border-radius:13px;
-outline:none
+    width:100%;
+    padding:15px;
+    border:1px solid #ddd;
+    border-radius:13px;
+    outline:none;
 }
 
-.input:focus{border-color:var(--orange)}
+.input:focus{
+    border-color:var(--orange);
+}
 
-/* CONTACT */
+/* ================= CONTACT ================= */
 
 .contact{
-background:var(--dark);
-color:#fff;
-text-align:center;
-padding:100px 7%
-}
-
-.contact p{
-color:#c2b8b0;
-max-width:650px;
-margin:15px auto
+    background:#fff;
+    text-align:center;
 }
 
 .contactInfo{
-display:flex;
-justify-content:center;
-gap:30px;
-flex-wrap:wrap;
-margin:30px 0
+    display:flex;
+    justify-content:center;
+    gap:30px;
+    flex-wrap:wrap;
+    margin:30px 0;
+    color:var(--muted);
 }
+
+/* ================= FOOTER ================= */
 
 .footer{
-background:#0f0c09;
-color:#8f8780;
-padding:25px 7%;
-display:flex;
-justify-content:space-between;
-font-size:12px
+    padding:25px 7%;
+    background:#21170f;
+    color:#b8aaa0;
+    display:flex;
+    justify-content:space-between;
+    font-size:12px;
 }
 
-/* CART FLOAT */
+/* ================= CART ================= */
 
-.floatingCart{
-position:fixed;
-z-index:110;
-right:22px;
-bottom:22px;
-border:0;
-background:var(--dark);
-color:#fff;
-padding:14px 20px;
-border-radius:30px;
-box-shadow:0 10px 30px #0005;
-font-weight:900
+.cartFloat{
+    position:fixed;
+    z-index:200;
+    right:22px;
+    bottom:22px;
+    border:none;
+    background:var(--brown);
+    color:#fff;
+    padding:14px 20px;
+    border-radius:30px;
+    box-shadow:0 10px 35px rgba(0,0,0,.25);
+    font-weight:900;
 }
 
 .badge{
-background:var(--orange);
-padding:3px 7px;
-border-radius:50%;
-margin-left:4px
+    background:var(--orange);
+    padding:3px 7px;
+    border-radius:50%;
 }
 
-/* GLITTER */
+/* ================= GLITTER ================= */
 
-.spark{
-position:fixed;
-z-index:4;
-width:4px;
-height:4px;
-border-radius:50%;
-background:var(--gold);
-opacity:0;
-animation:glitter linear infinite
+.glitter{
+    position:fixed;
+    z-index:3;
+    width:4px;
+    height:4px;
+    border-radius:50%;
+    background:var(--gold);
+    pointer-events:none;
+    animation:glitterMove linear infinite;
 }
 
-@keyframes glitter{
+@keyframes glitterMove{
+
 0%{
-transform:translateY(100vh) scale(.3);
-opacity:0
-}
-20%{opacity:.8}
-100%{
-transform:translateY(-10vh) scale(1);
-opacity:0
-}
+    transform:translateY(100vh) scale(.2);
+    opacity:0;
 }
 
-/* RESPONSIVE */
+20%{
+    opacity:.8;
+}
+
+100%{
+    transform:translateY(-10vh) scale(1);
+    opacity:0;
+}
+
+}
+
+/* ================= RESPONSIVE ================= */
 
 @media(max-width:950px){
 
-.foodGrid{
-grid-template-columns:repeat(2,1fr)
+.navlinks{
+    display:none;
 }
 
-.storyGrid,
-.chefGrid,
-.orderGrid{
-grid-template-columns:1fr
+.heroGrid,
+.chefGrid{
+    grid-template-columns:1fr;
+}
+
+.hero{
+    padding-top:130px;
+}
+
+.heroVisual{
+    height:420px;
+}
+
+.processGrid{
+    grid-template-columns:repeat(2,1fr);
+}
+
+.foodGrid{
+    grid-template-columns:repeat(2,1fr);
 }
 
 .reviewGrid{
-grid-template-columns:1fr
-}
-
-.cartPanel{
-position:relative;
-top:auto
+    grid-template-columns:1fr;
 }
 
 }
 
 @media(max-width:650px){
 
-.nav{
-top:8px;
-padding:11px 13px
+section{
+    padding:80px 0;
 }
 
-.logo{font-size:17px}
-.navlinks{display:none}
-
 .hero{
-padding:120px 6% 60px
+    min-height:auto;
 }
 
 .hero h1{
-font-size:55px;
-letter-spacing:-3px
+    font-size:55px;
+    letter-spacing:-4px;
 }
 
-.heroText{font-size:15px}
+.heroDescription{
+    font-size:15px;
+}
+
+.heroVisual{
+    height:350px;
+}
+
+.heroPlate{
+    width:290px;
+    height:290px;
+}
+
+.heroFood{
+    font-size:110px;
+}
 
 .heroStats{
-gap:18px
+    gap:15px;
 }
 
-.section{
-padding:90px 6%
+.heroStat strong{
+    font-size:18px;
+}
+
+.floatingCard{
+    font-size:12px;
+}
+
+.cardOne{
+    left:0;
+}
+
+.cardTwo{
+    right:0;
+}
+
+.journeyScene{
+    height:520px;
+}
+
+.chefCounter{
+    width:250px;
+}
+
+.chefCounterTop{
+    width:280px;
+}
+
+.chefCharacter{
+    font-size:60px;
+}
+
+.customerCharacter{
+    font-size:55px;
+}
+
+.customerCharacter.walking{
+    left:22%;
+}
+
+.customerLabel.walking{
+    left:20%;
+}
+
+.orderBubble{
+    bottom:320px;
+}
+
+.liveReview{
+    width:210px;
+    right:15px;
+}
+
+.processGrid{
+    grid-template-columns:1fr;
 }
 
 .foodGrid{
-grid-template-columns:1fr
+    grid-template-columns:1fr;
 }
 
-.liveScene{
-height:500px
+.chefImage{
+    height:330px;
+    font-size:120px;
 }
 
-.counter{
-width:240px
+.formGrid{
+    grid-template-columns:1fr;
 }
 
-.counterTop{
-width:270px
-}
-
-.customer.walk{
-left:30%
-}
-
-.reviewBubble{
-right:15px;
-top:25px;
-max-width:210px
-}
-
-.storyVisual,
-.chefPhoto{
-height:320px;
-font-size:110px
-}
-
-.form{
-grid-template-columns:1fr
-}
-
-.reserve{
-padding:30px 20px
+.reserveBox{
+    padding:30px 20px;
 }
 
 .footer{
-flex-direction:column;
-gap:10px
-}
-
-.sceneHint{
-display:none
+    flex-direction:column;
+    gap:10px;
 }
 
 }
@@ -878,25 +1052,25 @@ display:none
 
 <body>
 
-<!-- NAV -->
+<!-- NAVBAR -->
 
-<nav class="nav">
+<nav class="navbar">
 
 <a class="logo" href="#home">
-CHEF <span>& CO.</span>
+MAISON <span>CAFÉ</span>
 </a>
 
 <div class="navlinks">
 <a href="#home">Home</a>
-<a href="#story">Story</a>
+<a href="#journey">Experience</a>
 <a href="#menu">Menu</a>
-<a href="#live">Live Café</a>
 <a href="#chef">Chef</a>
+<a href="#reviews">Reviews</a>
 <a href="#contact">Contact</a>
 </div>
 
-<button class="navOrder"
-onclick="scrollToSection('order')">
+<button class="navbutton"
+onclick="go('menu')">
 Order Now
 </button>
 
@@ -907,410 +1081,190 @@ Order Now
 
 <section class="hero" id="home">
 
-<div id="hero3d"></div>
+<div class="container heroGrid">
 
-<div class="heroContent">
+<div>
 
 <div class="eyebrow">
 PREMIUM FOOD • COFFEE • EXPERIENCE
 </div>
 
 <h1>
-FOOD<br>
-<span>WITH A STORY.</span>
+A TABLE<br>
+<span>FULL OF LIFE.</span>
 </h1>
 
-<p class="heroText">
-Welcome to Chef & Co. — a modern food experience
-where you can meet the chef, explore the menu,
-watch your order come together and enjoy food
-created with care.
+<p class="heroDescription">
+Welcome to Maison Café — where customers meet the
+chef, discover carefully crafted food and become part
+of a memorable dining experience.
 </p>
 
-<div class="actions">
+<div class="heroButtons">
 
 <button class="primary"
-onclick="scrollToSection('menu')">
-EXPLORE MENU →
+onclick="go('journey')">
+WATCH THE EXPERIENCE →
 </button>
 
 <button class="secondary"
-onclick="scrollToSection('order')">
-ORDER ONLINE
+onclick="go('menu')">
+EXPLORE MENU
 </button>
 
 </div>
 
 <div class="heroStats">
 
-<div class="stat">
+<div class="heroStat">
 <strong>4.9/5</strong>
-<small>Customer rating</small>
+<small>Guest rating</small>
 </div>
 
-<div class="stat">
+<div class="heroStat">
 <strong>25K+</strong>
-<small>Meals served</small>
+<small>Guests served</small>
 </div>
 
-<div class="stat">
+<div class="heroStat">
 <strong>15 min</strong>
-<small>Average service</small>
+<small>Avg. service</small>
 </div>
 
 </div>
 
 </div>
 
-<div class="sceneHint">
-✨ Move your cursor to explore
+
+<div class="heroVisual">
+
+<div class="heroPlate">
+<div class="heroFood">🍽️</div>
+</div>
+
+<div class="floatingCard cardOne">
+<strong>⭐ 4.9 Rated</strong>
+<small>By our guests</small>
+</div>
+
+<div class="floatingCard cardTwo">
+<strong>👨‍🍳 Chef's Choice</strong>
+<small>Freshly prepared</small>
+</div>
+
+</div>
+
 </div>
 
 </section>
 
 
-<!-- STORY -->
+<!-- CUSTOMER LIVE EXPERIENCE -->
 
-<section class="section story" id="story">
+<section class="journey" id="journey">
 
-<div class="container storyGrid">
+<div class="container">
 
-<div class="storyVisual">
+<div class="journeyHeader">
+
+<div class="eyebrow">
+LIVE CUSTOMER EXPERIENCE
+</div>
+
+<h2 class="sectionTitle">
+FROM <span>WALK-IN</span><br>
+TO REVIEW.
+</h2>
+
+<p class="sectionText" style="margin:18px auto 0">
+Watch how a customer's visit unfolds — arrival,
+meeting the chef, ordering, preparation, serving
+and finally sharing their experience.
+</p>
+
+</div>
+
+
+<div class="journeyScene">
+
+<div class="cafeWall"></div>
+
+<div class="cafeSign">
+MAISON <span>CAFÉ</span>
+</div>
+
+<div class="liveDot">
+● <span>LIVE</span> CUSTOMER ACTIVITY
+</div>
+
+<div class="cafeFloor"></div>
+
+<div class="chefCounter">
+<div class="chefCounterTop"></div>
+</div>
+
+<!-- CHEF WITH TOQUE -->
+
+<div class="chefCharacter">
 👨‍🍳
 </div>
 
-<div class="storyText">
-
-<div class="eyebrow">
-OUR PHILOSOPHY
+<div class="chefName">
+HEAD CHEF
 </div>
 
-<h2 class="title">
-FROM THE<br>
-<span>CHEF</span><br>
-TO YOU.
-</h2>
+<!-- CUSTOMER -->
 
-<p>
-We believe every meal should have a beginning,
-a preparation and a memorable ending.
-Our experience brings customers closer to
-the people and process behind their food.
-</p>
-
-<div class="check">
-<b>✓</b>
-<div>
-<strong>Fresh ingredients</strong>
-<p>Ingredients selected for quality and flavour.</p>
-</div>
+<div class="customerCharacter"
+id="customer">
+🚶‍♂️
 </div>
 
-<div class="check">
-<b>✓</b>
-<div>
-<strong>Chef-led preparation</strong>
-<p>Every signature dish follows our kitchen standards.</p>
-</div>
+<div class="customerLabel"
+id="customerLabel">
+NEW CUSTOMER
 </div>
 
-<div class="check">
-<b>✓</b>
-<div>
-<strong>Customer-first service</strong>
-<p>From ordering to reviews, your experience matters.</p>
-</div>
-</div>
+<!-- ORDER -->
+
+<div class="orderBubble"
+id="orderBubble">
+
+<strong>📝 ORDER PLACED</strong>
+
+<small>
+Signature Burger + Cappuccino
+</small>
 
 </div>
 
+<!-- FOOD -->
+
+<div class="servedFood"
+id="servedFood">
+🍔 ☕
 </div>
 
-</section>
+<!-- REVIEW -->
 
+<div class="liveReview"
+id="liveReview">
 
-<!-- MENU -->
-
-<section class="section menu" id="menu">
-
-<div class="container">
-
-<div class="center">
-
-<div class="eyebrow">
-SIGNATURE MENU
-</div>
-
-<h2 class="title">
-CHOOSE YOUR<br>
-<span>FAVOURITE.</span>
-</h2>
-
-<p class="lead">
-Explore our chef-selected menu with transparent
-prices, ratings and useful food information.
-</p>
-
-</div>
-
-<div class="categories">
-
-<button class="category active"
-onclick="filterFood('all',this)">
-All
-</button>
-
-<button class="category"
-onclick="filterFood('coffee',this)">
-Coffee
-</button>
-
-<button class="category"
-onclick="filterFood('main',this)">
-Main Course
-</button>
-
-<button class="category"
-onclick="filterFood('dessert',this)">
-Dessert
-</button>
-
-</div>
-
-
-<div class="foodGrid">
-
-
-<div class="foodCard" data-cat="coffee">
-<div class="foodImage">☕</div>
-<div class="foodInfo">
-<div class="foodTop">
-<h3>Chef Cappuccino</h3>
-<strong>₹180</strong>
-</div>
-<div class="rating">★★★★★ 4.9</div>
-<p>Double espresso, steamed milk and signature foam.</p>
-<div class="foodBottom">
-<span>220 kcal</span>
-<button class="add"
-onclick="addCart('Chef Cappuccino',180)">
-ADD +
-</button>
-</div>
-</div>
-</div>
-
-
-<div class="foodCard" data-cat="main">
-<div class="foodImage">🍔</div>
-<div class="foodInfo">
-<div class="foodTop">
-<h3>Signature Burger</h3>
-<strong>₹299</strong>
-</div>
-<div class="rating">★★★★★ 4.9</div>
-<p>Premium patty, cheddar, lettuce and house sauce.</p>
-<div class="foodBottom">
-<span>580 kcal</span>
-<button class="add"
-onclick="addCart('Signature Burger',299)">
-ADD +
-</button>
-</div>
-</div>
-</div>
-
-
-<div class="foodCard" data-cat="main">
-<div class="foodImage">🍕</div>
-<div class="foodInfo">
-<div class="foodTop">
-<h3>Chef Pizza</h3>
-<strong>₹349</strong>
-</div>
-<div class="rating">★★★★★ 4.8</div>
-<p>Fresh dough, tomato sauce, mozzarella and herbs.</p>
-<div class="foodBottom">
-<span>620 kcal</span>
-<button class="add"
-onclick="addCart('Chef Pizza',349)">
-ADD +
-</button>
-</div>
-</div>
-</div>
-
-
-<div class="foodCard" data-cat="dessert">
-<div class="foodImage">🍰</div>
-<div class="foodInfo">
-<div class="foodTop">
-<h3>Chocolate Cloud</h3>
-<strong>₹229</strong>
-</div>
-<div class="rating">★★★★★ 4.9</div>
-<p>Soft chocolate cake with premium chocolate cream.</p>
-<div class="foodBottom">
-<span>410 kcal</span>
-<button class="add"
-onclick="addCart('Chocolate Cloud',229)">
-ADD +
-</button>
-</div>
-</div>
-</div>
-
-
-<div class="foodCard" data-cat="coffee">
-<div class="foodImage">🥤</div>
-<div class="foodInfo">
-<div class="foodTop">
-<h3>Cold Coffee</h3>
-<strong>₹169</strong>
-</div>
-<div class="rating">★★★★☆ 4.7</div>
-<p>Cold coffee blended with creamy milk.</p>
-<div class="foodBottom">
-<span>260 kcal</span>
-<button class="add"
-onclick="addCart('Cold Coffee',169)">
-ADD +
-</button>
-</div>
-</div>
-</div>
-
-
-<div class="foodCard" data-cat="dessert">
-<div class="foodImage">🍩</div>
-<div class="foodInfo">
-<div class="foodTop">
-<h3>Glazed Donut</h3>
-<strong>₹129</strong>
-</div>
-<div class="rating">★★★★★ 4.8</div>
-<p>Fresh baked donut with our signature glaze.</p>
-<div class="foodBottom">
-<span>290 kcal</span>
-<button class="add"
-onclick="addCart('Glazed Donut',129)">
-ADD +
-</button>
-</div>
-</div>
-</div>
-
-
-<div class="foodCard" data-cat="main">
-<div class="foodImage">🍟</div>
-<div class="foodInfo">
-<div class="foodTop">
-<h3>Loaded Fries</h3>
-<strong>₹189</strong>
-</div>
-<div class="rating">★★★★★ 4.8</div>
-<p>Crispy fries with cheese and chef's special sauce.</p>
-<div class="foodBottom">
-<span>390 kcal</span>
-<button class="add"
-onclick="addCart('Loaded Fries',189)">
-ADD +
-</button>
-</div>
-</div>
-</div>
-
-
-<div class="foodCard" data-cat="dessert">
-<div class="foodImage">🍨</div>
-<div class="foodInfo">
-<div class="foodTop">
-<h3>Chef Sundae</h3>
-<strong>₹199</strong>
-</div>
-<div class="rating">★★★★★ 4.9</div>
-<p>Vanilla ice cream with chocolate and nuts.</p>
-<div class="foodBottom">
-<span>330 kcal</span>
-<button class="add"
-onclick="addCart('Chef Sundae',199)">
-ADD +
-</button>
-</div>
-</div>
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- LIVE 3D CAFÉ -->
-
-<section class="section live" id="live">
-
-<div class="container">
-
-<div class="center">
-
-<div class="eyebrow">
-LIVE CAFÉ EXPERIENCE
-</div>
-
-<h2 class="title">
-WATCH THE<br>
-<span>JOURNEY.</span>
-</h2>
-
-<p class="lead">
-A live-style 3D story of what happens inside
-Chef & Co. — from customer arrival to the final review.
-</p>
-
-</div>
-
-
-<div class="liveScene">
-
-<div class="liveGlow"></div>
-<div class="wall"></div>
-<div class="floor"></div>
-
-<div class="liveStatus">
-● <b>LIVE</b> &nbsp; Café activity
-</div>
-
-<div class="counter">
-<div class="counterTop"></div>
-</div>
-
-<div class="chef">👨‍🍳</div>
-
-<div class="customer" id="customer">
-🚶
-</div>
-
-<div class="foodTray" id="foodTray">
-🍔 🍟 🥤
-</div>
-
-<div class="reviewBubble" id="reviewBubble">
-
-<div class="stars">
+<div class="liveStars">
 ★★★★★
 </div>
 
-<strong>Customer review</strong>
+<strong>
+Customer Review
+</strong>
 
-<p style="margin-top:8px;color:#665950">
-“Fantastic food and amazing service.
-The chef experience was wonderful!”
+<p>
+“Absolutely loved the food.
+The chef experience was amazing!”
 </p>
 
-<small style="display:block;margin-top:10px;color:#999">
-Just now • Verified visit
+<small>
+● Verified Visit
 </small>
 
 </div>
@@ -1322,117 +1276,464 @@ Just now • Verified visit
 </section>
 
 
-<!-- ORDER -->
+<!-- PROCESS -->
 
-<section class="section order" id="order">
+<section class="process">
 
 <div class="container">
 
 <div class="center">
 
 <div class="eyebrow">
-ORDER ONLINE
+HOW IT WORKS
 </div>
 
-<h2 class="title">
-BUILD YOUR<br>
-<span>ORDER.</span>
+<h2 class="sectionTitle">
+EVERY VISIT HAS<br>
+<span>A STORY.</span>
 </h2>
 
-<p class="lead">
-Choose your food, review your order and place your
-request. Payment can be connected later.
+<p class="sectionText">
+Our experience is designed to make the customer
+feel connected to the food and the people who make it.
 </p>
 
 </div>
 
 
-<div class="orderGrid">
+<div class="processGrid">
 
-<div class="panel">
+<div class="processCard">
 
-<div class="orderRow">
-<div class="orderEmoji">☕</div>
-<div class="orderInfo">
-<strong>Chef Cappuccino</strong>
-<small>₹180</small>
+<div class="processNumber">
+01 — ARRIVE
 </div>
-<button class="plus"
+
+<div class="processIcon">
+🚶
+</div>
+
+<h3>
+Walk Into The Café
+</h3>
+
+<p>
+Customers arrive, explore the atmosphere and
+discover today's recommendations.
+</p>
+
+</div>
+
+
+<div class="processCard">
+
+<div class="processNumber">
+02 — MEET
+</div>
+
+<div class="processIcon">
+👨‍🍳
+</div>
+
+<h3>
+Meet The Chef
+</h3>
+
+<p>
+Speak with our chef, ask questions and discover
+our signature dishes.
+</p>
+
+</div>
+
+
+<div class="processCard">
+
+<div class="processNumber">
+03 — CREATE
+</div>
+
+<div class="processIcon">
+🔥
+</div>
+
+<h3>
+Fresh Preparation
+</h3>
+
+<p>
+Your food is prepared fresh with carefully
+selected ingredients.
+</p>
+
+</div>
+
+
+<div class="processCard">
+
+<div class="processNumber">
+04 — SHARE
+</div>
+
+<div class="processIcon">
+⭐
+</div>
+
+<h3>
+Leave A Review
+</h3>
+
+<p>
+Enjoy your meal and share your experience with
+our growing community.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- MENU -->
+
+<section class="menu" id="menu">
+
+<div class="container">
+
+<div class="center">
+
+<div class="eyebrow">
+CHEF'S MENU
+</div>
+
+<h2 class="sectionTitle">
+FOOD MADE<br>
+<span>FOR YOU.</span>
+</h2>
+
+<p class="sectionText">
+Explore our menu with transparent prices,
+ratings, ingredients and nutritional information.
+</p>
+
+</div>
+
+
+<div class="categories">
+
+<button class="category active"
+onclick="filterMenu('all',this)">
+All
+</button>
+
+<button class="category"
+onclick="filterMenu('coffee',this)">
+Coffee
+</button>
+
+<button class="category"
+onclick="filterMenu('main',this)">
+Main Course
+</button>
+
+<button class="category"
+onclick="filterMenu('dessert',this)">
+Desserts
+</button>
+
+</div>
+
+
+<div class="foodGrid">
+
+
+<div class="foodCard" data-category="coffee">
+
+<div class="foodImage">
+☕
+</div>
+
+<div class="foodInfo">
+
+<div class="foodTop">
+<h3>Chef Cappuccino</h3>
+<strong>₹180</strong>
+</div>
+
+<div class="rating">
+★★★★★ 4.9
+</div>
+
+<p>
+Double espresso, steamed milk and signature foam.
+</p>
+
+<div class="foodBottom">
+<small>220 kcal</small>
+
+<button class="add"
 onclick="addCart('Chef Cappuccino',180)">
-+
+ADD +
 </button>
+
 </div>
 
-<div class="orderRow">
-<div class="orderEmoji">🍔</div>
-<div class="orderInfo">
-<strong>Signature Burger</strong>
-<small>₹299</small>
-</div>
-<button class="plus"
-onclick="addCart('Signature Burger',299)">
-+
-</button>
-</div>
-
-<div class="orderRow">
-<div class="orderEmoji">🍕</div>
-<div class="orderInfo">
-<strong>Chef Pizza</strong>
-<small>₹349</small>
-</div>
-<button class="plus"
-onclick="addCart('Chef Pizza',349)">
-+
-</button>
-</div>
-
-<div class="orderRow">
-<div class="orderEmoji">🍰</div>
-<div class="orderInfo">
-<strong>Chocolate Cloud</strong>
-<small>₹229</small>
-</div>
-<button class="plus"
-onclick="addCart('Chocolate Cloud',229)">
-+
-</button>
-</div>
-
-<div class="orderRow">
-<div class="orderEmoji">🍟</div>
-<div class="orderInfo">
-<strong>Loaded Fries</strong>
-<small>₹189</small>
-</div>
-<button class="plus"
-onclick="addCart('Loaded Fries',189)">
-+
-</button>
 </div>
 
 </div>
 
 
-<div class="panel cartPanel">
+<div class="foodCard" data-category="main">
 
-<h3>Your Order</h3>
+<div class="foodImage">
+🍔
+</div>
 
-<div id="cartItems">
-<p style="margin-top:20px;color:#777">
-Your order is empty.
+<div class="foodInfo">
+
+<div class="foodTop">
+<h3>Signature Burger</h3>
+<strong>₹299</strong>
+</div>
+
+<div class="rating">
+★★★★★ 4.9
+</div>
+
+<p>
+Premium patty, cheddar, lettuce and house sauce.
 </p>
-</div>
 
-<div class="total">
-<span>Total</span>
-<span id="total">₹0</span>
-</div>
+<div class="foodBottom">
+<small>580 kcal</small>
 
-<button class="checkout"
-onclick="checkout()">
-PLACE ORDER
+<button class="add"
+onclick="addCart('Signature Burger',299)">
+ADD +
 </button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="foodCard" data-category="main">
+
+<div class="foodImage">
+🍕
+</div>
+
+<div class="foodInfo">
+
+<div class="foodTop">
+<h3>Chef Pizza</h3>
+<strong>₹349</strong>
+</div>
+
+<div class="rating">
+★★★★★ 4.8
+</div>
+
+<p>
+Fresh dough, mozzarella, tomato and herbs.
+</p>
+
+<div class="foodBottom">
+<small>620 kcal</small>
+
+<button class="add"
+onclick="addCart('Chef Pizza',349)">
+ADD +
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="foodCard" data-category="dessert">
+
+<div class="foodImage">
+🍰
+</div>
+
+<div class="foodInfo">
+
+<div class="foodTop">
+<h3>Chocolate Cloud</h3>
+<strong>₹229</strong>
+</div>
+
+<div class="rating">
+★★★★★ 4.9
+</div>
+
+<p>
+Soft chocolate cake with premium chocolate cream.
+</p>
+
+<div class="foodBottom">
+<small>410 kcal</small>
+
+<button class="add"
+onclick="addCart('Chocolate Cloud',229)">
+ADD +
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="foodCard" data-category="coffee">
+
+<div class="foodImage">
+🥤
+</div>
+
+<div class="foodInfo">
+
+<div class="foodTop">
+<h3>Cold Coffee</h3>
+<strong>₹169</strong>
+</div>
+
+<div class="rating">
+★★★★☆ 4.7
+</div>
+
+<p>
+Cold coffee blended with creamy milk.
+</p>
+
+<div class="foodBottom">
+<small>260 kcal</small>
+
+<button class="add"
+onclick="addCart('Cold Coffee',169)">
+ADD +
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="foodCard" data-category="dessert">
+
+<div class="foodImage">
+🍩
+</div>
+
+<div class="foodInfo">
+
+<div class="foodTop">
+<h3>Glazed Donut</h3>
+<strong>₹129</strong>
+</div>
+
+<div class="rating">
+★★★★★ 4.8
+</div>
+
+<p>
+Fresh baked donut with signature glaze.
+</p>
+
+<div class="foodBottom">
+<small>290 kcal</small>
+
+<button class="add"
+onclick="addCart('Glazed Donut',129)">
+ADD +
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="foodCard" data-category="main">
+
+<div class="foodImage">
+🍟
+</div>
+
+<div class="foodInfo">
+
+<div class="foodTop">
+<h3>Loaded Fries</h3>
+<strong>₹189</strong>
+</div>
+
+<div class="rating">
+★★★★★ 4.8
+</div>
+
+<p>
+Crispy fries with cheese and chef's special sauce.
+</p>
+
+<div class="foodBottom">
+<small>390 kcal</small>
+
+<button class="add"
+onclick="addCart('Loaded Fries',189)">
+ADD +
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="foodCard" data-category="dessert">
+
+<div class="foodImage">
+🍨
+</div>
+
+<div class="foodInfo">
+
+<div class="foodTop">
+<h3>Chef Sundae</h3>
+<strong>₹199</strong>
+</div>
+
+<div class="rating">
+★★★★★ 4.9
+</div>
+
+<p>
+Vanilla ice cream, chocolate and roasted nuts.
+</p>
+
+<div class="foodBottom">
+<small>330 kcal</small>
+
+<button class="add"
+onclick="addCart('Chef Sundae',199)">
+ADD +
+</button>
+
+</div>
+
+</div>
 
 </div>
 
@@ -1445,39 +1746,39 @@ PLACE ORDER
 
 <!-- CHEF -->
 
-<section class="section chef" id="chef">
+<section class="chef" id="chef">
 
 <div class="container chefGrid">
 
-<div class="chefPhoto">
+<div class="chefImage">
 👨‍🍳
 </div>
 
-<div class="chefText">
+<div class="chefInfo">
 
 <div class="eyebrow">
-MEET THE CHEF
+MEET OUR CHEF
 </div>
 
-<h2 class="title">
-BEHIND<br>
-<span>THE PLATE.</span>
+<h2 class="sectionTitle">
+THE PERSON<br>
+<span>BEHIND THE PLATE.</span>
 </h2>
 
 <p>
-Our chef-led kitchen focuses on quality,
-consistency and presentation. Every signature
-dish is prepared with attention to flavour and detail.
+Our kitchen is led by a chef who believes that
+great food starts with quality ingredients and
+ends with a memorable customer experience.
 </p>
 
 <p>
-Customers can also ask our chef about
-recommendations, ingredients and today's specials.
+Customers can ask about ingredients, chef
+recommendations and today's specials.
 </p>
 
-<div class="quote">
-“Good food doesn't need to be complicated.
-It needs to be made well.”
+<div class="chefQuote">
+“Great food is not only about taste.
+It is about how it makes people feel.”
 </div>
 
 <button class="primary"
@@ -1494,24 +1795,24 @@ ASK THE CHEF
 
 <!-- REVIEWS -->
 
-<section class="section reviews">
+<section class="reviews" id="reviews">
 
 <div class="container">
 
 <div class="center">
 
 <div class="eyebrow">
-CUSTOMER VOICE
+CUSTOMER REVIEWS
 </div>
 
-<h2 class="title">
-WHAT PEOPLE<br>
-<span>ARE SAYING.</span>
+<h2 class="sectionTitle">
+OUR GUESTS<br>
+<span>SPEAK FOR US.</span>
 </h2>
 
-<p class="lead">
-Our customers don't just order food — they become
-part of the café story.
+<p class="sectionText">
+Real experiences from customers who visited,
+ordered and shared their thoughts.
 </p>
 
 </div>
@@ -1520,33 +1821,68 @@ part of the café story.
 <div class="reviewGrid">
 
 <div class="review">
-<div class="stars">★★★★★</div>
-<p>
-“Excellent food, beautiful atmosphere and
-the chef interaction made the visit special.”
-</p>
-<strong>— Aarav</strong>
-<div class="reviewLive">● VERIFIED CUSTOMER</div>
+
+<div class="reviewStars">
+★★★★★
 </div>
 
-<div class="review">
-<div class="stars">★★★★★</div>
 <p>
-“The burger was fantastic. Service was quick
-and the whole experience felt premium.”
+“The chef personally recommended the burger
+and it was fantastic. Loved the whole experience.”
 </p>
-<strong>— Meera</strong>
-<div class="reviewLive">● VERIFIED CUSTOMER</div>
+
+<strong>
+— Aarav
+</strong>
+
+<div class="verified">
+● VERIFIED VISIT
 </div>
 
+</div>
+
+
 <div class="review">
-<div class="stars">★★★★★</div>
+
+<div class="reviewStars">
+★★★★★
+</div>
+
 <p>
-“Perfect place for friends and family.
-The desserts are amazing.”
+“Beautiful café, excellent coffee and very
+professional service.”
 </p>
-<strong>— Rohan</strong>
-<div class="reviewLive">● VERIFIED CUSTOMER</div>
+
+<strong>
+— Meera
+</strong>
+
+<div class="verified">
+● VERIFIED VISIT
+</div>
+
+</div>
+
+
+<div class="review">
+
+<div class="reviewStars">
+★★★★★
+</div>
+
+<p>
+“Perfect place for family dinners. The desserts
+were incredible.”
+</p>
+
+<strong>
+— Rohan
+</strong>
+
+<div class="verified">
+● VERIFIED VISIT
+</div>
+
 </div>
 
 </div>
@@ -1558,9 +1894,11 @@ The desserts are amazing.”
 
 <!-- RESERVATION -->
 
-<section class="section reservation">
+<section class="reservation">
 
-<div class="reserve">
+<div class="container">
+
+<div class="reserveBox">
 
 <div class="center">
 
@@ -1568,46 +1906,56 @@ The desserts are amazing.”
 RESERVE YOUR TABLE
 </div>
 
-<h2 class="title">
+<h2 class="sectionTitle">
 MAKE IT<br>
 <span>A MOMENT.</span>
 </h2>
 
-<p class="lead">
-Reserve your table for a family dinner,
-business meeting or special occasion.
+<p class="sectionText">
+Planning a dinner, celebration or business meeting?
+Reserve your table before you arrive.
 </p>
 
 </div>
 
-<div class="form">
 
-<input class="input"
-id="name"
+<div class="formGrid">
+
+<input
+class="input"
+id="guestName"
 placeholder="Your name">
 
-<input class="input"
-id="phone"
+<input
+class="input"
+id="guestPhone"
 placeholder="Phone number">
 
-<input class="input"
-id="date"
+<input
+class="input"
+id="guestDate"
 type="date">
 
-<select class="input" id="guests">
+<select
+class="input"
+id="guestCount">
+
 <option>2 Guests</option>
 <option>3 Guests</option>
 <option>4 Guests</option>
 <option>5 Guests</option>
 <option>6+ Guests</option>
+
 </select>
 
 </div>
 
 <button class="primary"
-onclick="reserve()">
+onclick="reserveTable()">
 REQUEST RESERVATION
 </button>
+
+</div>
 
 </div>
 
@@ -1618,376 +1966,73 @@ REQUEST RESERVATION
 
 <section class="contact" id="contact">
 
+<div class="container">
+
 <div class="eyebrow">
-COME VISIT US
+VISIT MAISON CAFÉ
 </div>
 
-<h2 class="title">
-SEE YOU<br>
-<span>AT THE TABLE.</span>
+<h2 class="sectionTitle">
+COME FOR THE FOOD.<br>
+<span>STAY FOR THE EXPERIENCE.</span>
 </h2>
 
-<p>
+<p class="sectionText" style="margin:20px auto">
 Open every day from 10:00 AM to 11:00 PM.
-Come for the food. Stay for the experience.
+We look forward to welcoming you.
 </p>
 
 <div class="contactInfo">
+
 <span>📍 Main Street, Your City</span>
+
 <span>📞 +91 90000 00000</span>
-<span>✉️ hello@chefandco.com</span>
+
+<span>✉️ hello@maisoncafe.com</span>
+
 </div>
 
 <button class="primary"
-onclick="scrollToSection('reservation')">
-BOOK A TABLE
+onclick="go('journey')">
+WATCH EXPERIENCE
 </button>
+
+</div>
 
 </section>
 
 
 <footer class="footer">
-<span>© 2026 CHEF & CO.</span>
-<span>Food • Coffee • Community</span>
+
+<span>
+© 2026 MAISON CAFÉ
+</span>
+
+<span>
+Food • Coffee • People • Experience
+</span>
+
 </footer>
 
 
-<button class="floatingCart"
-onclick="scrollToSection('order')">
-🛒 CART <span class="badge" id="cartCount">0</span>
+<!-- FLOATING CART -->
+
+<button class="cartFloat"
+onclick="go('order')">
+
+🛒 CART
+<span class="badge" id="cartCount">
+0
+</span>
+
 </button>
-
-
-<script type="module">
-
-import * as THREE from
-"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js/+esm";
-
-
-/* HERO 3D */
-
-const scene=new THREE.Scene();
-
-scene.background=
-new THREE.Color(0xfffaf4);
-
-const camera=
-new THREE.PerspectiveCamera(
-55,
-innerWidth/innerHeight,
-.1,
-100
-);
-
-camera.position.set(
-0,2.4,9
-);
-
-const renderer=
-new THREE.WebGLRenderer({
-antialias:true,
-alpha:true
-});
-
-renderer.setPixelRatio(
-Math.min(devicePixelRatio,2)
-);
-
-renderer.setSize(
-innerWidth,
-innerHeight
-);
-
-document
-.getElementById("hero3d")
-.appendChild(renderer.domElement);
-
-
-/* LIGHT */
-
-scene.add(
-new THREE.HemisphereLight(
-0xffffff,
-0xffd0a0,
-3
-)
-);
-
-const mainLight=
-new THREE.PointLight(
-0xffa32b,
-45,
-30
-);
-
-mainLight.position.set(
-3,7,5
-);
-
-scene.add(mainLight);
-
-
-/* MATERIAL */
-
-function mat(color){
-return new THREE.MeshStandardMaterial({
-color,
-roughness:.5,
-metalness:.05
-});
-}
-
-
-/* FOOD */
-
-const food=
-new THREE.Group();
-
-scene.add(food);
-
-
-/* PLATE */
-
-const plate=
-new THREE.Mesh(
-new THREE.CylinderGeometry(
-2.8,2.8,.15,64
-),
-mat(0xffffff)
-);
-
-plate.position.y=-.3;
-
-food.add(plate);
-
-
-/* BURGER */
-
-const bottom=
-new THREE.Mesh(
-new THREE.CylinderGeometry(
-1.55,1.55,.42,48
-),
-mat(0xc87532)
-);
-
-bottom.position.y=.2;
-
-food.add(bottom);
-
-const patty=
-new THREE.Mesh(
-new THREE.CylinderGeometry(
-1.45,1.45,.45,48
-),
-mat(0x452015)
-);
-
-patty.position.y=.63;
-
-food.add(patty);
-
-const cheese=
-new THREE.Mesh(
-new THREE.BoxGeometry(
-2.9,.13,2.9
-),
-mat(0xffc627)
-);
-
-cheese.position.y=.91;
-cheese.rotation.y=.15;
-
-food.add(cheese);
-
-const top=
-new THREE.Mesh(
-new THREE.SphereGeometry(
-1.55,48,32
-),
-mat(0xe69b4d)
-);
-
-top.scale.y=.55;
-top.position.y=1.3;
-
-food.add(top);
-
-
-/* COFFEE */
-
-const cup=
-new THREE.Mesh(
-new THREE.CylinderGeometry(
-.62,.52,1.2,40
-),
-mat(0xffffff)
-);
-
-cup.position.set(
-3,.5,-.4
-);
-
-food.add(cup);
-
-const coffee=
-new THREE.Mesh(
-new THREE.CylinderGeometry(
-.48,.48,.06,40
-),
-mat(0x3b1b0b)
-);
-
-coffee.position.set(
-3,1.12,-.4
-);
-
-food.add(coffee);
-
-
-/* DONUT */
-
-const donut=
-new THREE.Mesh(
-new THREE.TorusGeometry(
-.7,.25,24,50
-),
-mat(0xff8d9d)
-);
-
-donut.position.set(
--3,.55,-.4
-);
-
-donut.rotation.x=
-Math.PI/2;
-
-food.add(donut);
-
-
-/* GLITTER PARTICLES */
-
-const geo=
-new THREE.BufferGeometry();
-
-const count=800;
-
-const positions=
-new Float32Array(
-count*3
-);
-
-for(
-let i=0;
-i<count*3;
-i++
-){
-
-positions[i]=
-(Math.random()-.5)*30;
-
-}
-
-geo.setAttribute(
-"position",
-new THREE.BufferAttribute(
-positions,3
-)
-);
-
-const glitter=
-new THREE.Points(
-geo,
-new THREE.PointsMaterial({
-color:0xf4ae32,
-size:.045,
-transparent:true,
-opacity:.7
-})
-);
-
-scene.add(glitter);
-
-
-/* MOUSE */
-
-let mouseX=0;
-let mouseY=0;
-
-addEventListener(
-"mousemove",
-e=>{
-
-mouseX=
-(e.clientX/innerWidth-.5);
-
-mouseY=
-(e.clientY/innerHeight-.5);
-
-}
-);
-
-
-/* ANIMATION */
-
-function animate(){
-
-requestAnimationFrame(animate);
-
-food.rotation.y+=.003;
-
-food.position.y=
-Math.sin(
-Date.now()*.001
-)*.12;
-
-glitter.rotation.y+=.00025;
-
-camera.position.x+=
-(mouseX*1.4-camera.position.x)*.025;
-
-camera.position.y+=
-(2.4-mouseY-camera.position.y)*.025;
-
-camera.lookAt(
-0,.5,0
-);
-
-renderer.render(
-scene,
-camera
-);
-
-}
-
-animate();
-
-
-addEventListener(
-"resize",
-()=>{
-
-camera.aspect=
-innerWidth/innerHeight;
-
-camera.updateProjectionMatrix();
-
-renderer.setSize(
-innerWidth,
-innerHeight
-);
-
-}
-);
-
-</script>
 
 
 <script>
 
-/* NAV */
+/* ================= NAV ================= */
 
-function scrollToSection(id){
+function go(id){
 
 document
 .getElementById(id)
@@ -1998,15 +2043,15 @@ behavior:"smooth"
 }
 
 
-/* FILTER */
+/* ================= MENU FILTER ================= */
 
-function filterFood(cat,button){
+function filterMenu(category,button){
 
 document
 .querySelectorAll(".category")
-.forEach(x=>
-x.classList.remove("active")
-);
+.forEach(btn=>{
+    btn.classList.remove("active");
+});
 
 button.classList.add("active");
 
@@ -2014,17 +2059,25 @@ document
 .querySelectorAll(".foodCard")
 .forEach(card=>{
 
-card.style.display=
-cat==="all" ||
-card.dataset.cat===cat
-?"block":"none";
+if(
+category==="all" ||
+card.dataset.category===category
+){
+
+card.style.display="block";
+
+}else{
+
+card.style.display="none";
+
+}
 
 });
 
 }
 
 
-/* CART */
+/* ================= CART ================= */
 
 let cart=[];
 
@@ -2047,117 +2100,49 @@ qty:1
 
 }
 
-renderCart();
+updateCart();
+
+alert(name+" added to your order.");
 
 }
 
 
-function renderCart(){
+function updateCart(){
 
-const box=
-document.getElementById("cartItems");
+let total=0;
 
-if(!cart.length){
-
-box.innerHTML=
-"<p style='margin-top:20px;color:#777'>Your order is empty.</p>";
-
-}else{
-
-box.innerHTML=
-cart.map(item=>`
-
-<div class="cartLine">
-
-<span>
-${item.name} × ${item.qty}
-</span>
-
-<strong>
-₹${item.price*item.qty}
-</strong>
-
-</div>
-
-`).join("");
-
-}
-
-const total=
-cart.reduce(
-(sum,item)=>
-sum+(item.price*item.qty),
-0
-);
-
-document
-.getElementById("total")
-.textContent=
-"₹"+total;
+cart.forEach(item=>{
+    total+=item.price*item.qty;
+});
 
 document
 .getElementById("cartCount")
 .textContent=
 cart.reduce(
-(sum,item)=>
-sum+item.qty,
+(sum,item)=>sum+item.qty,
 0
 );
 
 }
 
 
-/* CHECKOUT */
+/* ================= RESERVATION ================= */
 
-function checkout(){
+function reserveTable(){
 
-if(!cart.length){
+let name=
+document.getElementById("guestName").value;
 
-alert(
-"Please add an item to your order first."
-);
+let phone=
+document.getElementById("guestPhone").value;
 
-return;
-
-}
-
-const total=
-cart.reduce(
-(sum,item)=>
-sum+(item.price*item.qty),
-0
-);
-
-alert(
-"Order request received!\n\n"+
-"Total: ₹"+total+
-"\n\nOur team will contact you to confirm the order."
-);
-
-cart=[];
-
-renderCart();
-
-}
-
-
-/* RESERVATION */
-
-function reserve(){
-
-const name=
-document.getElementById("name").value;
-
-const phone=
-document.getElementById("phone").value;
-
-const date=
-document.getElementById("date").value;
+let date=
+document.getElementById("guestDate").value;
 
 if(!name||!phone||!date){
 
 alert(
-"Please complete your name, phone and date."
+"Please enter your name, phone number and date."
 );
 
 return;
@@ -2173,56 +2158,121 @@ alert(
 }
 
 
-/* LIVE CUSTOMER ANIMATION */
+/* ================= LIVE CUSTOMER JOURNEY ================= */
 
 const customer=
 document.getElementById("customer");
 
-const tray=
-document.getElementById("foodTray");
+const customerLabel=
+document.getElementById("customerLabel");
 
-const review=
-document.getElementById("reviewBubble");
+const orderBubble=
+document.getElementById("orderBubble");
+
+const servedFood=
+document.getElementById("servedFood");
+
+const liveReview=
+document.getElementById("liveReview");
 
 
-function runCafeAnimation(){
+function resetJourney(){
 
-customer.classList.remove("walk");
-tray.classList.remove("show");
-review.classList.remove("show");
+customer.classList.remove("walking");
 
-setTimeout(
-()=>{
-customer.classList.add("walk");
-},
-500
-);
+customerLabel.classList.remove("walking");
 
-setTimeout(
-()=>{
-tray.classList.add("show");
-},
-5200
-);
+orderBubble.classList.remove("show");
 
-setTimeout(
-()=>{
-review.classList.add("show");
-},
-7200
-);
+servedFood.classList.remove("show");
+
+liveReview.classList.remove("show");
 
 }
 
-runCafeAnimation();
+
+/*
+
+STAGE 1
+Customer arrives
+
+*/
+
+function startJourney(){
+
+resetJourney();
+
+setTimeout(()=>{
+
+customer.classList.add("walking");
+
+customerLabel.classList.add("walking");
+
+},500);
+
+
+/*
+
+STAGE 2
+Customer reaches chef
+and places order
+
+*/
+
+setTimeout(()=>{
+
+orderBubble.classList.add("show");
+
+},4800);
+
+
+/*
+
+STAGE 3
+Chef prepares food
+
+*/
+
+setTimeout(()=>{
+
+orderBubble.classList.remove("show");
+
+servedFood.classList.add("show");
+
+},7200);
+
+
+/*
+
+STAGE 4
+Customer review
+
+*/
+
+setTimeout(()=>{
+
+liveReview.classList.add("show");
+
+},9200);
+
+}
+
+
+/*
+
+Run animation repeatedly
+
+*/
+
+startJourney();
 
 setInterval(
-runCafeAnimation,
-11000
+startJourney,
+13000
 );
 
 
-/* GLITTER */
+/* ================= GLITTER ================= */
 
 for(
 let i=0;
@@ -2230,23 +2280,21 @@ i<45;
 i++
 ){
 
-const spark=
+const glitter=
 document.createElement("div");
 
-spark.className="spark";
+glitter.className="glitter";
 
-spark.style.left=
+glitter.style.left=
 Math.random()*100+"%";
 
-spark.style.animationDelay=
+glitter.style.animationDelay=
 Math.random()*8+"s";
 
-spark.style.animationDuration=
-4+Math.random()*7+"s";
+glitter.style.animationDuration=
+(4+Math.random()*7)+"s";
 
-document.body.appendChild(
-spark
-);
+document.body.appendChild(glitter);
 
 }
 

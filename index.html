@@ -1,393 +1,971 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>My 3D Cafe</title>
+<title>Café 3D</title>
 
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            background: #111;
-        }
+<style>
+*{
+  box-sizing:border-box;
+}
 
-        canvas {
-            display: block;
-        }
-    </style>
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:Arial,sans-serif;
+  background:#120c08;
+}
+
+canvas{
+  display:block;
+}
+
+/* NAVIGATION */
+
+.nav{
+  position:fixed;
+  z-index:10;
+  top:18px;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(94%,1100px);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 20px;
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:20px;
+  background:rgba(20,13,9,.75);
+  backdrop-filter:blur(14px);
+  color:white;
+}
+
+.logo{
+  font-size:22px;
+  font-weight:bold;
+  color:#f3b36b;
+}
+
+.links{
+  display:flex;
+  gap:25px;
+}
+
+.links button{
+  background:none;
+  border:0;
+  color:white;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.links button:hover{
+  color:#f3b36b;
+}
+
+/* HERO */
+
+.hero{
+  position:fixed;
+  z-index:5;
+  top:27%;
+  left:6%;
+  width:min(500px,88%);
+  color:white;
+  pointer-events:none;
+}
+
+.hero h1{
+  margin:0;
+  font-size:clamp(45px,7vw,85px);
+  line-height:.9;
+  letter-spacing:-3px;
+}
+
+.hero h1 span{
+  color:#f0a45b;
+}
+
+.hero p{
+  color:#ddd;
+  font-size:17px;
+  line-height:1.6;
+  margin:22px 0;
+  max-width:440px;
+}
+
+.mainButton{
+  pointer-events:auto;
+  border:0;
+  padding:15px 25px;
+  border-radius:30px;
+  background:#efa45c;
+  color:#21130a;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.mainButton:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 30px rgba(239,164,92,.35);
+}
+
+/* MENU */
+
+.menu{
+  position:fixed;
+  z-index:20;
+  right:25px;
+  top:90px;
+  width:min(340px,88%);
+  padding:22px;
+  border-radius:20px;
+  background:white;
+  color:#21130a;
+  display:none;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+}
+
+.menu h2{
+  margin:0 0 15px;
+}
+
+.food{
+  display:flex;
+  justify-content:space-between;
+  padding:13px 0;
+  border-bottom:1px solid #ddd;
+}
+
+.food:last-child{
+  border-bottom:0;
+}
+
+/* HINT */
+
+.hint{
+  position:fixed;
+  z-index:5;
+  bottom:22px;
+  left:50%;
+  transform:translateX(-50%);
+  padding:10px 18px;
+  border-radius:30px;
+  background:rgba(20,13,9,.75);
+  color:#ddd;
+  font-size:13px;
+  white-space:nowrap;
+}
+
+@media(max-width:600px){
+
+  .nav{
+    top:10px;
+    padding:11px 13px;
+  }
+
+  .logo{
+    font-size:17px;
+  }
+
+  .links{
+    gap:8px;
+  }
+
+  .links button{
+    font-size:11px;
+  }
+
+  .hero{
+    top:25%;
+    left:6%;
+  }
+
+  .hero h1{
+    font-size:50px;
+  }
+
+  .hero p{
+    font-size:14px;
+    max-width:330px;
+  }
+
+  .hint{
+    font-size:10px;
+    bottom:12px;
+  }
+}
+</style>
 </head>
 
 <body>
 
+<!-- NAVIGATION -->
+
+<nav class="nav">
+
+  <div class="logo">
+    ☕ CAFÉ 3D
+  </div>
+
+  <div class="links">
+
+    <button id="homeBtn">
+      HOME
+    </button>
+
+    <button id="menuBtn">
+      MENU
+    </button>
+
+    <button id="aboutBtn">
+      ABOUT
+    </button>
+
+  </div>
+
+</nav>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+  <h1>
+    Taste<br>
+    <span>the Magic.</span>
+  </h1>
+
+  <p>
+    Welcome to our immersive 3D café.
+    Explore delicious coffee, desserts and
+    food in a completely new way.
+  </p>
+
+  <button class="mainButton" id="exploreBtn">
+    EXPLORE MENU
+  </button>
+
+</section>
+
+
+<!-- MENU -->
+
+<div class="menu" id="menu">
+
+  <h2>
+    Our Menu ☕
+  </h2>
+
+  <div class="food">
+    <span>☕ Cappuccino</span>
+    <strong>₹180</strong>
+  </div>
+
+  <div class="food">
+    <span>🍫 Chocolate Cake</span>
+    <strong>₹220</strong>
+  </div>
+
+  <div class="food">
+    <span>🍕 Italian Pizza</span>
+    <strong>₹299</strong>
+  </div>
+
+  <div class="food">
+    <span>🍔 Classic Burger</span>
+    <strong>₹249</strong>
+  </div>
+
+  <div class="food">
+    <span>🥤 Cold Coffee</span>
+    <strong>₹160</strong>
+  </div>
+
+  <div class="food">
+    <span>🍩 Donut</span>
+    <strong>₹120</strong>
+  </div>
+
+</div>
+
+
+<div class="hint">
+  Move your mouse or finger to explore the café
+</div>
+
+
 <script type="module">
 
 import * as THREE from
-'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js/+esm';
+"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js/+esm";
 
 
-// CREATE SCENE
+/* SCENE */
 
 const scene = new THREE.Scene();
 
-scene.background = new THREE.Color(0x111111);
+scene.background =
+  new THREE.Color(0x120c08);
+
+scene.fog =
+  new THREE.Fog(0x120c08,8,30);
 
 
-// CREATE CAMERA
+/* CAMERA */
 
-const camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    1000
+const camera =
+  new THREE.PerspectiveCamera(
+    60,
+    window.innerWidth /
+    window.innerHeight,
+    .1,
+    100
+  );
+
+camera.position.set(
+  0,
+  4.5,
+  12
 );
 
-camera.position.set(0, 3, 7);
 
+/* RENDERER */
 
-// CREATE SCREEN
+const renderer =
+  new THREE.WebGLRenderer({
+    antialias:true,
+    powerPreference:"high-performance"
+  });
 
-const renderer = new THREE.WebGLRenderer({
-    antialias: true
-});
+renderer.setPixelRatio(
+  Math.min(window.devicePixelRatio,2)
+);
 
 renderer.setSize(
-    window.innerWidth,
-    window.innerHeight
+  window.innerWidth,
+  window.innerHeight
 );
 
-document.body.appendChild(renderer.domElement);
-
-
-// LIGHT
-
-const light = new THREE.DirectionalLight(
-    0xffffff,
-    3
-);
-
-light.position.set(5, 10, 5);
-
-scene.add(light);
-
-
-// FLOOR
-
-const floorGeometry =
-    new THREE.PlaneGeometry(20, 20);
-
-const floorMaterial =
-    new THREE.MeshStandardMaterial({
-        color: 0x553322
-    });
-
-const floor =
-    new THREE.Mesh(
-        floorGeometry,
-        floorMaterial
-    );
-
-floor.rotation.x = -Math.PI / 2;
-
-scene.add(floor);
-
-
-// TABLE
-
-const tableGeometry =
-    new THREE.BoxGeometry(2.5, 0.25, 2.5);
-
-const tableMaterial =
-    new THREE.MeshStandardMaterial({
-        color: 0x8B4513
-    });
-
-const table =
-    new THREE.Mesh(
-        tableGeometry,
-        tableMaterial
-    );
-
-table.position.y = 1;
-
-scene.add(table);
-
-
-// TABLE LEGS
-
-for (let x of [-1, 1]) {
-
-    for (let z of [-1, 1]) {
-
-        const legGeometry =
-            new THREE.BoxGeometry(
-                0.2,
-                1,
-                0.2
-            );
-
-        const leg =
-            new THREE.Mesh(
-                legGeometry,
-                tableMaterial
-            );
-
-        leg.position.set(
-            x,
-            0.5,
-            z
-        );
-
-        scene.add(leg);
-    }
-}
-
-
-// COFFEE CUP
-
-const cupGeometry =
-    new THREE.CylinderGeometry(
-        0.5,
-        0.4,
-        0.8,
-        32
-    );
-
-const cupMaterial =
-    new THREE.MeshStandardMaterial({
-        color: 0xffffff
-    });
-
-const cup =
-    new THREE.Mesh(
-        cupGeometry,
-        cupMaterial
-    );
-
-cup.position.set(
-    0,
-    1.55,
-    0
-);
-
-scene.add(cup);
-
-
-// COFFEE
-
-const coffeeGeometry =
-    new THREE.CylinderGeometry(
-        0.4,
-        0.4,
-        0.05,
-        32
-    );
-
-const coffeeMaterial =
-    new THREE.MeshStandardMaterial({
-        color: 0x3b1f0f
-    });
-
-const coffee =
-    new THREE.Mesh(
-        coffeeGeometry,
-        coffeeMaterial
-    );
-
-coffee.position.set(
-    0,
-    1.97,
-    0
-);
-
-scene.add(coffee);
-
-
-// ANIMATION
-
-function animate() {
-
-    requestAnimationFrame(animate);
-
-    cup.rotation.y += 0.01;
-
-    coffee.rotation.y += 0.01;
-
-    renderer.render(
-        scene,
-        camera
-    );
-}
-
-animate();
-
-
-// RESPONSIVE SCREEN
-
-window.addEventListener(
-    'resize',
-    () => {
-
-        camera.aspect =
-            window.innerWidth /
-            window.innerHeight;
-
-        camera.updateProjectionMatrix();
-
-        renderer.setSize(
-            window.innerWidth,
-            window.innerHeight
-        );
-
-    }
-);
-
-</script>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Café 3D</title>
-<style>
-*{box-sizing:border-box}body{margin:0;overflow:hidden;background:#17110d;font-family:Arial}
-#ui{position:fixed;z-index:5;top:25px;left:30px;color:white}
-h1{font-size:34px;margin:0 0 5px}
-p{margin:0 0 15px;color:#ddd}
-button{padding:12px 20px;border:0;border-radius:25px;background:#d99a5b;color:white;cursor:pointer}
-#menu{position:fixed;z-index:5;right:25px;top:25px;background:#fff;color:#222;padding:18px;border-radius:18px;display:none}
-#menu h2{margin:0 0 10px}
-</style>
-</head>
-<body>
-
-<div id="ui">
-<h1>CAFÉ 3D</h1>
-<p>Welcome to your virtual café</p>
-<button id="menuBtn">EXPLORE MENU</button>
-</div>
-
-<div id="menu">
-<h2>☕ Our Menu</h2>
-<div>☕ Cappuccino — ₹180</div>
-<div>🍰 Chocolate Cake — ₹220</div>
-<div>🍕 Pizza — ₹299</div>
-<div>🍔 Classic Burger — ₹249</div>
-</div>
-
-<script type="module">
-import * as THREE from
-'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js/+esm';
-
-const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x17110d);
-scene.fog=new THREE.Fog(0x17110d,8,30);
-
-const camera=new THREE.PerspectiveCamera(65,innerWidth/innerHeight,.1,100);
-camera.position.set(0,5,12);
-
-const renderer=new THREE.WebGLRenderer({antialias:true});
-renderer.setSize(innerWidth,innerHeight);
 renderer.shadowMap.enabled=true;
-document.body.appendChild(renderer.domElement);
 
-const mat=c=>new THREE.MeshStandardMaterial({color:c});
+document.body.appendChild(
+  renderer.domElement
+);
 
-scene.add(new THREE.HemisphereLight(0xffddbb,0x332211,2));
 
-const light=new THREE.PointLight(0xffb36b,40,25);
-light.position.set(0,7,2);
-light.castShadow=true;
-scene.add(light);
+/* MATERIAL */
 
-function box(x,y,z,w,h,d,c){
- let m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(c));
- m.position.set(x,y,z);m.castShadow=true;scene.add(m);return m;
+function material(
+  color,
+  roughness=.7
+){
+
+  return new THREE.MeshStandardMaterial({
+    color:color,
+    roughness:roughness,
+    metalness:.05
+  });
+
 }
 
-function cyl(x,y,z,r,h,c){
- let m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,32),mat(c));
- m.position.set(x,y,z);m.castShadow=true;scene.add(m);return m;
+
+/* BOX */
+
+function box(
+  x,y,z,
+  w,h,d,
+  color
+){
+
+  const object =
+    new THREE.Mesh(
+      new THREE.BoxGeometry(
+        w,h,d
+      ),
+      material(color)
+    );
+
+  object.position.set(
+    x,y,z
+  );
+
+  object.castShadow=true;
+  object.receiveShadow=true;
+
+  scene.add(object);
+
+  return object;
+
 }
+
+
+/* CYLINDER */
+
+function cylinder(
+  x,y,z,
+  radius,height,
+  color
+){
+
+  const object =
+    new THREE.Mesh(
+      new THREE.CylinderGeometry(
+        radius,
+        radius,
+        height,
+        32
+      ),
+      material(color)
+    );
+
+  object.position.set(
+    x,y,z
+  );
+
+  object.castShadow=true;
+  object.receiveShadow=true;
+
+  scene.add(object);
+
+  return object;
+
+}
+
+
+/* LIGHTING */
+
+scene.add(
+  new THREE.HemisphereLight(
+    0xffddbb,
+    0x24130c,
+    2.5
+  )
+);
+
+const mainLight =
+  new THREE.PointLight(
+    0xffa45c,
+    45,
+    25
+  );
+
+mainLight.position.set(
+  0,6,2
+);
+
+mainLight.castShadow=true;
+
+scene.add(mainLight);
+
 
 /* FLOOR */
-box(0,-.25,0,24,.5,24,0x593b2c);
+
+box(
+  0,-.3,0,
+  24,.6,24,
+  0x503426
+);
+
 
 /* WALLS */
-box(0,4,-8,24,8,.3,0x302019);
-box(-12,4,0,.3,8,16,0x302019);
-box(12,4,0,.3,8,16,0x302019);
+
+box(
+  0,4,-8,
+  24,8,.3,
+  0x2b1a13
+);
+
+box(
+  -12,4,0,
+  .3,8,16,
+  0x24150f
+);
+
+box(
+  12,4,0,
+  .3,8,16,
+  0x24150f
+);
+
 
 /* COUNTER */
-box(0,1,-6,9,2,1.5,0x8b4f2b);
-box(0,2.3,-6,9,.25,1.7,0xd19a62);
+
+box(
+  0,1,-6,
+  9,2,1.5,
+  0x704025
+);
+
+box(
+  0,2.2,-6,
+  9,.3,1.7,
+  0xc98952
+);
+
 
 /* TABLES */
-for(let x of [-5,5]){
- box(x,1,0,3,.25,3,0x9a6038);
- for(let a of [-1,1])for(let b of [-1,1])
-   box(x+a,0.45,b,0.18,1,.18,0x633b26);
+
+for(
+  const x of [-5,5]
+){
+
+  box(
+    x,1,0,
+    3,.25,3,
+    0x8d542f
+  );
+
+  for(
+    const sx of [-1,1]
+  ){
+
+    for(
+      const sz of [-1,1]
+    ){
+
+      box(
+        x+sx,
+        .5,
+        sz,
+        .18,
+        1,
+        .18,
+        0x5b351f
+      );
+
+    }
+
+  }
+
 }
+
 
 /* CHAIRS */
-for(let x of [-5,5]){
- for(let z of [-2.5,2.5]){
-   box(x,z>0?0.9:0.9,z,1.4,.2,.7,0x75442c);
-   box(x,z>0?1.5:1.5,z+(z>0?.3:-.3),1.4,.9,.15,0x75442c);
- }
+
+for(
+  const x of [-5,5]
+){
+
+  for(
+    const z of [-2.5,2.5]
+  ){
+
+    box(
+      x,.8,z,
+      1.5,.18,.7,
+      0x784526
+    );
+
+    box(
+      x,
+      1.45,
+      z+(z>0?.28:-.28),
+      1.5,
+      1,
+      .16,
+      0x784526
+    );
+
+  }
+
 }
 
-/* COFFEE CUPS */
-for(let x of [-5,5]){
- cyl(x,1.35,0,.42,.65,0xf4eee5);
- cyl(x,1.68,0,.34,.05,0x3b2114);
+
+/* COFFEE */
+
+const cups=[];
+
+for(
+  const x of [-5,5]
+){
+
+  const cup =
+    cylinder(
+      x,
+      1.38,
+      0,
+      .43,
+      .65,
+      0xf5eee5
+    );
+
+  cylinder(
+    x,
+    1.72,
+    0,
+    .35,
+    .05,
+    0x3a1c0d
+  );
+
+  cups.push(cup);
+
 }
+
 
 /* CAKES */
-cyl(-3.5,1.5,-5.35,.65,.35,0xd98282);
-cyl(-3.5,1.75,-5.35,.55,.2,0xf1d2c5);
+
+for(
+  const x of [-2.8,2.8]
+){
+
+  cylinder(
+    x,
+    1.48,
+    -5.35,
+    .65,
+    .35,
+    0xb96b61
+  );
+
+  cylinder(
+    x,
+    1.72,
+    -5.35,
+    .52,
+    .15,
+    0xf2d0c0
+  );
+
+}
+
+
+/* DONUTS */
+
+for(
+  const x of [-1.4,1.4]
+){
+
+  const donut =
+    new THREE.Mesh(
+      new THREE.TorusGeometry(
+        .35,
+        .13,
+        16,
+        40
+      ),
+      material(0xd98b58)
+    );
+
+  donut.position.set(
+    x,
+    1.5,
+    -5.35
+  );
+
+  donut.rotation.x =
+    Math.PI/2;
+
+  scene.add(donut);
+
+}
+
 
 /* PLANTS */
-cyl(8,1,-5.2,.55,1.4,0x684126);
-for(let i=0;i<7;i++)
- cyl(8+(Math.random()-.5),2+Math.random(),-5.2+(Math.random()-.5),.22,.8,0x496b45);
 
-/* LIGHTS */
-for(let x of [-6,0,6]){
- let l=new THREE.PointLight(0xffb36b,18,8);
- l.position.set(x,5,-2);scene.add(l);
+for(
+  const x of [-8,8]
+){
+
+  cylinder(
+    x,
+    1,
+    -5.7,
+    .5,
+    1.3,
+    0x654026
+  );
+
+  for(
+    let i=0;
+    i<6;
+    i++
+  ){
+
+    const leaf =
+      cylinder(
+        x+(Math.random()-.5),
+        2+Math.random()*1.3,
+        -5.7+(Math.random()-.5),
+        .18,
+        .8,
+        0x456744
+      );
+
+    leaf.rotation.z =
+      (Math.random()-.5)*.8;
+
+  }
+
 }
 
-/* MOVEMENT */
-let targetX=0,targetY=5;
-addEventListener('mousemove',e=>{
- targetX=(e.clientX/innerWidth-.5)*3;
- targetY=4+(1-e.clientY/innerHeight)*2;
-});
+
+/* HANGING LIGHTS */
+
+for(
+  const x of [-6,0,6]
+){
+
+  box(
+    x,5,-1,
+    .06,2,.06,
+    0x222222
+  );
+
+  cylinder(
+    x,
+    4,
+    -1,
+    .45,
+    .3,
+    0xe5a15d
+  );
+
+  const glow =
+    new THREE.PointLight(
+      0xffa45c,
+      14,
+      6
+    );
+
+  glow.position.set(
+    x,4,-1
+  );
+
+  scene.add(glow);
+
+}
+
+
+/* WINDOWS */
+
+for(
+  const x of [-8,8]
+){
+
+  box(
+    x,
+    3.5,
+    -7.7,
+    2.8,
+    2.5,
+    .12,
+    0x6b91a3
+  );
+
+}
+
+
+/* FLOATING PARTICLES */
+
+const particleGeometry =
+  new THREE.BufferGeometry();
+
+const count=350;
+
+const positions =
+  new Float32Array(
+    count*3
+  );
+
+for(
+  let i=0;
+  i<count*3;
+  i++
+){
+
+  positions[i] =
+    (Math.random()-.5)*25;
+
+}
+
+particleGeometry.setAttribute(
+  "position",
+  new THREE.BufferAttribute(
+    positions,
+    3
+  )
+);
+
+const particles =
+  new THREE.Points(
+    particleGeometry,
+    new THREE.PointsMaterial({
+      color:0xf2b36b,
+      size:.035,
+      transparent:true,
+      opacity:.5
+    })
+  );
+
+scene.add(particles);
+
+
+/* CAMERA MOVEMENT */
+
+let targetX=0;
+let targetY=4.5;
+
+window.addEventListener(
+  "mousemove",
+  function(event){
+
+    targetX =
+      (event.clientX /
+      window.innerWidth -.5)*5;
+
+    targetY =
+      3.5+
+      (1-event.clientY /
+      window.innerHeight)*2;
+
+  }
+);
+
+
+/* MOBILE TOUCH */
+
+window.addEventListener(
+  "touchmove",
+  function(event){
+
+    if(!event.touches[0])
+      return;
+
+    targetX =
+      (event.touches[0].clientX /
+      window.innerWidth -.5)*5;
+
+  }
+);
+
+
+/* MENU */
+
+const menu =
+  document.getElementById("menu");
+
+function toggleMenu(){
+
+  menu.style.display =
+    menu.style.display === "block"
+    ? "none"
+    : "block";
+
+}
+
+document
+  .getElementById("menuBtn")
+  .addEventListener(
+    "click",
+    toggleMenu
+  );
+
+document
+  .getElementById("exploreBtn")
+  .addEventListener(
+    "click",
+    toggleMenu
+  );
+
+document
+  .getElementById("homeBtn")
+  .addEventListener(
+    "click",
+    function(){
+
+      menu.style.display="none";
+
+      camera.position.z=12;
+
+    }
+  );
+
+document
+  .getElementById("aboutBtn")
+  .addEventListener(
+    "click",
+    function(){
+
+      alert(
+        "Welcome to Café 3D — an immersive virtual café experience."
+      );
+
+    }
+  );
+
+
+/* ANIMATION */
 
 function animate(){
- requestAnimationFrame(animate);
- camera.position.x+=(targetX-camera.position.x)*.03;
- camera.position.y+=(targetY-camera.position.y)*.03;
- camera.lookAt(0,2,-2);
- renderer.render(scene,camera);
+
+  requestAnimationFrame(
+    animate
+  );
+
+  camera.position.x +=
+    (targetX-camera.position.x)
+    *.025;
+
+  camera.position.y +=
+    (targetY-camera.position.y)
+    *.025;
+
+  camera.lookAt(
+    0,
+    2,
+    -2
+  );
+
+  particles.rotation.y +=
+    .0005;
+
+  cups.forEach(
+    (cup,index)=>{
+
+      cup.rotation.y +=
+        .005+(index*.002);
+
+    }
+  );
+
+  renderer.render(
+    scene,
+    camera
+  );
+
 }
+
 animate();
 
-document.getElementById('menuBtn').onclick=()=>{
- let m=document.getElementById('menu');
- m.style.display=m.style.display==='block'?'none':'block';
-};
 
-addEventListener('resize',()=>{
- camera.aspect=innerWidth/innerHeight;
- camera.updateProjectionMatrix();
- renderer.setSize(innerWidth,innerHeight);
-});
+/* RESPONSIVE */
+
+window.addEventListener(
+  "resize",
+  function(){
+
+    camera.aspect =
+      window.innerWidth /
+      window.innerHeight;
+
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(
+      window.innerWidth,
+      window.innerHeight
+    );
+
+  }
+);
+
 </script>
+
 </body>
 </html>

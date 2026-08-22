@@ -3,29 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-
-<title>AURELIA — Private Dining House</title>
+<title>NEONVERSE — AI VR Café</title>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap');
-
-:root{
-  --gold:#d6b06a;
-  --gold-light:#f4dca5;
-  --cream:#f7f2e9;
-  --ink:#0b0907;
-  --brown:#21160d;
-  --muted:#aaa094;
-  --line:rgba(214,176,106,.25);
-}
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
 
 *{
+  box-sizing:border-box;
   margin:0;
   padding:0;
-  box-sizing:border-box;
+}
+
+:root{
+  --blue:#00c8ff;
+  --cyan:#6ffaff;
+  --purple:#8d5cff;
+  --dark:#02050b;
+  --glass:rgba(3,14,27,.62);
+  --border:rgba(0,210,255,.28);
 }
 
 html{
@@ -33,62 +32,59 @@ html{
 }
 
 body{
-  background:var(--ink);
+  background:#02050b;
   color:white;
-  font-family:"DM Sans",sans-serif;
+  font-family:Inter,sans-serif;
   overflow-x:hidden;
 }
 
-button,
-input,
-select{
-  font:inherit;
-}
-
 button{
+  font-family:inherit;
   cursor:pointer;
 }
 
-a{
-  text-decoration:none;
-  color:inherit;
+canvas{
+  display:block;
 }
 
-/* LOADER */
+/* LOADING */
 
-.loader{
+#loader{
   position:fixed;
   inset:0;
   z-index:99999;
-  background:#050403;
+  background:#010308;
   display:flex;
   align-items:center;
   justify-content:center;
   flex-direction:column;
-  transition:opacity 1s;
 }
 
-.loader-brand{
-  font-family:"Cormorant Garamond";
-  font-size:65px;
-  letter-spacing:12px;
+.loader-title{
+  font-family:Orbitron;
+  font-size:clamp(28px,6vw,70px);
+  letter-spacing:8px;
+  color:#00d9ff;
+  text-shadow:0 0 30px #00bfff;
 }
 
-.loader-line{
-  width:180px;
-  height:1px;
-  background:#30271d;
-  margin-top:20px;
+.loader-bar{
+  width:260px;
+  height:3px;
+  background:#092030;
+  margin-top:30px;
+  overflow:hidden;
 }
 
-.loader-progress{
-  height:100%;
+.loader-fill{
   width:0;
-  background:var(--gold);
-  animation:loading 2s forwards;
+  height:100%;
+  background:#00d9ff;
+  box-shadow:0 0 20px #00d9ff;
+  animation:load 2s forwards;
 }
 
-@keyframes loading{
+@keyframes load{
   to{width:100%}
 }
 
@@ -96,73 +92,59 @@ a{
 
 .nav{
   position:fixed;
-  top:18px;
+  z-index:5000;
+  top:15px;
   left:50%;
   transform:translateX(-50%);
-  z-index:5000;
-
   width:min(1450px,94%);
-  height:66px;
-
+  min-height:62px;
+  padding:10px 18px;
+  border:1px solid var(--border);
+  border-radius:18px;
+  background:rgba(2,7,15,.72);
+  backdrop-filter:blur(20px);
   display:flex;
   align-items:center;
   justify-content:space-between;
-
-  padding:0 22px;
-
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:50px;
-
-  background:rgba(8,7,5,.68);
-  backdrop-filter:blur(25px);
 }
 
-.brand{
-  font-family:"Cormorant Garamond";
-  font-size:29px;
-  letter-spacing:5px;
+.logo{
+  font-family:Orbitron;
+  font-size:20px;
+  letter-spacing:3px;
+  color:#fff;
 }
 
-.brand span{
-  color:var(--gold);
+.logo span{
+  color:var(--blue);
+  text-shadow:0 0 15px var(--blue);
 }
 
 .nav-links{
   display:flex;
-  gap:22px;
+  gap:20px;
 }
 
 .nav-links a{
+  color:#9fb5c4;
+  text-decoration:none;
   font-size:9px;
+  letter-spacing:1.5px;
   text-transform:uppercase;
-  letter-spacing:1.8px;
-  color:#c9c0b3;
-  transition:.3s;
 }
 
 .nav-links a:hover{
-  color:var(--gold-light);
+  color:#5ff6ff;
 }
 
-.nav-btn,
-.gold-btn{
-  border:1px solid var(--gold);
-  background:var(--gold);
-  color:#120d08;
-  border-radius:30px;
-  padding:12px 20px;
+.nav-button{
+  border:1px solid #00d5ff;
+  background:#00bfe8;
+  color:#001018;
+  border-radius:9px;
+  padding:10px 15px;
   font-size:9px;
-  letter-spacing:1.5px;
-}
-
-.outline-btn{
-  border:1px solid var(--line);
-  background:rgba(0,0,0,.2);
-  color:white;
-  border-radius:30px;
-  padding:12px 20px;
-  font-size:9px;
-  letter-spacing:1.5px;
+  font-weight:bold;
 }
 
 /* HERO */
@@ -174,7 +156,7 @@ a{
   overflow:hidden;
 }
 
-#heroCanvas{
+#hero3d{
   position:absolute;
   inset:0;
 }
@@ -183,25 +165,22 @@ a{
   position:absolute;
   inset:0;
   background:
-    linear-gradient(90deg,
-      rgba(4,3,2,.95) 0%,
-      rgba(4,3,2,.62) 38%,
-      rgba(4,3,2,.12) 75%,
-      rgba(4,3,2,.28));
+    radial-gradient(circle at 65% 40%,transparent 0%,rgba(0,5,15,.1) 35%,rgba(0,3,9,.85) 100%),
+    linear-gradient(90deg,rgba(0,3,9,.95),rgba(0,3,9,.25));
   pointer-events:none;
 }
 
 .hero-content{
   position:absolute;
-  z-index:5;
+  z-index:10;
+  left:7%;
   top:50%;
-  left:8%;
   transform:translateY(-50%);
-  max-width:780px;
+  max-width:850px;
 }
 
-.kicker{
-  color:var(--gold);
+.eyebrow{
+  color:#00dcff;
   font-size:9px;
   letter-spacing:5px;
   text-transform:uppercase;
@@ -209,645 +188,481 @@ a{
 }
 
 .hero h1{
-  font-family:"Cormorant Garamond";
-  font-weight:500;
-  font-size:clamp(72px,10vw,155px);
-  line-height:.77;
-  letter-spacing:-5px;
+  font-family:Orbitron;
+  font-size:clamp(48px,8vw,120px);
+  line-height:.9;
+  letter-spacing:-4px;
 }
 
 .hero h1 span{
-  color:var(--gold);
+  color:#00dcff;
+  text-shadow:
+    0 0 10px #00c8ff,
+    0 0 40px #006dff;
 }
 
-.hero-sub{
-  max-width:570px;
-  margin-top:28px;
-  color:#c4bbae;
+.hero p{
+  max-width:620px;
+  color:#9fb1bf;
   font-size:13px;
   line-height:1.9;
-}
-
-.actions{
-  display:flex;
-  gap:12px;
-  margin-top:28px;
-  flex-wrap:wrap;
-}
-
-.drag-badge{
-  position:absolute;
-  z-index:5;
-  right:30px;
-  bottom:30px;
-  border:1px solid var(--line);
-  border-radius:30px;
-  padding:13px 18px;
-  background:rgba(0,0,0,.42);
-  backdrop-filter:blur(10px);
-  font-size:9px;
-  letter-spacing:2px;
-}
-
-.scroll-hint{
-  position:absolute;
-  bottom:25px;
-  left:50%;
-  transform:translateX(-50%);
-  z-index:5;
-  font-size:8px;
-  letter-spacing:4px;
-  color:#bcb1a3;
-}
-
-.scroll-hint i{
-  display:block;
-  height:45px;
-  width:1px;
-  background:var(--gold);
-  margin:10px auto 0;
-}
-
-/* FAIRY LIGHTS */
-
-.fairy{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  z-index:3;
-}
-
-.fairy span{
-  position:absolute;
-  width:5px;
-  height:5px;
-  border-radius:50%;
-  background:#ffe4a7;
-  box-shadow:
-    0 0 7px #ffd17b,
-    0 0 18px rgba(214,176,106,.8);
-  animation:blink 2.2s infinite alternate;
-}
-
-@keyframes blink{
-  from{opacity:.3}
-  to{opacity:1}
-}
-
-/* COMMON */
-
-.section{
-  min-height:100vh;
-  padding:130px 7%;
-  position:relative;
-}
-
-.section-head{
-  max-width:850px;
-}
-
-.section-title{
-  font-family:"Cormorant Garamond";
-  font-weight:500;
-  font-size:clamp(55px,8vw,110px);
-  line-height:.82;
-  letter-spacing:-3px;
-}
-
-.section-title span{
-  color:var(--gold);
-}
-
-.copy{
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.9;
-  max-width:650px;
   margin-top:25px;
 }
 
-/* INTRO */
-
-.intro{
-  background:#0d0b09;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:80px;
-  align-items:center;
-}
-
-.intro-visual{
-  height:600px;
-  position:relative;
-  overflow:hidden;
-  border:1px solid var(--line);
-  background:
-    radial-gradient(circle at 50% 35%,#87643c,#392615 30%,#0c0805 70%);
-}
-
-.intro-visual:before{
-  content:"AURELIA";
-  position:absolute;
-  inset:0;
+.hero-buttons{
   display:flex;
-  justify-content:center;
-  align-items:center;
-  font-family:"Cormorant Garamond";
-  font-size:80px;
-  letter-spacing:8px;
-  color:rgba(255,255,255,.07);
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:30px;
 }
 
-.intro-visual:after{
-  content:"";
-  position:absolute;
-  inset:25px;
-  border:1px solid rgba(255,255,255,.14);
-}
-
-/* 360 */
-
-.experience{
-  background:#080706;
-}
-
-.viewer{
-  position:relative;
-  width:100%;
-  height:650px;
-  margin-top:50px;
-  border:1px solid var(--line);
-  overflow:hidden;
-  border-radius:4px;
-  background:#0d0b09;
-  touch-action:none;
-}
-
-#viewerCanvas{
-  width:100%;
-  height:100%;
-  display:block;
-}
-
-.viewer-top{
-  position:absolute;
-  z-index:10;
-  top:18px;
-  left:18px;
-  padding:12px 16px;
-  border:1px solid var(--line);
-  background:rgba(0,0,0,.5);
-  backdrop-filter:blur(15px);
+.primary{
+  border:1px solid #00ddff;
+  background:#00c8ff;
+  color:#001018;
+  padding:14px 20px;
+  border-radius:9px;
   font-size:9px;
-  letter-spacing:2px;
+  letter-spacing:1.5px;
+  font-weight:bold;
+  box-shadow:0 0 25px rgba(0,210,255,.25);
 }
 
-.viewer-bottom{
-  position:absolute;
-  z-index:10;
-  bottom:18px;
-  left:18px;
-  right:18px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  pointer-events:none;
-}
-
-.viewer-help{
-  padding:12px 15px;
-  background:rgba(0,0,0,.58);
-  border:1px solid var(--line);
+.secondary{
+  border:1px solid rgba(0,210,255,.4);
+  background:rgba(0,20,35,.5);
+  color:#dffcff;
+  padding:14px 20px;
+  border-radius:9px;
   font-size:9px;
   letter-spacing:1.5px;
 }
 
-.viewer-buttons{
-  display:flex;
-  gap:8px;
-  pointer-events:auto;
-}
-
-.viewer-buttons button{
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  border:1px solid var(--line);
-  background:rgba(0,0,0,.65);
-  color:white;
-}
-
-/* HOTSPOTS */
-
-.hotspot{
+.hud{
   position:absolute;
+  right:25px;
+  bottom:25px;
   z-index:20;
-  width:38px;
-  height:38px;
-  border-radius:50%;
-  border:1px solid var(--gold);
-  background:rgba(214,176,106,.18);
-  color:var(--gold-light);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  animation:pulse 2s infinite;
-}
-
-.hotspot.one{left:28%;top:40%}
-.hotspot.two{left:67%;top:34%}
-.hotspot.three{left:49%;top:58%}
-
-@keyframes pulse{
-  0%,100%{box-shadow:0 0 0 0 rgba(214,176,106,.5)}
-  50%{box-shadow:0 0 0 12px rgba(214,176,106,0)}
-}
-
-/* JOURNEY */
-
-.journey{
-  background:#f2ece2;
-  color:#20170f;
-}
-
-.journey .copy{
-  color:#756c61;
-}
-
-.journey .kicker{
-  color:#98713a;
-}
-
-.journey .section-title span{
-  color:#9a723a;
-}
-
-.journey-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:15px;
-  margin-top:55px;
-}
-
-.journey-card{
-  min-height:350px;
-  padding:30px;
-  background:white;
-  border:1px solid #ded3c3;
-  transition:.5s;
-}
-
-.journey-card:hover{
-  transform:translateY(-10px);
-}
-
-.journey-number{
-  color:#a27a40;
+  padding:14px 18px;
+  background:rgba(0,8,18,.7);
+  border:1px solid var(--border);
+  font-family:Orbitron;
   font-size:9px;
-  letter-spacing:3px;
+  color:#6ffaff;
 }
 
-.journey-icon{
-  font-size:50px;
-  margin:40px 0 30px;
+.scroll{
+  position:absolute;
+  bottom:25px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:20;
+  color:#587383;
+  font-size:8px;
+  letter-spacing:4px;
 }
 
-.journey-card h3{
-  font-family:"Cormorant Garamond";
-  font-size:32px;
-  font-weight:600;
-}
+/* SECTIONS */
 
-.journey-card p{
-  margin-top:10px;
-  font-size:11px;
-  line-height:1.8;
-  color:#766d62;
-}
-
-/* MENU */
-
-.menu{
-  background:#f2ece2;
-  color:#1e160e;
-}
-
-.menu .copy{
-  color:#766d62;
-}
-
-.menu-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:18px;
-  margin-top:55px;
-}
-
-.food{
-  background:white;
-  padding:12px;
-  border:1px solid #ded3c3;
-  transition:.45s;
-}
-
-.food:hover{
-  transform:translateY(-8px);
-}
-
-.food-image{
-  height:260px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:110px;
+.section{
+  min-height:100vh;
+  padding:120px 7%;
+  position:relative;
   background:
-    radial-gradient(circle at center,#eee3d5,#fff);
+    radial-gradient(circle at 80% 20%,rgba(0,100,255,.08),transparent 35%),
+    #02050b;
 }
 
-.food-info{
-  padding:18px 8px 10px;
-}
-
-.food-row{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-}
-
-.food h3{
-  font-family:"Cormorant Garamond";
-  font-size:28px;
-}
-
-.price{
-  color:#9b733c;
-}
-
-.rating{
-  margin-top:8px;
-  font-size:10px;
-  color:#a2783e;
-}
-
-.food p{
-  margin-top:10px;
-  color:#776e63;
-  font-size:11px;
-  line-height:1.7;
-}
-
-.order-btn{
-  margin-top:15px;
-  padding:10px 16px;
-  border:1px solid #a2783e;
-  background:transparent;
-  color:#8c6736;
-  border-radius:30px;
-  font-size:9px;
-}
-
-/* CHEF */
-
-.chef{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:80px;
-  align-items:center;
-  background:#0b0907;
-}
-
-.chef-card{
-  height:620px;
-  border:1px solid var(--line);
+.section.light{
   background:
-    radial-gradient(circle at 50% 35%,#8a6842,#291b10 40%,#050403 80%);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:210px;
+    radial-gradient(circle at 20% 30%,rgba(0,210,255,.09),transparent 35%),
+    #06101a;
 }
 
-.quote{
-  font-family:"Cormorant Garamond";
-  font-size:34px;
-  line-height:1.25;
-  margin:30px 0;
-  color:#e8dccd;
-}
-
-/* PRIVATE */
-
-.private{
-  background:
-    radial-gradient(circle at 70% 40%,#382513,#080604 58%);
-}
-
-.private-content{
+.section-head{
   max-width:900px;
 }
 
-.private-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
-  margin-top:45px;
+.title{
+  font-family:Orbitron;
+  font-size:clamp(42px,7vw,90px);
+  line-height:.95;
+  letter-spacing:-3px;
 }
 
-.private-box{
+.title span{
+  color:#00d9ff;
+  text-shadow:0 0 25px rgba(0,200,255,.45);
+}
+
+.description{
+  max-width:680px;
+  color:#8399a9;
+  line-height:1.9;
+  font-size:13px;
+  margin-top:22px;
+}
+
+/* EXPERIENCE */
+
+.experience{
+  position:relative;
+}
+
+.world{
+  height:650px;
+  margin-top:50px;
+  position:relative;
+  overflow:hidden;
+  border:1px solid var(--border);
+  border-radius:15px;
+  background:#01040a;
+}
+
+#world3d{
+  width:100%;
+  height:100%;
+}
+
+.world-hud{
+  position:absolute;
+  top:20px;
+  left:20px;
+  z-index:10;
+  background:rgba(0,7,15,.75);
+  border:1px solid var(--border);
+  padding:15px;
+  font-family:Orbitron;
+  font-size:8px;
+  color:#6ffaff;
+  line-height:2;
+}
+
+.world-controls{
+  position:absolute;
+  right:20px;
+  bottom:20px;
+  z-index:10;
+  display:flex;
+  gap:7px;
+}
+
+.world-controls button{
+  width:42px;
+  height:42px;
+  border:1px solid var(--border);
+  background:rgba(0,10,20,.75);
+  color:#6ffaff;
+  border-radius:8px;
+}
+
+/* GAME CARDS */
+
+.game-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  margin-top:50px;
+}
+
+.game{
+  min-height:300px;
   padding:25px;
-  border:1px solid var(--line);
-  background:rgba(255,255,255,.025);
+  position:relative;
+  overflow:hidden;
+  border:1px solid var(--border);
+  background:
+    linear-gradient(145deg,rgba(0,150,255,.09),rgba(110,50,255,.05)),
+    rgba(2,8,17,.8);
+  transition:.4s;
 }
 
-.private-box h3{
-  font-family:"Cormorant Garamond";
-  font-size:29px;
+.game:hover{
+  transform:translateY(-8px);
+  border-color:#00eaff;
+  box-shadow:0 0 35px rgba(0,180,255,.15);
 }
 
-.private-box p{
-  color:var(--muted);
-  font-size:11px;
-  line-height:1.7;
-  margin-top:7px;
+.game-icon{
+  font-size:45px;
 }
 
-/* REVIEWS */
-
-.reviews{
-  background:#0d0b09;
-}
-
-.review-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:16px;
-  margin-top:55px;
-}
-
-.review{
-  padding:35px;
-  min-height:270px;
-  border:1px solid var(--line);
-  background:linear-gradient(145deg,#17120d,#0b0907);
-}
-
-.stars{
-  color:var(--gold);
-  letter-spacing:3px;
-}
-
-.review p{
-  font-family:"Cormorant Garamond";
-  font-size:27px;
-  line-height:1.3;
+.game h3{
+  font-family:Orbitron;
   margin-top:30px;
+  font-size:18px;
 }
 
-.review small{
-  display:block;
-  margin-top:25px;
-  color:#81766b;
-  font-size:9px;
+.game p{
+  color:#738b9b;
+  font-size:11px;
+  line-height:1.8;
+  margin-top:12px;
+}
+
+.play{
+  margin-top:22px;
+  padding:10px 15px;
+  border:1px solid #00d9ff;
+  color:#6ffaff;
+  background:transparent;
+  border-radius:7px;
+  font-size:8px;
   letter-spacing:2px;
 }
 
-/* RESERVATION */
+/* GAME AREA */
 
-.reservation{
-  background:#f2ece2;
-  color:#21180f;
+.game-zone{
+  margin-top:45px;
+  min-height:500px;
+  border:1px solid var(--border);
+  background:
+    linear-gradient(rgba(0,210,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,210,255,.035) 1px,transparent 1px),
+    #020711;
+  background-size:40px 40px;
+  position:relative;
+  overflow:hidden;
 }
 
-.reservation .copy{
-  color:#756b60;
+.game-top{
+  padding:18px;
+  display:flex;
+  justify-content:space-between;
+  border-bottom:1px solid var(--border);
+  font-family:Orbitron;
+  font-size:9px;
 }
 
-.reservation .kicker{
-  color:#98713a;
+.score{
+  color:#00e1ff;
 }
 
-.reservation .section-title span{
-  color:#9b733b;
+.game-screen{
+  min-height:440px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  text-align:center;
+  padding:30px;
 }
 
-.form{
-  max-width:900px;
-  margin:55px auto 0;
+/* BURGER */
+
+.burger{
+  font-size:150px;
+  filter:drop-shadow(0 0 25px rgba(0,200,255,.3));
+}
+
+.ingredients{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:8px;
+  margin-top:25px;
+}
+
+.ingredient{
+  padding:12px 17px;
+  background:#061522;
+  color:#8ceeff;
+  border:1px solid var(--border);
+  border-radius:7px;
+}
+
+/* HEALTH */
+
+.food-choice{
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.food-choice button{
+  width:160px;
+  height:150px;
+  background:#071522;
+  border:1px solid var(--border);
+  color:white;
+  font-size:45px;
+  border-radius:12px;
+}
+
+.food-choice small{
+  display:block;
+  font-size:9px;
+  margin-top:10px;
+}
+
+/* TEACHER */
+
+.teacher{
+  display:grid;
+  grid-template-columns:380px 1fr;
+  gap:50px;
+  align-items:center;
+}
+
+.teacher-avatar{
+  height:500px;
+  border:1px solid var(--border);
+  background:
+    radial-gradient(circle at center,rgba(0,210,255,.2),transparent 45%),
+    #020711;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:170px;
+  box-shadow:inset 0 0 100px rgba(0,180,255,.06);
+}
+
+.quiz{
+  border:1px solid var(--border);
+  background:rgba(0,10,20,.6);
+  padding:35px;
+}
+
+.quiz h3{
+  font-family:Orbitron;
+  font-size:22px;
+}
+
+.quiz p{
+  color:#879aa8;
+  margin-top:15px;
+  line-height:1.8;
+  font-size:12px;
+}
+
+.quiz-options{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:12px;
+  gap:10px;
+  margin-top:25px;
 }
 
-.form input,
-.form select{
-  border:1px solid #d6c8b5;
-  background:white;
-  padding:17px;
-  outline:none;
-  color:#21180f;
+.quiz-options button{
+  padding:15px;
+  background:#061521;
+  border:1px solid var(--border);
+  color:#b8f8ff;
+  text-align:left;
 }
 
-.form .full{
-  grid-column:1/-1;
+/* DRAW */
+
+.draw-area{
+  height:600px;
+  margin-top:45px;
+  border:1px solid var(--border);
+  background:
+    radial-gradient(circle at center,rgba(0,200,255,.08),transparent 45%),
+    #01050b;
+  position:relative;
 }
 
-.form button{
-  grid-column:1/-1;
+#drawCanvas{
+  width:100%;
+  height:100%;
+  touch-action:none;
+}
+
+.draw-tools{
+  position:absolute;
+  top:15px;
+  right:15px;
+  z-index:10;
+  display:flex;
+  gap:7px;
+}
+
+.draw-tools button{
+  padding:10px 14px;
+  background:#061521;
+  color:#8ceeff;
+  border:1px solid var(--border);
 }
 
 /* AI */
 
-.concierge{
-  background:
-    radial-gradient(circle at center,#24170d,#080706 65%);
-}
-
-.ai-window{
-  max-width:900px;
+.ai{
+  max-width:950px;
   margin:50px auto 0;
-  border:1px solid var(--line);
-  background:rgba(255,255,255,.025);
-  backdrop-filter:blur(20px);
+  border:1px solid var(--border);
+  background:rgba(0,10,20,.65);
+  box-shadow:0 0 70px rgba(0,130,255,.08);
 }
 
 .ai-header{
-  padding:18px 20px;
-  border-bottom:1px solid var(--line);
+  padding:20px;
+  border-bottom:1px solid var(--border);
   display:flex;
   justify-content:space-between;
+  font-family:Orbitron;
+  font-size:10px;
 }
 
 .online{
-  color:#6fd49a;
-  font-size:9px;
+  color:#4dffae;
 }
 
 .chat{
-  height:400px;
-  overflow-y:auto;
+  height:380px;
+  overflow:auto;
   padding:20px;
 }
 
-.message{
+.msg{
   max-width:75%;
   padding:13px 16px;
-  margin-bottom:12px;
+  margin-bottom:10px;
   font-size:11px;
   line-height:1.7;
+  border:1px solid var(--border);
 }
 
 .bot{
-  border:1px solid var(--line);
-  background:#16110c;
+  background:#06121c;
 }
 
 .user{
   margin-left:auto;
-  background:var(--gold);
-  color:#100c07;
+  background:#00bfe8;
+  color:#001018;
 }
 
-.chat-input{
-  border-top:1px solid var(--line);
+.chatbar{
   display:flex;
+  border-top:1px solid var(--border);
 }
 
-.chat-input input{
+.chatbar input{
   flex:1;
-  padding:18px;
+  background:transparent;
   border:0;
   outline:0;
-  background:transparent;
   color:white;
+  padding:18px;
 }
 
-.chat-input button{
+.chatbar button{
   border:0;
+  background:#00c8ff;
   padding:0 25px;
-  background:var(--gold);
-}
-
-/* FINAL */
-
-.final{
-  min-height:80vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  background:
-    radial-gradient(circle at center,#352312,#080604 55%);
 }
 
 /* FOOTER */
 
 footer{
   padding:30px 7%;
+  border-top:1px solid rgba(0,210,255,.12);
+  background:#010308;
+  color:#587383;
   display:flex;
   justify-content:space-between;
-  color:#70665a;
-  border-top:1px solid rgba(255,255,255,.07);
-  background:#050403;
   font-size:8px;
   letter-spacing:2px;
 }
@@ -860,21 +675,16 @@ footer{
   display:none;
 }
 
-.journey-grid{
+.game-grid{
   grid-template-columns:1fr 1fr;
 }
 
-.menu-grid{
-  grid-template-columns:1fr 1fr;
-}
-
-.intro,
-.chef{
+.teacher{
   grid-template-columns:1fr;
 }
 
-.chef-card{
-  height:500px;
+.teacher-avatar{
+  height:350px;
 }
 
 }
@@ -882,58 +692,48 @@ footer{
 @media(max-width:650px){
 
 .nav{
-  height:58px;
+  width:96%;
 }
 
-.brand{
-  font-size:24px;
-}
-
-.nav-btn{
-  padding:10px 15px;
+.logo{
+  font-size:15px;
 }
 
 .hero-content{
-  left:7%;
-  right:7%;
+  left:6%;
+  right:6%;
 }
 
 .hero h1{
-  font-size:68px;
-}
-
-.drag-badge{
-  right:15px;
-  bottom:15px;
+  font-size:48px;
 }
 
 .section{
-  padding:105px 6%;
+  padding:100px 6%;
 }
 
-.viewer{
-  height:530px;
+.world{
+  height:520px;
 }
 
-.journey-grid,
-.menu-grid,
-.review-grid,
-.private-grid,
-.form{
+.game-grid{
   grid-template-columns:1fr;
 }
 
-.form .full{
-  grid-column:auto;
+.game-zone{
+  min-height:500px;
 }
 
-.chef-card{
-  height:420px;
-  font-size:150px;
+.burger{
+  font-size:100px;
 }
 
-.intro-visual{
-  height:420px;
+.quiz-options{
+  grid-template-columns:1fr;
+}
+
+.draw-area{
+  height:480px;
 }
 
 footer{
@@ -949,10 +749,10 @@ footer{
 
 <!-- LOADER -->
 
-<div class="loader" id="loader">
-  <div class="loader-brand">AURELIA</div>
-  <div class="loader-line">
-    <div class="loader-progress"></div>
+<div id="loader">
+  <div class="loader-title">NEONVERSE</div>
+  <div class="loader-bar">
+    <div class="loader-fill"></div>
   </div>
 </div>
 
@@ -961,23 +761,21 @@ footer{
 
 <nav class="nav">
 
-<a class="brand" href="#home">
-AURELIA<span>.</span>
-</a>
-
-<div class="nav-links">
-<a href="#experience">360°</a>
-<a href="#journey">Experience</a>
-<a href="#menu">Menu</a>
-<a href="#chef">Chef</a>
-<a href="#private">Private</a>
-<a href="#reviews">Reviews</a>
-<a href="#reservation">Reserve</a>
-<a href="#concierge">Concierge</a>
+<div class="logo">
+NEON<span>VERSE</span>
 </div>
 
-<button class="nav-btn" onclick="scrollToId('reservation')">
-RESERVE
+<div class="nav-links">
+<a href="#world">World</a>
+<a href="#games">Games</a>
+<a href="#health">Health</a>
+<a href="#teacher">Teacher</a>
+<a href="#drawing">VR Pen</a>
+<a href="#ai">AI</a>
+</div>
+
+<button class="nav-button" onclick="enterWorld()">
+ENTER WORLD
 </button>
 
 </nav>
@@ -985,151 +783,291 @@ RESERVE
 
 <!-- HERO -->
 
-<section class="hero" id="home">
+<section class="hero">
 
-<div id="heroCanvas"></div>
+<div id="hero3d"></div>
 
 <div class="hero-overlay"></div>
 
-<div class="fairy" id="fairyLights"></div>
-
 <div class="hero-content">
 
-<div class="kicker">
-PRIVATE DINING HOUSE • GURUGRAM
+<div class="eyebrow">
+AI • VR • 3D • GAMING • LEARNING
 </div>
 
 <h1>
-A NEW<br>
-<span>DIMENSION</span><br>
-OF DINING.
+WELCOME TO<br>
+THE <span>NEONVERSE</span>
 </h1>
 
-<p class="hero-sub">
-Step into an immersive luxury dining house where
-architecture, cuisine, hospitality and light become one
-extraordinary experience.
+<p>
+A futuristic interactive world where a café becomes
+a playground. Meet robots, prepare food, drive,
+learn, draw in 3D and explore an AI-powered virtual
+environment from any device.
 </p>
 
-<div class="actions">
+<div class="hero-buttons">
 
-<button class="gold-btn"
-onclick="scrollToId('experience')">
-ENTER 360° EXPERIENCE
+<button class="primary" onclick="enterWorld()">
+ENTER 3D WORLD
 </button>
 
-<button class="outline-btn"
-onclick="scrollToId('menu')">
-EXPLORE MENU
+<button class="secondary" onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">
+PLAY GAMES
 </button>
 
 </div>
 
 </div>
 
-<div class="drag-badge">
-◉ DRAG • LOOK AROUND • EXPLORE
+<div class="hud">
+SYSTEM ONLINE<br>
+AI CORE: ACTIVE<br>
+VR READY: YES
 </div>
 
-<div class="scroll-hint">
-SCROLL TO ENTER
-<i></i>
+<div class="scroll">
+EXPLORE
 </div>
 
 </section>
 
 
-<!-- INTRO -->
+<!-- WORLD -->
 
-<section class="section intro">
-
-<div class="intro-visual"></div>
-
-<div>
-
-<div class="kicker">
-01 — THE HOUSE
-</div>
-
-<h2 class="section-title">
-NOT A CAFÉ.<br>
-<span>A DESTINATION.</span>
-</h2>
-
-<p class="copy">
-AURELIA was created for people who appreciate the
-details others overlook. Every surface, light, aroma,
-sound and plate has been carefully considered.
-</p>
-
-<p class="copy">
-Come for coffee. Stay for dinner. Return for the
-experience.
-</p>
-
-</div>
-
-</section>
-
-
-<!-- 360 VIEWER -->
-
-<section class="section experience" id="experience">
+<section class="section" id="world">
 
 <div class="section-head">
 
-<div class="kicker">
-02 — IMMERSIVE 360°
+<div class="eyebrow">
+01 — VIRTUAL WORLD
 </div>
 
-<h2 class="section-title">
-LOOK<br>
-<span>AROUND.</span>
+<h2 class="title">
+WALK INSIDE<br>
+<span>THE FUTURE.</span>
 </h2>
 
-<p class="copy">
-Explore the AURELIA environment. Drag with your mouse
-or swipe with your finger. Use the controls to move
-around the room.
+<p class="description">
+Explore an interactive 3D café environment. Use the
+mouse, touch controls or keyboard to move around.
+The environment contains robots, customers, tables,
+lights and interactive objects.
 </p>
 
 </div>
 
-<div class="viewer" id="viewer">
+<div class="world">
 
-<div id="viewerCanvas"></div>
+<div id="world3d"></div>
 
-<div class="viewer-top">
-AURELIA • 360° IMMERSIVE ROOM
+<div class="world-hud">
+NEONVERSE WORLD<br>
+WASD / TOUCH TO MOVE<br>
+DRAG TO LOOK<br>
+OBJECTS: ACTIVE
 </div>
 
-<div class="hotspot one"
-onclick="showInfo('CHEF COUNTER','Meet the chef and discover tonight’s signature menu.')">
-+
+<div class="world-controls">
+<button onclick="movePlayer('forward')">↑</button>
+<button onclick="movePlayer('left')">←</button>
+<button onclick="movePlayer('back')">↓</button>
+<button onclick="movePlayer('right')">→</button>
 </div>
 
-<div class="hotspot two"
-onclick="showInfo('PRIVATE DINING','An intimate environment for your most important evenings.')">
-+
 </div>
 
-<div class="hotspot three"
-onclick="showInfo('SIGNATURE TABLE','Every table receives personalised service.')">
-+
+</section>
+
+
+<!-- GAMES -->
+
+<section class="section light" id="games">
+
+<div class="eyebrow">
+02 — PLAYABLE WORLD
 </div>
 
-<div class="viewer-bottom">
+<h2 class="title">
+CHOOSE<br>
+<span>YOUR GAME.</span>
+</h2>
 
-<div class="viewer-help">
-DESKTOP: DRAG • MOBILE: SWIPE • PINCH TO ZOOM
+<p class="description">
+Every experience happens inside the NEONVERSE.
+Play, earn points and unlock new experiences.
+</p>
+
+<div class="game-grid">
+
+<div class="game">
+
+<div class="game-icon">🤖</div>
+
+<h3>ROBOT CHEF</h3>
+
+<p>
+Prepare a customer's burger, select ingredients,
+cook it correctly and deliver the order.
+</p>
+
+<button class="play" onclick="startBurger()">
+PLAY
+</button>
+
 </div>
 
-<div class="viewer-buttons">
+<div class="game">
 
-<button onclick="viewerZoom(1)">+</button>
-<button onclick="viewerZoom(-1)">−</button>
-<button onclick="resetViewer()">↺</button>
+<div class="game-icon">🚗</div>
 
+<h3>NEON DRIVE</h3>
+
+<p>
+An original arcade driving challenge through
+the futuristic city.
+</p>
+
+<button class="play" onclick="startDrive()">
+PLAY
+</button>
+
+</div>
+
+<div class="game">
+
+<div class="game-icon">🥗</div>
+
+<h3>HEALTH LAB</h3>
+
+<p>
+Identify healthy and unhealthy food choices
+and build the best meal.
+</p>
+
+<button class="play" onclick="startHealth()">
+PLAY
+</button>
+
+</div>
+
+<div class="game">
+
+<div class="game-icon">🧠</div>
+
+<h3>AI CHALLENGE</h3>
+
+<p>
+Solve interactive questions and improve your
+NEONVERSE intelligence score.
+</p>
+
+<button class="play" onclick="startQuiz()">
+PLAY
+</button>
+
+</div>
+
+</div>
+
+
+<!-- GAME SCREEN -->
+
+<div class="game-zone">
+
+<div class="game-top">
+
+<span id="gameTitle">
+GAME CONSOLE
+</span>
+
+<span class="score">
+SCORE: <b id="score">0</b>
+</span>
+
+</div>
+
+<div class="game-screen" id="gameScreen">
+
+<div style="font-size:70px">🎮</div>
+
+<h2 style="font-family:Orbitron;margin-top:20px">
+SELECT A GAME
+</h2>
+
+<p style="color:#78909f;margin-top:10px">
+Choose one of the experiences above.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- HEALTH -->
+
+<section class="section" id="health">
+
+<div class="eyebrow">
+03 — DIGITAL HEALTH LAB
+</div>
+
+<h2 class="title">
+HEALTH<br>
+<span>IS A GAME.</span>
+</h2>
+
+<p class="description">
+Learn the difference between healthy and unhealthy
+food choices through an interactive game.
+</p>
+
+<div class="game-zone">
+
+<div class="game-top">
+<span>HEALTH LAB</span>
+<span class="score">HEALTH SCORE: <b id="healthScore">0</b></span>
+</div>
+
+<div class="game-screen">
+
+<h2 style="font-family:Orbitron">
+CHOOSE THE HEALTHIER OPTION
+</h2>
+
+<p style="color:#78909f;margin:15px 0 25px">
+Build your nutrition score.
+</p>
+
+<div class="food-choice">
+
+<button onclick="healthChoice(true)">
+🥗
+<small>FRESH SALAD</small>
+</button>
+
+<button onclick="healthChoice(false)">
+🍟
+<small>FRIED FAST FOOD</small>
+</button>
+
+<button onclick="healthChoice(true)">
+🍎
+<small>FRESH FRUIT</small>
+</button>
+
+<button onclick="healthChoice(false)">
+🥤
+<small>SUGARY DRINK</small>
+</button>
+
+</div>
+
+<div id="healthResult" style="margin-top:25px;color:#6ffaff">
+Choose an option.
 </div>
 
 </div>
@@ -1139,83 +1077,61 @@ DESKTOP: DRAG • MOBILE: SWIPE • PINCH TO ZOOM
 </section>
 
 
-<!-- JOURNEY -->
+<!-- TEACHER -->
 
-<section class="section journey" id="journey">
+<section class="section light" id="teacher">
 
-<div class="kicker">
-03 — THE GUEST JOURNEY
+<div class="eyebrow">
+04 — VIRTUAL TEACHER
 </div>
 
-<h2 class="section-title">
-YOUR EVENING.<br>
-<span>OUR CRAFT.</span>
+<div class="teacher">
+
+<div class="teacher-avatar">
+🧑‍🏫
+</div>
+
+<div class="quiz">
+
+<div class="eyebrow">
+AI EDUCATION CORE
+</div>
+
+<h2 class="title" style="font-size:45px">
+LEARN<br>
+<span>SMARTER.</span>
 </h2>
 
-<p class="copy">
-From the moment you arrive until the final course,
-every movement has been designed around hospitality.
-</p>
-
-<div class="journey-grid">
-
-<div class="journey-card">
-
-<div class="journey-number">01 / ARRIVAL</div>
-
-<div class="journey-icon">🚶</div>
-
-<h3>Walk In</h3>
-
 <p>
-Your host welcomes you and guides you into
-the world of AURELIA.
+Your virtual teacher can turn the NEONVERSE into
+an interactive classroom.
 </p>
+
+<h3 style="margin-top:30px">
+Which food gives the body fibre?
+</h3>
+
+<div class="quiz-options">
+
+<button onclick="answerQuiz(false)">
+🍟 French Fries
+</button>
+
+<button onclick="answerQuiz(true)">
+🥦 Vegetables
+</button>
+
+<button onclick="answerQuiz(false)">
+🍬 Candy
+</button>
+
+<button onclick="answerQuiz(false)">
+🥤 Soda
+</button>
 
 </div>
 
-<div class="journey-card">
-
-<div class="journey-number">02 / DISCOVER</div>
-
-<div class="journey-icon">✨</div>
-
-<h3>Meet The Chef</h3>
-
-<p>
-Discover the evening's ingredients and
-chef-curated recommendations.
-</p>
-
-</div>
-
-<div class="journey-card">
-
-<div class="journey-number">03 / ORDER</div>
-
-<div class="journey-icon">🍽</div>
-
-<h3>Choose</h3>
-
-<p>
-Build your evening around signature dishes,
-rare coffee and handcrafted desserts.
-</p>
-
-</div>
-
-<div class="journey-card">
-
-<div class="journey-number">04 / REMEMBER</div>
-
-<div class="journey-icon">🥂</div>
-
-<h3>Experience</h3>
-
-<p>
-Relax, celebrate and leave with a memory
-worth returning for.
-</p>
+<div id="quizResult" style="margin-top:20px;color:#6ffaff"></div>
 
 </div>
 
@@ -1224,402 +1140,39 @@ worth returning for.
 </section>
 
 
-<!-- MENU -->
+<!-- DRAWING -->
 
-<section class="section menu" id="menu">
+<section class="section" id="drawing">
 
-<div class="kicker">
-04 — SIGNATURE MENU
+<div class="eyebrow">
+05 — VIRTUAL PEN
 </div>
 
-<h2 class="section-title">
-THE<br>
-<span>COLLECTION.</span>
+<h2 class="title">
+DRAW<br>
+<span>IN THE AIR.</span>
 </h2>
 
-<p class="copy">
-A refined menu built around premium ingredients,
-specialty coffee and modern European techniques.
+<p class="description">
+Use your finger or mouse to draw. This creates a
+virtual creative canvas directly inside the world.
 </p>
 
-<div class="menu-grid">
+<div class="draw-area">
 
-<div class="food">
+<canvas id="drawCanvas"></canvas>
 
-<div class="food-image">🥩</div>
+<div class="draw-tools">
 
-<div class="food-info">
+<button onclick="clearDrawing()">
+CLEAR
+</button>
 
-<div class="food-row">
-<h3>Gold Reserve</h3>
-<span class="price">₹1,499</span>
-</div>
-
-<div class="rating">★★★★★ 4.9</div>
-
-<p>
-Prime grilled steak, truffle jus, seasonal vegetables
-and smoked sea salt.
-</p>
-
-<button class="order-btn"
-onclick="addOrder('Gold Reserve')">
-ADD TO EXPERIENCE
+<button onclick="changePen()">
+CHANGE PEN
 </button>
 
 </div>
-
-</div>
-
-
-<div class="food">
-
-<div class="food-image">🍝</div>
-
-<div class="food-info">
-
-<div class="food-row">
-<h3>Black Truffle</h3>
-<span class="price">₹799</span>
-</div>
-
-<div class="rating">★★★★★ 4.8</div>
-
-<p>
-Fresh pasta, black truffle, parmesan and
-silky cream sauce.
-</p>
-
-<button class="order-btn"
-onclick="addOrder('Black Truffle Pasta')">
-ADD TO EXPERIENCE
-</button>
-
-</div>
-
-</div>
-
-
-<div class="food">
-
-<div class="food-image">☕</div>
-
-<div class="food-info">
-
-<div class="food-row">
-<h3>Rare Origin</h3>
-<span class="price">₹420</span>
-</div>
-
-<div class="rating">★★★★★ 5.0</div>
-
-<p>
-Single-origin specialty coffee prepared
-fresh by our barista.
-</p>
-
-<button class="order-btn"
-onclick="addOrder('Rare Origin Coffee')">
-ADD TO EXPERIENCE
-</button>
-
-</div>
-
-</div>
-
-
-<div class="food">
-
-<div class="food-image">🍰</div>
-
-<div class="food-info">
-
-<div class="food-row">
-<h3>Golden Cacao</h3>
-<span class="price">₹499</span>
-</div>
-
-<div class="rating">★★★★★ 4.9</div>
-
-<p>
-Dark chocolate, vanilla cream, gold leaf
-and cacao crumble.
-</p>
-
-<button class="order-btn"
-onclick="addOrder('Golden Cacao')">
-ADD TO EXPERIENCE
-</button>
-
-</div>
-
-</div>
-
-
-<div class="food">
-
-<div class="food-image">🥐</div>
-
-<div class="food-info">
-
-<div class="food-row">
-<h3>Maison Croissant</h3>
-<span class="price">₹280</span>
-</div>
-
-<div class="rating">★★★★★ 4.8</div>
-
-<p>
-French butter pastry served warm with
-seasonal preserve.
-</p>
-
-<button class="order-btn"
-onclick="addOrder('Maison Croissant')">
-ADD TO EXPERIENCE
-</button>
-
-</div>
-
-</div>
-
-
-<div class="food">
-
-<div class="food-image">🍣</div>
-
-<div class="food-info">
-
-<div class="food-row">
-<h3>Chef's Tasting</h3>
-<span class="price">₹1,299</span>
-</div>
-
-<div class="rating">★★★★★ 4.9</div>
-
-<p>
-A multi-course tasting sequence created
-by the executive chef.
-</p>
-
-<button class="order-btn"
-onclick="addOrder('Chef Tasting')">
-ADD TO EXPERIENCE
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- CHEF -->
-
-<section class="section chef" id="chef">
-
-<div class="chef-card">
-👨‍🍳
-</div>
-
-<div>
-
-<div class="kicker">
-05 — THE CHEF
-</div>
-
-<h2 class="section-title">
-CRAFTED<br>
-<span>PERSONALLY.</span>
-</h2>
-
-<p class="copy">
-Our chef believes luxury dining is not about excess.
-It is about precision, ingredients and understanding
-what the guest wants to feel.
-</p>
-
-<div class="quote">
-“Every plate should give you a reason
-to remember the evening.”
-</div>
-
-<button class="gold-btn"
-onclick="chefRecommendation()">
-ASK THE CHEF
-</button>
-
-</div>
-
-</section>
-
-
-<!-- PRIVATE -->
-
-<section class="section private" id="private">
-
-<div class="private-content">
-
-<div class="kicker">
-06 — PRIVATE DINING
-</div>
-
-<h2 class="section-title">
-THE TABLE<br>
-<span>IS YOURS.</span>
-</h2>
-
-<p class="copy">
-For intimate celebrations, executive dinners,
-proposals, private meetings and special occasions.
-</p>
-
-<div class="private-grid">
-
-<div class="private-box">
-<h3>Private Room</h3>
-<p>Exclusive dining environment for your guests.</p>
-</div>
-
-<div class="private-box">
-<h3>Chef's Table</h3>
-<p>Watch the kitchen and interact with the chef.</p>
-</div>
-
-<div class="private-box">
-<h3>Personal Host</h3>
-<p>Dedicated service throughout your experience.</p>
-</div>
-
-<div class="private-box">
-<h3>Custom Menu</h3>
-<p>Design your menu around your preferences.</p>
-</div>
-
-</div>
-
-<br><br>
-
-<button class="gold-btn"
-onclick="scrollToId('reservation')">
-REQUEST PRIVATE DINING
-</button>
-
-</div>
-
-</section>
-
-
-<!-- REVIEWS -->
-
-<section class="section reviews" id="reviews">
-
-<div class="kicker">
-07 — GUEST JOURNAL
-</div>
-
-<h2 class="section-title">
-HEARD<br>
-<span>FROM THE TABLE.</span>
-</h2>
-
-<div class="review-grid">
-
-<div class="review">
-
-<div class="stars">★★★★★</div>
-
-<p>
-“The entire evening felt incredibly
-considered. Not just dinner — an experience.”
-</p>
-
-<small>— ARJUN • DELHI</small>
-
-</div>
-
-<div class="review">
-
-<div class="stars">★★★★★</div>
-
-<p>
-“The chef's table completely changed
-how I think about dining.”
-</p>
-
-<small>— ISHA • MUMBAI</small>
-
-</div>
-
-<div class="review">
-
-<div class="stars">★★★★★</div>
-
-<p>
-“The atmosphere is beautiful.
-The service is even better.”
-</p>
-
-<small>— RAHUL • GURUGRAM</small>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- RESERVATION -->
-
-<section class="section reservation" id="reservation">
-
-<div style="text-align:center">
-
-<div class="kicker">
-08 — RESERVATION
-</div>
-
-<h2 class="section-title">
-RESERVE<br>
-<span>YOUR EVENING.</span>
-</h2>
-
-<p class="copy" style="margin:25px auto 0">
-Reservations are recommended for Chef's Table
-and private dining experiences.
-</p>
-
-</div>
-
-<div class="form">
-
-<input id="name" placeholder="Full Name">
-
-<input id="phone" placeholder="Phone Number">
-
-<input id="date" type="date">
-
-<select id="guests">
-<option>2 Guests</option>
-<option>3 Guests</option>
-<option>4 Guests</option>
-<option>5 Guests</option>
-<option>6+ Guests</option>
-</select>
-
-<select class="full" id="experienceType">
-<option>Classic Dining</option>
-<option>Chef's Table</option>
-<option>Private Dining</option>
-<option>Celebration</option>
-</select>
-
-<button class="gold-btn"
-onclick="reserveTable()">
-REQUEST RESERVATION
-</button>
 
 </div>
 
@@ -1628,56 +1181,58 @@ REQUEST RESERVATION
 
 <!-- AI -->
 
-<section class="section concierge" id="concierge">
+<section class="section light" id="ai">
 
 <div style="text-align:center">
 
-<div class="kicker">
-09 — PRIVATE CONCIERGE
+<div class="eyebrow">
+06 — AI CONCIERGE
 </div>
 
-<h2 class="section-title">
-YOUR<br>
-<span>CONCIERGE.</span>
+<h2 class="title">
+MEET YOUR<br>
+<span>AI GUIDE.</span>
 </h2>
 
-<p class="copy" style="margin:25px auto 0">
-Ask about our menu, coffee, private dining,
-chef recommendations or reservations.
+<p class="description" style="margin-left:auto;margin-right:auto">
+Ask about the café, games, health, learning,
+robots or the NEONVERSE world.
 </p>
 
 </div>
 
-<div class="ai-window">
+<div class="ai">
 
 <div class="ai-header">
 
-<strong>AURELIA CONCIERGE</strong>
+<span>NEON AI CORE</span>
 
 <span class="online">
-● AVAILABLE
+● ONLINE
 </span>
 
 </div>
 
 <div class="chat" id="chat">
 
-<div class="message bot">
-Welcome to AURELIA. What would you like to
-discover tonight?
+<div class="msg bot">
+Welcome to NEONVERSE. I am your AI guide.
+What would you like to explore?
 </div>
 
 </div>
 
-<div class="chat-input">
+<div class="chatbar">
 
 <input
 id="chatInput"
-placeholder="Ask your concierge..."
-onkeydown="if(event.key==='Enter')sendChat()"
+placeholder="Ask the AI..."
+onkeydown="if(event.key==='Enter')sendAI()"
 >
 
-<button onclick="sendChat()">SEND</button>
+<button onclick="sendAI()">
+SEND
+</button>
 
 </div>
 
@@ -1688,29 +1243,33 @@ onkeydown="if(event.key==='Enter')sendChat()"
 
 <!-- FINAL -->
 
-<section class="section final">
+<section class="section" style="
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+min-height:70vh;
+">
 
 <div>
 
-<div class="kicker">
-10 — THE EVENING AWAITS
+<div class="eyebrow">
+NEONVERSE CORE
 </div>
 
-<h2 class="section-title">
-WELCOME TO<br>
-<span>AURELIA.</span>
+<h2 class="title">
+THE INTERNET<br>
+<span>IS NOW A WORLD.</span>
 </h2>
 
-<p class="copy" style="margin:25px auto">
-Exceptional food. Exceptional atmosphere.
-An experience worth remembering.
+<p class="description" style="margin-left:auto;margin-right:auto">
+Explore. Play. Learn. Create.
 </p>
 
 <br>
 
-<button class="gold-btn"
-onclick="scrollToId('reservation')">
-RESERVE YOUR EXPERIENCE
+<button class="primary" onclick="enterWorld()">
+ENTER AGAIN
 </button>
 
 </div>
@@ -1720,9 +1279,9 @@ RESERVE YOUR EXPERIENCE
 
 <footer>
 
-<span>© 2026 AURELIA PRIVATE DINING HOUSE</span>
+<span>© 2026 NEONVERSE</span>
 
-<span>DINING • COFFEE • ART • EXPERIENCE</span>
+<span>AI • VR • 3D • GAMING • EDUCATION</span>
 
 </footer>
 
@@ -1730,65 +1289,22 @@ RESERVE YOUR EXPERIENCE
 <script>
 
 /* =========================
-   BASIC FUNCTIONS
+GLOBAL
 ========================= */
 
-function scrollToId(id){
-  document.getElementById(id).scrollIntoView({
+let score=0;
+let healthScore=0;
+
+function addScore(points){
+  score+=points;
+  document.getElementById("score").textContent=score;
+}
+
+function enterWorld(){
+  document.getElementById("world").scrollIntoView({
     behavior:"smooth"
   });
 }
-
-function showInfo(title,text){
-
-  const box=document.createElement("div");
-
-  box.style.cssText=`
-    position:fixed;
-    left:50%;
-    top:50%;
-    transform:translate(-50%,-50%);
-    z-index:99999;
-    width:min(90%,420px);
-    padding:30px;
-    background:#110d09;
-    border:1px solid #d6b06a;
-    box-shadow:0 30px 100px #000;
-  `;
-
-  box.innerHTML=`
-    <div style="color:#d6b06a;font-size:9px;letter-spacing:3px">
-      AURELIA EXPERIENCE
-    </div>
-
-    <h2 style="
-      font-family:Cormorant Garamond;
-      font-size:40px;
-      margin:12px 0;
-    ">${title}</h2>
-
-    <p style="
-      color:#aaa094;
-      font-size:12px;
-      line-height:1.8;
-    ">${text}</p>
-
-    <button onclick="this.parentElement.remove()" style="
-      margin-top:20px;
-      padding:11px 18px;
-      background:#d6b06a;
-      border:0;
-      border-radius:20px;
-    ">CLOSE</button>
-  `;
-
-  document.body.appendChild(box);
-}
-
-
-/* =========================
-   LOADER
-========================= */
 
 window.addEventListener("load",()=>{
 
@@ -1799,160 +1315,172 @@ window.addEventListener("load",()=>{
     loader.style.opacity="0";
 
     setTimeout(()=>{
-      loader.style.display="none";
-    },1000);
+      loader.remove();
+    },700);
 
-  },1800);
+  },1900);
 
 });
 
 
 /* =========================
-   FAIRY LIGHTS
+HERO 3D
 ========================= */
 
-const fairy=document.getElementById("fairyLights");
+const heroContainer=
+document.getElementById("hero3d");
 
-for(let i=0;i<48;i++){
+const heroScene=
+new THREE.Scene();
 
-  const bulb=document.createElement("span");
-
-  bulb.style.left=(Math.random()*100)+"%";
-  bulb.style.top=(5+Math.random()*25)+"%";
-  bulb.style.animationDelay=(Math.random()*2)+"s";
-
-  fairy.appendChild(bulb);
-
-}
-
-
-/* =========================
-   HERO 3D
-========================= */
-
-const heroContainer=document.getElementById("heroCanvas");
-
-const heroScene=new THREE.Scene();
-
-const heroCamera=new THREE.PerspectiveCamera(
-  55,
-  innerWidth/innerHeight,
-  .1,
-  100
+const heroCamera=
+new THREE.PerspectiveCamera(
+55,
+innerWidth/innerHeight,
+.1,
+100
 );
 
 heroCamera.position.z=8;
 
-const heroRenderer=new THREE.WebGLRenderer({
-  antialias:true,
-  alpha:true
+const heroRenderer=
+new THREE.WebGLRenderer({
+antialias:true,
+alpha:true
 });
 
 heroRenderer.setPixelRatio(
-  Math.min(devicePixelRatio,2)
+Math.min(devicePixelRatio,2)
 );
 
 heroRenderer.setSize(
-  innerWidth,
-  innerHeight
+innerWidth,
+innerHeight
 );
 
 heroContainer.appendChild(
-  heroRenderer.domElement
+heroRenderer.domElement
 );
 
 
-/* GOLDEN PARTICLES */
+/* PARTICLES */
 
-const particleGeometry=new THREE.BufferGeometry();
+const geo=
+new THREE.BufferGeometry();
 
-const particleCount=1800;
+const count=2500;
 
-const particlePositions=
-new Float32Array(particleCount*3);
+const positions=
+new Float32Array(count*3);
 
-for(let i=0;i<particlePositions.length;i++){
+for(let i=0;i<positions.length;i++){
+  positions[i]=(Math.random()-.5)*40;
+}
 
-  particlePositions[i]=
-    (Math.random()-.5)*35;
+geo.setAttribute(
+"position",
+new THREE.BufferAttribute(positions,3)
+);
+
+const mat=
+new THREE.PointsMaterial({
+color:0x00d9ff,
+size:.025,
+transparent:true,
+opacity:.75
+});
+
+const particles=
+new THREE.Points(geo,mat);
+
+heroScene.add(particles);
+
+
+/* CORE */
+
+const core=
+new THREE.Mesh(
+new THREE.IcosahedronGeometry(2.4,2),
+new THREE.MeshStandardMaterial({
+color:0x03466a,
+metalness:.9,
+roughness:.18,
+emissive:0x003b68,
+wireframe:true
+})
+);
+
+core.position.set(4,0,-2);
+
+heroScene.add(core);
+
+
+/* RINGS */
+
+for(let i=0;i<4;i++){
+
+  const ring=
+  new THREE.Mesh(
+    new THREE.TorusGeometry(
+      2.8+i*.5,
+      .015,
+      12,
+      100
+    ),
+    new THREE.MeshBasicMaterial({
+      color:0x00d9ff,
+      transparent:true,
+      opacity:.35
+    })
+  );
+
+  ring.rotation.x=
+    Math.random()*Math.PI;
+
+  ring.rotation.y=
+    Math.random()*Math.PI;
+
+  core.add(ring);
 
 }
 
-particleGeometry.setAttribute(
-  "position",
-  new THREE.BufferAttribute(
-    particlePositions,3
-  )
-);
 
-const particleMaterial=
-new THREE.PointsMaterial({
-  color:0xd6b06a,
-  size:.035,
-  transparent:true,
-  opacity:.65
-});
-
-const particleSystem=
-new THREE.Points(
-  particleGeometry,
-  particleMaterial
-);
-
-heroScene.add(particleSystem);
-
-
-/* CENTRAL OBJECT */
-
-const heroObject=
-new THREE.Mesh(
-  new THREE.SphereGeometry(2.8,64,64),
-  new THREE.MeshStandardMaterial({
-    color:0x76552e,
-    metalness:1,
-    roughness:.2,
-    emissive:0x1b0e04
-  })
-);
-
-heroObject.position.set(4,0,-5);
-
-heroScene.add(heroObject);
-
-
-/* LIGHT */
+/* LIGHTS */
 
 heroScene.add(
-  new THREE.AmbientLight(
-    0xffffff,.7
-  )
+new THREE.AmbientLight(
+0x7fdcff,
+.7
+)
 );
 
 const heroLight=
 new THREE.PointLight(
-  0xd6b06a,
-  12,
-  30
+0x00cfff,
+15,
+30
 );
 
-heroLight.position.set(4,5,2);
+heroLight.position.set(
+4,4,3
+);
 
 heroScene.add(heroLight);
 
 
 function heroLoop(){
 
-  requestAnimationFrame(heroLoop);
+requestAnimationFrame(heroLoop);
 
-  particleSystem.rotation.y+=.0004;
+particles.rotation.y+=.0004;
 
-  heroObject.rotation.y+=.003;
-  heroObject.rotation.x+=.001;
+core.rotation.x+=.002;
+core.rotation.y+=.004;
 
-  heroRenderer.render(
-    heroScene,
-    heroCamera
-  );
+heroRenderer.render(
+heroScene,
+heroCamera
+);
 
 }
 
@@ -1960,828 +1488,1036 @@ heroLoop();
 
 
 /* =========================
-   TRUE INTERACTIVE ROOM
+3D WORLD
 ========================= */
 
-const viewer=
-document.getElementById("viewer");
+const worldElement=
+document.getElementById("world3d");
 
-const viewerContainer=
-document.getElementById("viewerCanvas");
-
-const scene=
+const world=
 new THREE.Scene();
 
-const camera=
+world.background=
+new THREE.Color(0x01040a);
+
+const worldCamera=
 new THREE.PerspectiveCamera(
-  70,
-  viewer.clientWidth/viewer.clientHeight,
-  .1,
-  1000
+70,
+worldElement.clientWidth/
+worldElement.clientHeight,
+.1,
+100
+);
+
+worldCamera.position.set(
+0,2.2,10
 );
 
 
-/*
-IMPORTANT:
-
-The camera is placed inside
-the environment.
-
-OrbitControls provides:
-
-- mouse drag
-- touch swipe
-- pinch zoom
-- inertia
-- damping
-- mobile interaction
-*/
-
-const controls=
-new THREE.OrbitControls(
-  camera,
-  viewerContainer
-);
-
-controls.enableDamping=true;
-controls.dampingFactor=.055;
-
-controls.enableZoom=true;
-
-controls.zoomSpeed=.7;
-
-controls.enablePan=false;
-
-controls.rotateSpeed=-.25;
-
-controls.minDistance=.1;
-controls.maxDistance=5;
-
-controls.target.set(
-  0,
-  1.7,
-  -5
-);
-
-camera.position.set(
-  0,
-  1.7,
-  0
-);
-
-
-/* RENDERER */
-
-const renderer=
+const worldRenderer=
 new THREE.WebGLRenderer({
-  antialias:true,
-  alpha:false
+antialias:true
 });
 
-renderer.setPixelRatio(
-  Math.min(devicePixelRatio,2)
+worldRenderer.setPixelRatio(
+Math.min(devicePixelRatio,2)
 );
 
-renderer.setSize(
-  viewer.clientWidth,
-  viewer.clientHeight
+worldRenderer.setSize(
+worldElement.clientWidth,
+worldElement.clientHeight
 );
 
-renderer.outputEncoding=
-THREE.sRGBEncoding;
-
-viewerContainer.appendChild(
-  renderer.domElement
+worldElement.appendChild(
+worldRenderer.domElement
 );
-
-
-/* ROOM MATERIALS */
-
-const floorMaterial=
-new THREE.MeshStandardMaterial({
-  color:0x21160d,
-  roughness:.35,
-  metalness:.25
-});
-
-const wallMaterial=
-new THREE.MeshStandardMaterial({
-  color:0x3a2616,
-  roughness:.6
-});
-
-const goldMaterial=
-new THREE.MeshStandardMaterial({
-  color:0xd6b06a,
-  metalness:1,
-  roughness:.18
-});
-
-const marbleMaterial=
-new THREE.MeshStandardMaterial({
-  color:0xd9d0c2,
-  roughness:.25,
-  metalness:.05
-});
 
 
 /* FLOOR */
 
 const floor=
 new THREE.Mesh(
-  new THREE.PlaneGeometry(30,30),
-  floorMaterial
+new THREE.PlaneGeometry(40,40),
+new THREE.MeshStandardMaterial({
+color:0x06111a,
+roughness:.3,
+metalness:.6
+})
 );
 
 floor.rotation.x=-Math.PI/2;
 
-scene.add(floor);
+world.add(floor);
 
 
-/* CEILING */
+/* GRID */
 
-const ceiling=
-new THREE.Mesh(
-  new THREE.PlaneGeometry(30,30),
-  new THREE.MeshStandardMaterial({
-    color:0x0b0907,
-    roughness:1
-  })
+const grid=
+new THREE.GridHelper(
+40,
+40,
+0x00bfff,
+0x073147
 );
 
-ceiling.rotation.x=Math.PI/2;
-ceiling.position.y=7;
+grid.position.y=.01;
 
-scene.add(ceiling);
+world.add(grid);
 
 
-/* WALL FUNCTION */
+/* BUILDING */
 
-function wall(
-  x,y,z,
-  width,height,depth
+const wallMaterial=
+new THREE.MeshStandardMaterial({
+color:0x071a2a,
+roughness:.45,
+metalness:.5
+});
+
+
+function createWall(
+x,y,z,
+sx,sy,sz
 ){
 
-  const w=
-  new THREE.Mesh(
-    new THREE.BoxGeometry(
-      width,height,depth
-    ),
-    wallMaterial
-  );
-
-  w.position.set(
-    x,y,z
-  );
-
-  scene.add(w);
-
-  return w;
-}
-
-
-wall(0,3.5,-10,20,7,.3);
-wall(-10,3.5,0,.3,7,20);
-wall(10,3.5,0,.3,7,20);
-
-
-/* GOLD WALL PANELS */
-
-for(let x=-8;x<=8;x+=4){
-
-  const panel=
-  new THREE.Mesh(
-    new THREE.BoxGeometry(
-      2.6,4,.08
-    ),
-    marbleMaterial
-  );
-
-  panel.position.set(
-    x,3.2,-9.8
-  );
-
-  scene.add(panel);
-
-  const frame=
-  new THREE.Mesh(
-    new THREE.BoxGeometry(
-      2.75,4.15,.05
-    ),
-    goldMaterial
-  );
-
-  frame.position.set(
-    x,3.2,-9.85
-  );
-
-  scene.add(frame);
-
-}
-
-
-/* TABLE FUNCTION */
-
-function createTable(x,z){
-
-  const top=
-  new THREE.Mesh(
-    new THREE.CylinderGeometry(
-      1.35,1.35,.16,48
-    ),
-    marbleMaterial
-  );
-
-  top.position.set(
-    x,1.65,z
-  );
-
-  scene.add(top);
-
-
-  const leg=
-  new THREE.Mesh(
-    new THREE.CylinderGeometry(
-      .13,.18,1.6,24
-    ),
-    goldMaterial
-  );
-
-  leg.position.set(
-    x,.8,z
-  );
-
-  scene.add(leg);
-
-
-  /* CHAIRS */
-
-  for(let a=0;a<Math.PI*2;a+=Math.PI/2){
-
-    const chair=
-    new THREE.Mesh(
-      new THREE.BoxGeometry(
-        .65,.8,.65
-      ),
-      new THREE.MeshStandardMaterial({
-        color:0x17120d,
-        roughness:.7
-      })
-    );
-
-    chair.position.set(
-      x+Math.sin(a)*2,
-      .55,
-      z+Math.cos(a)*2
-    );
-
-    chair.rotation.y=a;
-
-    scene.add(chair);
-
-  }
-
-}
-
-
-createTable(-4,-2);
-createTable(4,-2);
-createTable(-4,-7);
-createTable(4,-7);
-
-
-/* CHEF COUNTER */
-
-const counter=
+const w=
 new THREE.Mesh(
-  new THREE.BoxGeometry(
-    7,2.2,1.2
-  ),
-  new THREE.MeshStandardMaterial({
-    color:0x25170d,
-    roughness:.3,
-    metalness:.35
-  })
+new THREE.BoxGeometry(
+sx,sy,sz
+),
+wallMaterial
 );
 
-counter.position.set(
-  0,1.1,6
+w.position.set(
+x,y,z
 );
 
-scene.add(counter);
-
-
-/* BAR BACKDROP */
-
-const barBack=
-new THREE.Mesh(
-  new THREE.BoxGeometry(
-    8,5,.4
-  ),
-  wallMaterial
-);
-
-barBack.position.set(
-  0,3.3,6.6
-);
-
-scene.add(barBack);
-
-
-/* =========================
-   FAIRY LIGHT CANOPY
-========================= */
-
-for(let x=-9;x<=9;x+=.8){
-
-  const bulb=
-  new THREE.Mesh(
-    new THREE.SphereGeometry(
-      .075,16,16
-    ),
-    new THREE.MeshStandardMaterial({
-      color:0xffdf9b,
-      emissive:0xffb84e,
-      emissiveIntensity:4
-    })
-  );
-
-  bulb.position.set(
-    x,
-    6.5,
-    -3+Math.sin(x*.7)*.6
-  );
-
-  scene.add(bulb);
-
-  const glow=
-  new THREE.PointLight(
-    0xffc76d,
-    .45,
-    2.5
-  );
-
-  glow.position.copy(
-    bulb.position
-  );
-
-  scene.add(glow);
+world.add(w);
 
 }
 
 
-/* =========================
-   CHEF
-========================= */
+createWall(
+0,4,-9,
+20,8,.4
+);
 
-const chef=
+createWall(
+-10,4,0,
+.4,8,20
+);
+
+createWall(
+10,4,0,
+.4,8,20
+);
+
+
+/* NEON CUBES */
+
+for(let i=0;i<18;i++){
+
+const cube=
+new THREE.Mesh(
+new THREE.BoxGeometry(
+.7,.7,.7
+),
+new THREE.MeshStandardMaterial({
+color:0x008cff,
+emissive:0x003b88,
+emissiveIntensity:3,
+metalness:.8
+})
+);
+
+cube.position.set(
+(Math.random()-.5)*16,
+Math.random()*5+.5,
+-7+Math.random()*14
+);
+
+world.add(cube);
+
+}
+
+
+/* TABLES */
+
+function table(x,z){
+
+const top=
+new THREE.Mesh(
+new THREE.CylinderGeometry(
+1.2,1.2,.15,32
+),
+new THREE.MeshStandardMaterial({
+color:0x92a4b0,
+metalness:.8,
+roughness:.2
+})
+);
+
+top.position.set(x,1.5,z);
+
+world.add(top);
+
+
+const leg=
+new THREE.Mesh(
+new THREE.CylinderGeometry(
+.12,.18,1.5,20
+),
+new THREE.MeshStandardMaterial({
+color:0x00bfff,
+emissive:0x005080,
+emissiveIntensity:2
+})
+);
+
+leg.position.set(x,.75,z);
+
+world.add(leg);
+
+}
+
+table(-4,-2);
+table(4,-2);
+table(-4,-6);
+table(4,-6);
+
+
+/* ROBOT */
+
+function createRobot(){
+
+const robot=
 new THREE.Group();
 
 
-const chefBody=
+const body=
 new THREE.Mesh(
-  new THREE.CapsuleGeometry(
-    .38,1.2,8,16
-  ),
-  new THREE.MeshStandardMaterial({
-    color:0xf0ece4
-  })
+new THREE.BoxGeometry(
+.8,1.2,.6
+),
+new THREE.MeshStandardMaterial({
+color:0x94a9b7,
+metalness:.9,
+roughness:.2
+})
 );
 
-chefBody.position.y=1.2;
+body.position.y=1.3;
 
-chef.add(chefBody);
+robot.add(body);
 
 
-const chefHead=
+const head=
 new THREE.Mesh(
-  new THREE.SphereGeometry(
-    .35,24,24
-  ),
-  new THREE.MeshStandardMaterial({
-    color:0xc58968
-  })
+new THREE.BoxGeometry(
+.7,.65,.55
+),
+new THREE.MeshStandardMaterial({
+color:0x132433,
+metalness:.8,
+roughness:.2,
+emissive:0x002b40
+})
 );
 
-chefHead.position.y=2.35;
+head.position.y=2.25;
 
-chef.add(chefHead);
+robot.add(head);
 
 
-chef.position.set(
-  0,0,5.2
+const eye=
+new THREE.Mesh(
+new THREE.BoxGeometry(
+.38,.07,.04
+),
+new THREE.MeshBasicMaterial({
+color:0x00efff
+})
 );
 
-scene.add(chef);
+eye.position.set(
+0,2.25,-.3
+);
+
+robot.add(eye);
 
 
-/* =========================
-   CUSTOMER
-========================= */
+robot.position.set(
+0,0,-5
+);
+
+world.add(robot);
+
+return robot;
+
+}
+
+const robot=
+createRobot();
+
+
+/* CUSTOMER */
+
+function createCustomer(){
 
 const customer=
 new THREE.Group();
 
-
-const customerBody=
+const body=
 new THREE.Mesh(
-  new THREE.CapsuleGeometry(
-    .35,1.1,8,16
-  ),
-  new THREE.MeshStandardMaterial({
-    color:0x26201a
-  })
+new THREE.CapsuleGeometry(
+.3,.9,6,12
+),
+new THREE.MeshStandardMaterial({
+color:0x684d9a
+})
 );
 
-customerBody.position.y=1.1;
+body.position.y=1;
 
-customer.add(customerBody);
+customer.add(body);
 
 
-const customerHead=
+const head=
 new THREE.Mesh(
-  new THREE.SphereGeometry(
-    .34,24,24
-  ),
-  new THREE.MeshStandardMaterial({
-    color:0xc58a69
-  })
+new THREE.SphereGeometry(
+.3,20,20
+),
+new THREE.MeshStandardMaterial({
+color:0xc58c72
+})
 );
 
-customerHead.position.y=2.2;
+head.position.y=2;
 
-customer.add(customerHead);
-
+customer.add(head);
 
 customer.position.set(
-  -7,0,-4
+-6,0,-2
 );
 
-scene.add(customer);
+world.add(customer);
+
+return customer;
+
+}
+
+const customer=
+createCustomer();
 
 
-/* =========================
-   LIGHTING
-========================= */
+/* LIGHTS */
 
-scene.add(
-  new THREE.HemisphereLight(
-    0xffe6c0,
-    0x080604,
-    1
-  )
+world.add(
+new THREE.HemisphereLight(
+0x9bdfff,
+0x020308,
+1
+)
 );
 
-
-const mainLight=
+const blueLight=
 new THREE.PointLight(
-  0xffb65b,
-  15,
-  25
+0x00bfff,
+15,
+25
 );
 
-mainLight.position.set(
-  0,5,1
+blueLight.position.set(
+0,5,-3
 );
 
-scene.add(mainLight);
+world.add(blueLight);
 
 
-/* TABLE LIGHTS */
+/* MOVEMENT */
 
-[-4,4].forEach(x=>{
+const keys={};
 
-  const l=
-  new THREE.PointLight(
-    0xffcf83,
-    4,
-    8
-  );
+window.addEventListener(
+"keydown",
+e=>{
+keys[e.key.toLowerCase()]=true;
+}
+);
 
-  l.position.set(
-    x,4,-2
-  );
+window.addEventListener(
+"keyup",
+e=>{
+keys[e.key.toLowerCase()]=false;
+}
+);
 
-  scene.add(l);
+function movePlayer(direction){
+
+const amount=.8;
+
+if(direction==="forward")
+worldCamera.position.z-=amount;
+
+if(direction==="back")
+worldCamera.position.z+=amount;
+
+if(direction==="left")
+worldCamera.position.x-=amount;
+
+if(direction==="right")
+worldCamera.position.x+=amount;
+
+}
+
+
+/* ANIMATION */
+
+let worldTime=0;
+
+function worldLoop(){
+
+requestAnimationFrame(worldLoop);
+
+worldTime+=.015;
+
+
+/* keyboard movement */
+
+if(keys["w"]||keys["arrowup"])
+worldCamera.position.z-=.08;
+
+if(keys["s"]||keys["arrowdown"])
+worldCamera.position.z+=.08;
+
+if(keys["a"]||keys["arrowleft"])
+worldCamera.position.x-=.08;
+
+if(keys["d"]||keys["arrowright"])
+worldCamera.position.x+=.08;
+
+
+/* robot */
+
+robot.position.x=
+Math.sin(worldTime)*3;
+
+robot.rotation.y=
+Math.sin(worldTime)*.7;
+
+
+/* customer */
+
+customer.position.x=
+-6+
+((Math.sin(worldTime*.6)+1)/2)*5;
+
+customer.position.z=
+-2+
+Math.sin(worldTime*.8)*2;
+
+
+/* neon */
+
+world.children.forEach(obj=>{
+
+if(
+obj.isMesh &&
+obj.material &&
+obj.material.emissive
+){
+obj.rotation.y+=.002;
+}
 
 });
 
 
-/* =========================
-   CUSTOMER WALK CYCLE
-========================= */
-
-let customerTime=0;
-
-function animateRoom(){
-
-  requestAnimationFrame(
-    animateRoom
-  );
-
-  customerTime+=.006;
-
-  customer.position.x=
-    -7+
-    ((Math.sin(customerTime)+1)/2)*5;
-
-  customer.position.z=
-    -4+
-    Math.sin(customerTime*.7)*2;
-
-  customer.rotation.y=
-    Math.sin(customerTime)*.5;
-
-  chef.rotation.y=
-    Math.sin(customerTime*.5)*.1;
-
-  controls.update();
-
-  renderer.render(
-    scene,
-    camera
-  );
+worldRenderer.render(
+world,
+worldCamera
+);
 
 }
 
-animateRoom();
+worldLoop();
 
 
-/* =========================
-   ROOM CONTROLS
-========================= */
-
-function viewerZoom(amount){
-
-  camera.position.multiplyScalar(
-    amount>0 ? .85 : 1.15
-  );
-
-  const distance=
-    camera.position.length();
-
-  if(distance<.4){
-    camera.position.setLength(.4);
-  }
-
-  if(distance>4){
-    camera.position.setLength(4);
-  }
-
-}
-
-
-function resetViewer(){
-
-  controls.reset();
-
-  camera.position.set(
-    0,1.7,0
-  );
-
-  controls.target.set(
-    0,1.7,-5
-  );
-
-}
-
-
-/* =========================
-   RESPONSIVE 360 VIEW
-========================= */
-
-function resizeAll(){
-
-  heroCamera.aspect=
-    innerWidth/innerHeight;
-
-  heroCamera.updateProjectionMatrix();
-
-  heroRenderer.setSize(
-    innerWidth,
-    innerHeight
-  );
-
-
-  camera.aspect=
-    viewer.clientWidth/
-    viewer.clientHeight;
-
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(
-    viewer.clientWidth,
-    viewer.clientHeight
-  );
-
-}
+/* WORLD RESIZE */
 
 window.addEventListener(
-  "resize",
-  resizeAll
+"resize",
+()=>{
+
+heroCamera.aspect=
+innerWidth/innerHeight;
+
+heroCamera.updateProjectionMatrix();
+
+heroRenderer.setSize(
+innerWidth,
+innerHeight
+);
+
+
+worldCamera.aspect=
+worldElement.clientWidth/
+worldElement.clientHeight;
+
+worldCamera.updateProjectionMatrix();
+
+worldRenderer.setSize(
+worldElement.clientWidth,
+worldElement.clientHeight
+);
+
+}
 );
 
 
 /* =========================
-   MENU
+BURGER GAME
 ========================= */
 
-function addOrder(item){
+function startBurger(){
 
-  showInfo(
-    "ADDED TO EXPERIENCE",
-    item+
-    " has been added to your AURELIA dining experience. Your concierge can help build the rest of your evening."
-  );
+document.getElementById(
+"gameTitle"
+).textContent="ROBOT CHEF";
+
+document.getElementById(
+"gameScreen"
+).innerHTML=`
+
+<div class="burger">🍔</div>
+
+<h2 style="font-family:Orbitron">
+BUILD THE BURGER
+</h2>
+
+<p style="color:#78909f;margin-top:10px">
+Select all ingredients requested by the customer.
+</p>
+
+<div class="ingredients">
+
+<button class="ingredient"
+onclick="burgerPick(this,true)">
+🍞 BUN
+</button>
+
+<button class="ingredient"
+onclick="burgerPick(this,true)">
+🥩 PATTY
+</button>
+
+<button class="ingredient"
+onclick="burgerPick(this,true)">
+🥬 LETTUCE
+</button>
+
+<button class="ingredient"
+onclick="burgerPick(this,true)">
+🧀 CHEESE
+</button>
+
+<button class="ingredient"
+onclick="burgerPick(this,false)">
+🍭 CANDY
+</button>
+
+</div>
+
+<div id="burgerResult"
+style="margin-top:25px;color:#6ffaff">
+Customer order: Bun + Patty + Lettuce + Cheese
+</div>
+`;
+
+}
+
+
+let burgerCorrect=0;
+
+function burgerPick(button,correct){
+
+button.style.borderColor=
+correct ? "#00ffb3":"#ff405c";
+
+if(correct){
+
+burgerCorrect++;
+
+addScore(25);
+
+}
+
+if(burgerCorrect>=4){
+
+document.getElementById(
+"burgerResult"
+).textContent=
+"ORDER COMPLETE! Customer gave you ⭐⭐⭐⭐⭐";
+
+}
 
 }
 
 
 /* =========================
-   CHEF
+DRIVING
 ========================= */
 
-function chefRecommendation(){
+function startDrive(){
 
-  scrollToId("concierge");
+document.getElementById(
+"gameTitle"
+).textContent="NEON DRIVE";
 
-  setTimeout(()=>{
+document.getElementById(
+"gameScreen"
+).innerHTML=`
 
-    addBot(
-      "Our chef recommends the Chef's Tasting for a complete AURELIA experience. Tell me whether you prefer vegetarian, seafood, coffee or dessert and I will guide you."
-    );
+<div style="font-size:120px">
+🚗
+</div>
 
-  },600);
+<h2 style="font-family:Orbitron">
+NEON CITY DRIVER
+</h2>
+
+<p style="color:#78909f;margin-top:10px">
+Original arcade driving challenge.
+Use WASD or arrow keys.
+</p>
+
+<div style="
+margin-top:25px;
+font-family:Orbitron;
+color:#00e1ff;
+">
+DISTANCE: <span id="driveDistance">0</span> KM
+</div>
+
+<button
+class="primary"
+style="margin-top:25px"
+onclick="driveStart()">
+START ENGINE
+</button>
+`;
+
+}
+
+
+let driveTimer;
+
+function driveStart(){
+
+let distance=0;
+
+clearInterval(driveTimer);
+
+driveTimer=setInterval(()=>{
+
+distance++;
+
+document.getElementById(
+"driveDistance"
+).textContent=
+distance;
+
+if(distance>=100){
+
+clearInterval(driveTimer);
+
+addScore(100);
+
+alert(
+"Destination reached! +100 points"
+);
+
+}
+
+},100);
 
 }
 
 
 /* =========================
-   RESERVATION
+HEALTH
 ========================= */
 
-function reserveTable(){
+function startHealth(){
 
-  const name=
-    document.getElementById("name").value.trim();
+document.getElementById(
+"health"
+).scrollIntoView({
+behavior:"smooth"
+});
 
-  const phone=
-    document.getElementById("phone").value.trim();
+}
 
-  const date=
-    document.getElementById("date").value;
 
-  if(!name || !phone || !date){
+function healthChoice(healthy){
 
-    alert(
-      "Please complete your name, phone number and date."
-    );
+const result=
+document.getElementById(
+"healthResult"
+);
 
-    return;
-  }
+if(healthy){
 
-  showInfo(
-    "REQUEST RECEIVED",
-    "Thank you, "+
-    name+
-    ". Your reservation request has been received. Our concierge team will contact you to confirm your table."
-  );
+healthScore+=10;
+
+document.getElementById(
+"healthScore"
+).textContent=
+healthScore;
+
+result.textContent=
+"✓ Good choice! This supports a healthier meal.";
+
+result.style.color="#4dffae";
+
+addScore(10);
+
+}else{
+
+result.textContent=
+"✕ This is a less healthy everyday choice.";
+
+result.style.color="#ff6680";
+
+}
 
 }
 
 
 /* =========================
-   AI CONCIERGE
+QUIZ
 ========================= */
 
-function addBot(text){
+function startQuiz(){
 
-  const chat=
-    document.getElementById("chat");
-
-  const div=
-    document.createElement("div");
-
-  div.className=
-    "message bot";
-
-  div.textContent=text;
-
-  chat.appendChild(div);
-
-  chat.scrollTop=
-    chat.scrollHeight;
+document.getElementById(
+"teacher"
+).scrollIntoView({
+behavior:"smooth"
+});
 
 }
 
 
-function sendChat(){
+function answerQuiz(correct){
 
-  const input=
-    document.getElementById("chatInput");
+const result=
+document.getElementById(
+"quizResult"
+);
 
-  const text=
-    input.value.trim();
+if(correct){
 
-  if(!text)return;
+result.textContent=
+"✓ Correct! Vegetables are an important source of dietary fibre.";
 
+result.style.color="#4dffae";
 
-  const chat=
-    document.getElementById("chat");
+addScore(30);
 
+}else{
 
-  const user=
-    document.createElement("div");
+result.textContent=
+"✕ Try again. Think about foods naturally rich in fibre.";
 
-  user.className=
-    "message user";
+result.style.color="#ff6680";
 
-  user.textContent=
-    text;
-
-  chat.appendChild(user);
-
-  input.value="";
-
-
-  setTimeout(()=>{
-
-    addBot(
-      conciergeReply(text)
-    );
-
-  },450);
+}
 
 }
 
 
-function conciergeReply(text){
+/* =========================
+DRAWING
+========================= */
 
-  const t=
-    text.toLowerCase();
+const drawCanvas=
+document.getElementById(
+"drawCanvas"
+);
 
+const drawCtx=
+drawCanvas.getContext("2d");
 
-  if(
-    t.includes("menu") ||
-    t.includes("food") ||
-    t.includes("dish")
-  ){
+let drawing=false;
+let penColor="#00d9ff";
 
-    return "Our signature collection includes Gold Reserve, Black Truffle Pasta, Rare Origin Coffee, Golden Cacao, Maison Croissant and our Chef's Tasting.";
+function resizeDraw(){
 
-  }
+const rect=
+drawCanvas.getBoundingClientRect();
 
+drawCanvas.width=
+rect.width*devicePixelRatio;
 
-  if(
-    t.includes("price") ||
-    t.includes("cost")
-  ){
+drawCanvas.height=
+rect.height*devicePixelRatio;
 
-    return "Signature dishes currently range from ₹280 to ₹1,499. Private dining and Chef's Table experiences can be customised.";
+drawCtx.scale(
+devicePixelRatio,
+devicePixelRatio
+);
 
-  }
+drawCtx.lineWidth=4;
+drawCtx.lineCap="round";
+drawCtx.lineJoin="round";
 
+}
 
-  if(
-    t.includes("chef")
-  ){
+resizeDraw();
 
-    return "For the most personal experience, I recommend our Chef's Table, where you can meet the chef and experience a curated menu.";
-
-  }
-
-
-  if(
-    t.includes("private") ||
-    t.includes("vip")
-  ){
-
-    return "Our private dining includes an exclusive room, dedicated host and a customised menu for your guests.";
-
-  }
-
-
-  if(
-    t.includes("coffee")
-  ){
-
-    return "Our Rare Origin Coffee is a specialty single-origin selection prepared fresh by our barista.";
-
-  }
+window.addEventListener(
+"resize",
+resizeDraw
+);
 
 
-  if(
-    t.includes("book") ||
-    t.includes("reserve") ||
-    t.includes("table")
-  ){
+function drawStart(e){
 
-    return "You can request your table in our reservation section. Chef's Table and private dining are best reserved in advance.";
+drawing=true;
 
-  }
+drawCtx.beginPath();
+
+drawMove(e);
+
+}
+
+function drawMove(e){
+
+if(!drawing)return;
+
+const rect=
+drawCanvas.getBoundingClientRect();
+
+let x,y;
+
+if(e.touches){
+
+x=e.touches[0].clientX-rect.left;
+y=e.touches[0].clientY-rect.top;
+
+}else{
+
+x=e.clientX-rect.left;
+y=e.clientY-rect.top;
+
+}
+
+drawCtx.strokeStyle=
+penColor;
+
+drawCtx.lineTo(x,y);
+
+drawCtx.stroke();
+
+}
+
+function drawEnd(){
+
+drawing=false;
+
+}
+
+drawCanvas.addEventListener(
+"mousedown",
+drawStart
+);
+
+drawCanvas.addEventListener(
+"mousemove",
+drawMove
+);
+
+drawCanvas.addEventListener(
+"mouseup",
+drawEnd
+);
+
+drawCanvas.addEventListener(
+"mouseleave",
+drawEnd
+);
+
+drawCanvas.addEventListener(
+"touchstart",
+drawStart,
+{passive:true}
+);
+
+drawCanvas.addEventListener(
+"touchmove",
+drawMove,
+{passive:true}
+);
+
+drawCanvas.addEventListener(
+"touchend",
+drawEnd
+);
 
 
-  return "I can help you discover our menu, prices, Chef's Table, private dining, coffee and reservations. What would you like to explore?";
+function clearDrawing(){
+
+drawCtx.clearRect(
+0,
+0,
+drawCanvas.width,
+drawCanvas.height
+);
+
+}
+
+
+function changePen(){
+
+const colors=[
+"#00d9ff",
+"#8d5cff",
+"#4dffae",
+"#ff4fd8",
+"#ffffff"
+];
+
+let index=
+colors.indexOf(penColor);
+
+index=(index+1)%colors.length;
+
+penColor=
+colors[index];
+
+}
+
+
+/* =========================
+AI
+========================= */
+
+function addAI(text){
+
+const chat=
+document.getElementById(
+"chat"
+);
+
+const div=
+document.createElement("div");
+
+div.className="msg bot";
+
+div.textContent=text;
+
+chat.appendChild(div);
+
+chat.scrollTop=
+chat.scrollHeight;
+
+}
+
+
+function sendAI(){
+
+const input=
+document.getElementById(
+"chatInput"
+);
+
+const text=
+input.value.trim();
+
+if(!text)return;
+
+
+const chat=
+document.getElementById(
+"chat"
+);
+
+const user=
+document.createElement("div");
+
+user.className="msg user";
+
+user.textContent=text;
+
+chat.appendChild(user);
+
+input.value="";
+
+
+setTimeout(()=>{
+
+const t=text.toLowerCase();
+
+let answer=
+"I can help you explore the NEONVERSE, games, health, learning, robots and the virtual café.";
+
+if(
+t.includes("robot")
+){
+
+answer=
+"Our robots manage the virtual café, serve customers and can become playable characters.";
+
+}
+
+else if(
+t.includes("game")
+){
+
+answer=
+"Try Robot Chef, Neon Drive, Health Lab and AI Challenge. More mini-games can be added later.";
+
+}
+
+else if(
+t.includes("health")
+){
+
+answer=
+"Health Lab teaches healthy and less healthy food choices through a simple interactive game.";
+
+}
+
+else if(
+t.includes("vr")
+){
+
+answer=
+"The world is designed with WebGL/WebXR-ready architecture and responsive controls for supported devices.";
+
+}
+
+else if(
+t.includes("draw")
+){
+
+answer=
+"Visit Virtual Pen and draw directly with your mouse, stylus or finger.";
+
+}
+
+else if(
+t.includes("teacher")
+){
+
+answer=
+"The Virtual Teacher section provides interactive learning questions and scoring.";
+
+}
+
+addAI(answer);
+
+},500);
 
 }
 

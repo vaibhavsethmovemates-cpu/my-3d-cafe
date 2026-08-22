@@ -2,322 +2,984 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>AURELIA — Luxury 360° Café</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<title>AURELIA — Private Dining House</title>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap');
 
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:#080706;color:#f7efe3;font-family:Inter,sans-serif;overflow-x:hidden}
 :root{
---gold:#d1ad70;
---gold2:#f3d79e;
---cream:#f7efe3;
---dark:#080706;
---brown:#24180e;
---muted:#aaa092;
+  --gold:#d6b06a;
+  --gold-light:#f4dca5;
+  --cream:#f7f2e9;
+  --ink:#0b0907;
+  --brown:#21160d;
+  --muted:#aaa094;
+  --line:rgba(214,176,106,.25);
 }
-button{font:inherit;cursor:pointer}
-a{text-decoration:none;color:inherit}
 
-::-webkit-scrollbar{width:5px}
-::-webkit-scrollbar-thumb{background:var(--gold)}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  background:var(--ink);
+  color:white;
+  font-family:"DM Sans",sans-serif;
+  overflow-x:hidden;
+}
+
+button,
+input,
+select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+/* LOADER */
 
 .loader{
-position:fixed;inset:0;background:#050403;z-index:9999;
-display:flex;align-items:center;justify-content:center;
-flex-direction:column;transition:1s
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  background:#050403;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  transition:opacity 1s;
 }
-.loaderLogo{
-font:500 65px "Cormorant Garamond";
-letter-spacing:10px
+
+.loader-brand{
+  font-family:"Cormorant Garamond";
+  font-size:65px;
+  letter-spacing:12px;
 }
-.loaderBar{
-height:1px;width:180px;background:#29241d;margin-top:20px
+
+.loader-line{
+  width:180px;
+  height:1px;
+  background:#30271d;
+  margin-top:20px;
 }
-.loaderBar span{
-display:block;width:0;height:100%;background:var(--gold);
-animation:load 2s forwards
+
+.loader-progress{
+  height:100%;
+  width:0;
+  background:var(--gold);
+  animation:loading 2s forwards;
 }
-@keyframes load{to{width:100%}}
+
+@keyframes loading{
+  to{width:100%}
+}
+
+/* NAV */
 
 .nav{
-position:fixed;z-index:500;top:18px;left:50%;
-transform:translateX(-50%);width:94%;max-width:1450px;
-display:flex;align-items:center;justify-content:space-between;
-padding:13px 20px;border:1px solid #d1ad7033;
-border-radius:50px;background:#080706a8;
-backdrop-filter:blur(20px)
-}
-.logo{font:500 28px "Cormorant Garamond";letter-spacing:5px}
-.logo span{color:var(--gold)}
-.links{display:flex;gap:20px}
-.links a{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#d7cbbb}
-.links a:hover{color:var(--gold2)}
-.navButton,.goldButton,.outlineButton{
-border-radius:30px;padding:12px 20px;font-size:10px;letter-spacing:1.2px
-}
-.navButton,.goldButton{border:1px solid var(--gold);background:var(--gold);color:#100c07}
-.outlineButton{border:1px solid #d1ad7066;background:transparent;color:#fff}
+  position:fixed;
+  top:18px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:5000;
 
-.page{min-height:100vh;padding:130px 7%;position:relative}
-.eyebrow{color:var(--gold);font-size:9px;letter-spacing:4px;margin-bottom:18px}
-.title{
-font:500 clamp(55px,8vw,115px) "Cormorant Garamond";
-line-height:.84;letter-spacing:-3px
-}
-.title span{color:var(--gold)}
-.desc{max-width:620px;color:var(--muted);font-size:13px;line-height:1.9}
+  width:min(1450px,94%);
+  height:66px;
 
-.hero{height:100vh;padding:0;overflow:hidden}
-#hero3d{position:absolute;inset:0}
-.heroShade{
-position:absolute;inset:0;z-index:2;
-background:linear-gradient(90deg,#050403ed,#05040360,#05040320)
-}
-.heroContent{
-position:absolute;z-index:5;top:50%;left:8%;
-transform:translateY(-50%);max-width:780px
-}
-.heroTitle{
-font:500 clamp(75px,10vw,150px) "Cormorant Garamond";
-line-height:.76;letter-spacing:-5px
-}
-.heroTitle span{color:var(--gold)}
-.heroTag{
-margin:25px 0;color:#dfd2c0;font-size:11px;letter-spacing:4px
-}
-.heroButtons{display:flex;gap:12px;margin-top:25px;flex-wrap:wrap}
-.scroll{
-position:absolute;z-index:5;bottom:25px;left:50%;
-transform:translateX(-50%);font-size:8px;letter-spacing:4px;text-align:center
-}
-.scroll i{display:block;width:1px;height:50px;background:var(--gold);margin:10px auto}
-.vr{
-position:absolute;right:30px;bottom:30px;z-index:5;
-padding:12px 18px;border:1px solid #d1ad7066;border-radius:30px;
-background:#0008;font-size:9px;letter-spacing:2px
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:0 22px;
+
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:50px;
+
+  background:rgba(8,7,5,.68);
+  backdrop-filter:blur(25px);
 }
 
-.intro{
-display:grid;grid-template-columns:1fr 1fr;gap:90px;align-items:center;
-background:#0b0907
-}
-.luxImage{
-height:580px;border:1px solid #d1ad7033;
-position:relative;overflow:hidden;
-background:
-radial-gradient(circle at 50% 30%,#8c7047 0,#2a1c10 22%,#100c08 60%,#050403 100%)
-}
-.luxImage:before{
-content:"";position:absolute;inset:25px;
-border:1px solid #e4c17a44
-}
-.luxImage:after{
-content:"AURELIA";position:absolute;inset:0;
-display:flex;align-items:center;justify-content:center;
-font:500 85px "Cormorant Garamond";letter-spacing:8px;
-color:#f4d99a16
+.brand{
+  font-family:"Cormorant Garamond";
+  font-size:29px;
+  letter-spacing:5px;
 }
 
-.sectionDark{background:#0d0b09}
-.room{
-height:650px;margin-top:45px;position:relative;
-border:1px solid #d1ad7040;overflow:hidden
-}
-#room3d{width:100%;height:100%}
-.roomHint{
-position:absolute;z-index:3;top:20px;left:20px;
-padding:10px 14px;background:#0008;border:1px solid #d1ad7040;
-font-size:9px;letter-spacing:2px
+.brand span{
+  color:var(--gold);
 }
 
-.cards{
-display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:50px
-}
-.card{
-padding:32px;min-height:250px;
-background:linear-gradient(145deg,#1b140d,#0d0b09);
-border:1px solid #d1ad7025;transition:.5s
-}
-.card:hover{transform:translateY(-8px);border-color:#d1ad70}
-.num{font-size:9px;color:var(--gold);letter-spacing:3px}
-.icon{font-size:40px;margin:25px 0}
-.card h3{font:500 29px "Cormorant Garamond"}
-.card p{font-size:12px;color:var(--muted);line-height:1.8;margin-top:10px}
-
-.menu{
-background:#f4eee5;color:#20180f
-}
-.menu .desc{color:#756c60}
-.menu .eyebrow{color:#987442}
-.menu .title span{color:#a2783e}
-.menuGrid{
-display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:50px
-}
-.food{
-background:white;border:1px solid #e1d5c4;padding:18px;transition:.4s
-}
-.food:hover{transform:translateY(-6px)}
-.foodPic{
-height:230px;background:linear-gradient(135deg,#eee2d1,#fff);
-display:flex;align-items:center;justify-content:center;font-size:100px;
-margin-bottom:20px
-}
-.foodInfo{display:flex;justify-content:space-between;gap:10px}
-.food h3{font:600 26px "Cormorant Garamond"}
-.price{color:#9b723b;font-weight:600}
-.stars{color:#a2783e;font-size:10px;margin-top:8px}
-.food p{font-size:11px;line-height:1.7;color:#776e62;margin-top:9px}
-.order{
-margin-top:15px;border:1px solid #a2783e;background:transparent;
-padding:10px 15px;color:#7d5b2e;border-radius:20px;font-size:9px
+.nav-links{
+  display:flex;
+  gap:22px;
 }
 
-.chef{
-display:grid;grid-template-columns:1fr 1fr;gap:90px;align-items:center
-}
-.chefVisual{
-height:620px;display:flex;align-items:center;justify-content:center;
-font-size:220px;border:1px solid #d1ad7033;
-background:radial-gradient(circle,#80603b,#24170c 45%,#050403)
-}
-.quote{
-font:400 30px "Cormorant Garamond";line-height:1.25;margin:30px 0;color:#e7dac9
+.nav-links a{
+  font-size:9px;
+  text-transform:uppercase;
+  letter-spacing:1.8px;
+  color:#c9c0b3;
+  transition:.3s;
 }
 
-.private{
-background:
-radial-gradient(circle at 70% 40%,#342010,#0a0806 55%);
-}
-.privateBox{max-width:760px}
-.features{
-display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:35px
-}
-.feature{
-padding:20px;border:1px solid #d1ad7033;background:#ffffff06
-}
-.feature strong{
-display:block;font:500 24px "Cormorant Garamond";margin-bottom:6px
-}
-.feature small{color:var(--muted);font-size:10px}
-
-.reviews{background:#0b0907}
-.review p{
-font:400 25px "Cormorant Garamond";line-height:1.35
-}
-.review small{display:block;color:#8e8376;margin-top:20px}
-
-.reserve{
-background:#f2eade;color:#21190f
-}
-.reserve .title span{color:#a2783e}
-.form{
-max-width:900px;margin:50px auto 0;
-display:grid;grid-template-columns:1fr 1fr;gap:13px
-}
-.input{
-padding:17px;border:1px solid #d7c8b6;background:white;
-outline:none;font:inherit;color:#21190f
-}
-.full{grid-column:1/-1}
-.form button{grid-column:1/-1}
-
-.ai{
-background:radial-gradient(circle at center,#24190e,#080706 60%)
-}
-.aiBox{
-max-width:850px;margin:50px auto 0;
-border:1px solid #d1ad7040;background:#ffffff06;
-backdrop-filter:blur(20px)
-}
-.aiTop{
-display:flex;justify-content:space-between;padding:18px;
-border-bottom:1px solid #d1ad7025
-}
-.online{color:#74d39b;font-size:9px}
-.chat{height:380px;padding:20px;overflow:auto}
-.msg{
-max-width:76%;padding:13px 16px;margin-bottom:13px;
-font-size:12px;line-height:1.6
-}
-.bot{background:#18130d;border:1px solid #d1ad7025}
-.user{margin-left:auto;background:var(--gold);color:#110d08}
-.chatInput{display:flex;border-top:1px solid #d1ad7025}
-.chatInput input{
-flex:1;background:transparent;border:0;padding:17px;color:white;outline:0
-}
-.chatInput button{border:0;background:var(--gold);padding:0 22px}
-
-.footer{
-padding:35px 7%;display:flex;justify-content:space-between;
-border-top:1px solid #d1ad7020;background:#050403;
-font-size:9px;letter-spacing:2px;color:#746a5d
+.nav-links a:hover{
+  color:var(--gold-light);
 }
 
-/* FLOATING FAIRY LIGHTS */
+.nav-btn,
+.gold-btn{
+  border:1px solid var(--gold);
+  background:var(--gold);
+  color:#120d08;
+  border-radius:30px;
+  padding:12px 20px;
+  font-size:9px;
+  letter-spacing:1.5px;
+}
+
+.outline-btn{
+  border:1px solid var(--line);
+  background:rgba(0,0,0,.2);
+  color:white;
+  border-radius:30px;
+  padding:12px 20px;
+  font-size:9px;
+  letter-spacing:1.5px;
+}
+
+/* HERO */
+
+.hero{
+  height:100svh;
+  min-height:650px;
+  position:relative;
+  overflow:hidden;
+}
+
+#heroCanvas{
+  position:absolute;
+  inset:0;
+}
+
+.hero-overlay{
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(90deg,
+      rgba(4,3,2,.95) 0%,
+      rgba(4,3,2,.62) 38%,
+      rgba(4,3,2,.12) 75%,
+      rgba(4,3,2,.28));
+  pointer-events:none;
+}
+
+.hero-content{
+  position:absolute;
+  z-index:5;
+  top:50%;
+  left:8%;
+  transform:translateY(-50%);
+  max-width:780px;
+}
+
+.kicker{
+  color:var(--gold);
+  font-size:9px;
+  letter-spacing:5px;
+  text-transform:uppercase;
+  margin-bottom:20px;
+}
+
+.hero h1{
+  font-family:"Cormorant Garamond";
+  font-weight:500;
+  font-size:clamp(72px,10vw,155px);
+  line-height:.77;
+  letter-spacing:-5px;
+}
+
+.hero h1 span{
+  color:var(--gold);
+}
+
+.hero-sub{
+  max-width:570px;
+  margin-top:28px;
+  color:#c4bbae;
+  font-size:13px;
+  line-height:1.9;
+}
+
+.actions{
+  display:flex;
+  gap:12px;
+  margin-top:28px;
+  flex-wrap:wrap;
+}
+
+.drag-badge{
+  position:absolute;
+  z-index:5;
+  right:30px;
+  bottom:30px;
+  border:1px solid var(--line);
+  border-radius:30px;
+  padding:13px 18px;
+  background:rgba(0,0,0,.42);
+  backdrop-filter:blur(10px);
+  font-size:9px;
+  letter-spacing:2px;
+}
+
+.scroll-hint{
+  position:absolute;
+  bottom:25px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:5;
+  font-size:8px;
+  letter-spacing:4px;
+  color:#bcb1a3;
+}
+
+.scroll-hint i{
+  display:block;
+  height:45px;
+  width:1px;
+  background:var(--gold);
+  margin:10px auto 0;
+}
+
+/* FAIRY LIGHTS */
 
 .fairy{
-position:absolute;z-index:2;left:0;right:0;top:0;
-height:100px;pointer-events:none
-}
-.bulb{
-position:absolute;width:6px;height:6px;border-radius:50%;
-background:#ffe0a0;box-shadow:0 0 7px #ffd27a,0 0 18px #d7a957;
-animation:twinkle 2.5s infinite alternate
-}
-@keyframes twinkle{
-0%{opacity:.35;box-shadow:0 0 3px #ffd27a}
-100%{opacity:1;box-shadow:0 0 10px #ffd27a,0 0 25px #d7a957}
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:3;
 }
 
-@media(max-width:900px){
-.links{display:none}
-.intro,.chef{grid-template-columns:1fr;gap:40px}
-.cards,.menuGrid{grid-template-columns:1fr 1fr}
-.page{padding:105px 5%}
+.fairy span{
+  position:absolute;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:#ffe4a7;
+  box-shadow:
+    0 0 7px #ffd17b,
+    0 0 18px rgba(214,176,106,.8);
+  animation:blink 2.2s infinite alternate;
 }
 
-@media(max-width:600px){
-.heroContent{left:6%;right:6%}
-.heroTitle{font-size:68px}
-.cards,.menuGrid,.features,.form{grid-template-columns:1fr}
-.full{grid-column:auto}
-.room{height:480px}
-.luxImage,.chefVisual{height:430px}
-.title{font-size:58px}
-.footer{flex-direction:column;gap:12px}
+@keyframes blink{
+  from{opacity:.3}
+  to{opacity:1}
+}
+
+/* COMMON */
+
+.section{
+  min-height:100vh;
+  padding:130px 7%;
+  position:relative;
+}
+
+.section-head{
+  max-width:850px;
+}
+
+.section-title{
+  font-family:"Cormorant Garamond";
+  font-weight:500;
+  font-size:clamp(55px,8vw,110px);
+  line-height:.82;
+  letter-spacing:-3px;
+}
+
+.section-title span{
+  color:var(--gold);
+}
+
+.copy{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.9;
+  max-width:650px;
+  margin-top:25px;
+}
+
+/* INTRO */
+
+.intro{
+  background:#0d0b09;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:80px;
+  align-items:center;
+}
+
+.intro-visual{
+  height:600px;
+  position:relative;
+  overflow:hidden;
+  border:1px solid var(--line);
+  background:
+    radial-gradient(circle at 50% 35%,#87643c,#392615 30%,#0c0805 70%);
+}
+
+.intro-visual:before{
+  content:"AURELIA";
+  position:absolute;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:"Cormorant Garamond";
+  font-size:80px;
+  letter-spacing:8px;
+  color:rgba(255,255,255,.07);
+}
+
+.intro-visual:after{
+  content:"";
+  position:absolute;
+  inset:25px;
+  border:1px solid rgba(255,255,255,.14);
+}
+
+/* 360 */
+
+.experience{
+  background:#080706;
+}
+
+.viewer{
+  position:relative;
+  width:100%;
+  height:650px;
+  margin-top:50px;
+  border:1px solid var(--line);
+  overflow:hidden;
+  border-radius:4px;
+  background:#0d0b09;
+  touch-action:none;
+}
+
+#viewerCanvas{
+  width:100%;
+  height:100%;
+  display:block;
+}
+
+.viewer-top{
+  position:absolute;
+  z-index:10;
+  top:18px;
+  left:18px;
+  padding:12px 16px;
+  border:1px solid var(--line);
+  background:rgba(0,0,0,.5);
+  backdrop-filter:blur(15px);
+  font-size:9px;
+  letter-spacing:2px;
+}
+
+.viewer-bottom{
+  position:absolute;
+  z-index:10;
+  bottom:18px;
+  left:18px;
+  right:18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  pointer-events:none;
+}
+
+.viewer-help{
+  padding:12px 15px;
+  background:rgba(0,0,0,.58);
+  border:1px solid var(--line);
+  font-size:9px;
+  letter-spacing:1.5px;
+}
+
+.viewer-buttons{
+  display:flex;
+  gap:8px;
+  pointer-events:auto;
+}
+
+.viewer-buttons button{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:1px solid var(--line);
+  background:rgba(0,0,0,.65);
+  color:white;
+}
+
+/* HOTSPOTS */
+
+.hotspot{
+  position:absolute;
+  z-index:20;
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  border:1px solid var(--gold);
+  background:rgba(214,176,106,.18);
+  color:var(--gold-light);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  animation:pulse 2s infinite;
+}
+
+.hotspot.one{left:28%;top:40%}
+.hotspot.two{left:67%;top:34%}
+.hotspot.three{left:49%;top:58%}
+
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(214,176,106,.5)}
+  50%{box-shadow:0 0 0 12px rgba(214,176,106,0)}
+}
+
+/* JOURNEY */
+
+.journey{
+  background:#f2ece2;
+  color:#20170f;
+}
+
+.journey .copy{
+  color:#756c61;
+}
+
+.journey .kicker{
+  color:#98713a;
+}
+
+.journey .section-title span{
+  color:#9a723a;
+}
+
+.journey-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-top:55px;
+}
+
+.journey-card{
+  min-height:350px;
+  padding:30px;
+  background:white;
+  border:1px solid #ded3c3;
+  transition:.5s;
+}
+
+.journey-card:hover{
+  transform:translateY(-10px);
+}
+
+.journey-number{
+  color:#a27a40;
+  font-size:9px;
+  letter-spacing:3px;
+}
+
+.journey-icon{
+  font-size:50px;
+  margin:40px 0 30px;
+}
+
+.journey-card h3{
+  font-family:"Cormorant Garamond";
+  font-size:32px;
+  font-weight:600;
+}
+
+.journey-card p{
+  margin-top:10px;
+  font-size:11px;
+  line-height:1.8;
+  color:#766d62;
+}
+
+/* MENU */
+
+.menu{
+  background:#f2ece2;
+  color:#1e160e;
+}
+
+.menu .copy{
+  color:#766d62;
+}
+
+.menu-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+  margin-top:55px;
+}
+
+.food{
+  background:white;
+  padding:12px;
+  border:1px solid #ded3c3;
+  transition:.45s;
+}
+
+.food:hover{
+  transform:translateY(-8px);
+}
+
+.food-image{
+  height:260px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:110px;
+  background:
+    radial-gradient(circle at center,#eee3d5,#fff);
+}
+
+.food-info{
+  padding:18px 8px 10px;
+}
+
+.food-row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.food h3{
+  font-family:"Cormorant Garamond";
+  font-size:28px;
+}
+
+.price{
+  color:#9b733c;
+}
+
+.rating{
+  margin-top:8px;
+  font-size:10px;
+  color:#a2783e;
+}
+
+.food p{
+  margin-top:10px;
+  color:#776e63;
+  font-size:11px;
+  line-height:1.7;
+}
+
+.order-btn{
+  margin-top:15px;
+  padding:10px 16px;
+  border:1px solid #a2783e;
+  background:transparent;
+  color:#8c6736;
+  border-radius:30px;
+  font-size:9px;
+}
+
+/* CHEF */
+
+.chef{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:80px;
+  align-items:center;
+  background:#0b0907;
+}
+
+.chef-card{
+  height:620px;
+  border:1px solid var(--line);
+  background:
+    radial-gradient(circle at 50% 35%,#8a6842,#291b10 40%,#050403 80%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:210px;
+}
+
+.quote{
+  font-family:"Cormorant Garamond";
+  font-size:34px;
+  line-height:1.25;
+  margin:30px 0;
+  color:#e8dccd;
+}
+
+/* PRIVATE */
+
+.private{
+  background:
+    radial-gradient(circle at 70% 40%,#382513,#080604 58%);
+}
+
+.private-content{
+  max-width:900px;
+}
+
+.private-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  margin-top:45px;
+}
+
+.private-box{
+  padding:25px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.025);
+}
+
+.private-box h3{
+  font-family:"Cormorant Garamond";
+  font-size:29px;
+}
+
+.private-box p{
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.7;
+  margin-top:7px;
+}
+
+/* REVIEWS */
+
+.reviews{
+  background:#0d0b09;
+}
+
+.review-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+  margin-top:55px;
+}
+
+.review{
+  padding:35px;
+  min-height:270px;
+  border:1px solid var(--line);
+  background:linear-gradient(145deg,#17120d,#0b0907);
+}
+
+.stars{
+  color:var(--gold);
+  letter-spacing:3px;
+}
+
+.review p{
+  font-family:"Cormorant Garamond";
+  font-size:27px;
+  line-height:1.3;
+  margin-top:30px;
+}
+
+.review small{
+  display:block;
+  margin-top:25px;
+  color:#81766b;
+  font-size:9px;
+  letter-spacing:2px;
+}
+
+/* RESERVATION */
+
+.reservation{
+  background:#f2ece2;
+  color:#21180f;
+}
+
+.reservation .copy{
+  color:#756b60;
+}
+
+.reservation .kicker{
+  color:#98713a;
+}
+
+.reservation .section-title span{
+  color:#9b733b;
+}
+
+.form{
+  max-width:900px;
+  margin:55px auto 0;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.form input,
+.form select{
+  border:1px solid #d6c8b5;
+  background:white;
+  padding:17px;
+  outline:none;
+  color:#21180f;
+}
+
+.form .full{
+  grid-column:1/-1;
+}
+
+.form button{
+  grid-column:1/-1;
+}
+
+/* AI */
+
+.concierge{
+  background:
+    radial-gradient(circle at center,#24170d,#080706 65%);
+}
+
+.ai-window{
+  max-width:900px;
+  margin:50px auto 0;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.025);
+  backdrop-filter:blur(20px);
+}
+
+.ai-header{
+  padding:18px 20px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+}
+
+.online{
+  color:#6fd49a;
+  font-size:9px;
+}
+
+.chat{
+  height:400px;
+  overflow-y:auto;
+  padding:20px;
+}
+
+.message{
+  max-width:75%;
+  padding:13px 16px;
+  margin-bottom:12px;
+  font-size:11px;
+  line-height:1.7;
+}
+
+.bot{
+  border:1px solid var(--line);
+  background:#16110c;
+}
+
+.user{
+  margin-left:auto;
+  background:var(--gold);
+  color:#100c07;
+}
+
+.chat-input{
+  border-top:1px solid var(--line);
+  display:flex;
+}
+
+.chat-input input{
+  flex:1;
+  padding:18px;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:white;
+}
+
+.chat-input button{
+  border:0;
+  padding:0 25px;
+  background:var(--gold);
+}
+
+/* FINAL */
+
+.final{
+  min-height:80vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  background:
+    radial-gradient(circle at center,#352312,#080604 55%);
+}
+
+/* FOOTER */
+
+footer{
+  padding:30px 7%;
+  display:flex;
+  justify-content:space-between;
+  color:#70665a;
+  border-top:1px solid rgba(255,255,255,.07);
+  background:#050403;
+  font-size:8px;
+  letter-spacing:2px;
+}
+
+/* MOBILE */
+
+@media(max-width:1000px){
+
+.nav-links{
+  display:none;
+}
+
+.journey-grid{
+  grid-template-columns:1fr 1fr;
+}
+
+.menu-grid{
+  grid-template-columns:1fr 1fr;
+}
+
+.intro,
+.chef{
+  grid-template-columns:1fr;
+}
+
+.chef-card{
+  height:500px;
+}
+
+}
+
+@media(max-width:650px){
+
+.nav{
+  height:58px;
+}
+
+.brand{
+  font-size:24px;
+}
+
+.nav-btn{
+  padding:10px 15px;
+}
+
+.hero-content{
+  left:7%;
+  right:7%;
+}
+
+.hero h1{
+  font-size:68px;
+}
+
+.drag-badge{
+  right:15px;
+  bottom:15px;
+}
+
+.section{
+  padding:105px 6%;
+}
+
+.viewer{
+  height:530px;
+}
+
+.journey-grid,
+.menu-grid,
+.review-grid,
+.private-grid,
+.form{
+  grid-template-columns:1fr;
+}
+
+.form .full{
+  grid-column:auto;
+}
+
+.chef-card{
+  height:420px;
+  font-size:150px;
+}
+
+.intro-visual{
+  height:420px;
+}
+
+footer{
+  flex-direction:column;
+  gap:12px;
+}
+
 }
 </style>
 </head>
 
 <body>
 
+<!-- LOADER -->
+
 <div class="loader" id="loader">
-<div class="loaderLogo">AURELIA</div>
-<div class="loaderBar"><span></span></div>
+  <div class="loader-brand">AURELIA</div>
+  <div class="loader-line">
+    <div class="loader-progress"></div>
+  </div>
 </div>
 
-<nav class="nav">
-<a class="logo" href="#home">AURELIA<span>.</span></a>
 
-<div class="links">
-<a href="#home">Home</a>
+<!-- NAV -->
+
+<nav class="nav">
+
+<a class="brand" href="#home">
+AURELIA<span>.</span>
+</a>
+
+<div class="nav-links">
 <a href="#experience">360°</a>
 <a href="#journey">Experience</a>
 <a href="#menu">Menu</a>
 <a href="#chef">Chef</a>
 <a href="#private">Private</a>
 <a href="#reviews">Reviews</a>
-<a href="#reserve">Reserve</a>
-<a href="#ai">Concierge</a>
+<a href="#reservation">Reserve</a>
+<a href="#concierge">Concierge</a>
 </div>
 
-<button class="navButton" onclick="go('reserve')">RESERVE</button>
+<button class="nav-btn" onclick="scrollToId('reservation')">
+RESERVE
+</button>
+
 </nav>
 
 
@@ -325,157 +987,236 @@ animation:twinkle 2.5s infinite alternate
 
 <section class="hero" id="home">
 
-<div id="hero3d"></div>
+<div id="heroCanvas"></div>
 
-<div class="heroShade"></div>
+<div class="hero-overlay"></div>
 
-<div class="fairy" id="heroLights"></div>
+<div class="fairy" id="fairyLights"></div>
 
-<div class="heroContent">
+<div class="hero-content">
 
-<div class="eyebrow">THE PRIVATE CAFÉ EXPERIENCE</div>
-
-<h1 class="heroTitle">
-NOT JUST<br>
-<span>A CAFÉ.</span>
-</h1>
-
-<div class="heroTag">
-DINING • COFFEE • ART • EXPERIENCE
+<div class="kicker">
+PRIVATE DINING HOUSE • GURUGRAM
 </div>
 
-<p class="desc">
-AURELIA is an immersive luxury café created for guests
-who believe exceptional dining should feel unforgettable.
+<h1>
+A NEW<br>
+<span>DIMENSION</span><br>
+OF DINING.
+</h1>
+
+<p class="hero-sub">
+Step into an immersive luxury dining house where
+architecture, cuisine, hospitality and light become one
+extraordinary experience.
 </p>
 
-<div class="heroButtons">
-<button class="goldButton" onclick="go('experience')">
+<div class="actions">
+
+<button class="gold-btn"
+onclick="scrollToId('experience')">
 ENTER 360° EXPERIENCE
 </button>
 
-<button class="outlineButton" onclick="go('menu')">
-DISCOVER THE MENU
+<button class="outline-btn"
+onclick="scrollToId('menu')">
+EXPLORE MENU
 </button>
-</div>
 
 </div>
 
-<div class="scroll">
-ENTER THE EXPERIENCE
+</div>
+
+<div class="drag-badge">
+◉ DRAG • LOOK AROUND • EXPLORE
+</div>
+
+<div class="scroll-hint">
+SCROLL TO ENTER
 <i></i>
 </div>
 
-<div class="vr">◉ DRAG TO EXPLORE • 360°</div>
-
 </section>
 
 
-<!-- STORY -->
+<!-- INTRO -->
 
-<section class="page intro">
+<section class="section intro">
 
-<div class="luxImage"></div>
+<div class="intro-visual"></div>
 
 <div>
 
-<div class="eyebrow">01 — THE PHILOSOPHY</div>
-
-<h2 class="title">
-LUXURY IS<br>
-<span>AN EXPERIENCE.</span>
-</h2>
-
-<br>
-
-<p class="desc">
-Every detail at AURELIA is designed around the guest.
-From the first step through the door to the final dessert,
-the experience combines architecture, aroma, music,
-lighting, hospitality and food.
-</p>
-
-<br>
-
-<p class="desc">
-We don't simply serve a meal. We create an evening
-worth remembering.
-</p>
-
+<div class="kicker">
+01 — THE HOUSE
 </div>
-</section>
 
-
-<!-- 360 -->
-
-<section class="page sectionDark" id="experience">
-
-<div class="eyebrow">02 — IMMERSIVE SPACE</div>
-
-<h2 class="title">
-ENTER THE<br>
-<span>360° ROOM.</span>
+<h2 class="section-title">
+NOT A CAFÉ.<br>
+<span>A DESTINATION.</span>
 </h2>
 
-<br>
-
-<p class="desc">
-Drag the room to explore the dining area, bar,
-chef counter and glowing fairy-light atmosphere.
+<p class="copy">
+AURELIA was created for people who appreciate the
+details others overlook. Every surface, light, aroma,
+sound and plate has been carefully considered.
 </p>
 
-<div class="room">
-
-<div class="roomHint">DRAG • ROTATE • EXPLORE</div>
-
-<div id="room3d"></div>
+<p class="copy">
+Come for coffee. Stay for dinner. Return for the
+experience.
+</p>
 
 </div>
 
 </section>
 
 
-<!-- CUSTOMER JOURNEY -->
+<!-- 360 VIEWER -->
 
-<section class="page" id="journey">
+<section class="section experience" id="experience">
 
-<div class="eyebrow">03 — THE GUEST JOURNEY</div>
+<div class="section-head">
 
-<h2 class="title">
-FROM ARRIVAL<br>
-<span>TO TABLE.</span>
+<div class="kicker">
+02 — IMMERSIVE 360°
+</div>
+
+<h2 class="section-title">
+LOOK<br>
+<span>AROUND.</span>
 </h2>
 
-<div class="cards">
+<p class="copy">
+Explore the AURELIA environment. Drag with your mouse
+or swipe with your finger. Use the controls to move
+around the room.
+</p>
 
-<div class="card">
-<div class="num">01 / ARRIVAL</div>
-<div class="icon">🚶</div>
+</div>
+
+<div class="viewer" id="viewer">
+
+<div id="viewerCanvas"></div>
+
+<div class="viewer-top">
+AURELIA • 360° IMMERSIVE ROOM
+</div>
+
+<div class="hotspot one"
+onclick="showInfo('CHEF COUNTER','Meet the chef and discover tonight’s signature menu.')">
++
+</div>
+
+<div class="hotspot two"
+onclick="showInfo('PRIVATE DINING','An intimate environment for your most important evenings.')">
++
+</div>
+
+<div class="hotspot three"
+onclick="showInfo('SIGNATURE TABLE','Every table receives personalised service.')">
++
+</div>
+
+<div class="viewer-bottom">
+
+<div class="viewer-help">
+DESKTOP: DRAG • MOBILE: SWIPE • PINCH TO ZOOM
+</div>
+
+<div class="viewer-buttons">
+
+<button onclick="viewerZoom(1)">+</button>
+<button onclick="viewerZoom(-1)">−</button>
+<button onclick="resetViewer()">↺</button>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- JOURNEY -->
+
+<section class="section journey" id="journey">
+
+<div class="kicker">
+03 — THE GUEST JOURNEY
+</div>
+
+<h2 class="section-title">
+YOUR EVENING.<br>
+<span>OUR CRAFT.</span>
+</h2>
+
+<p class="copy">
+From the moment you arrive until the final course,
+every movement has been designed around hospitality.
+</p>
+
+<div class="journey-grid">
+
+<div class="journey-card">
+
+<div class="journey-number">01 / ARRIVAL</div>
+
+<div class="journey-icon">🚶</div>
+
 <h3>Walk In</h3>
+
 <p>
-Your host welcomes you at the entrance and guides
-you into the private café experience.
+Your host welcomes you and guides you into
+the world of AURELIA.
 </p>
+
 </div>
 
-<div class="card">
-<div class="num">02 / CHEF</div>
-<div class="icon">👨‍🍳</div>
+<div class="journey-card">
+
+<div class="journey-number">02 / DISCOVER</div>
+
+<div class="journey-icon">✨</div>
+
 <h3>Meet The Chef</h3>
+
 <p>
-The chef introduces the day's signature dishes
-and recommends the perfect experience.
+Discover the evening's ingredients and
+chef-curated recommendations.
 </p>
+
 </div>
 
-<div class="card">
-<div class="num">03 / ORDER</div>
-<div class="icon">✨</div>
-<h3>Personal Order</h3>
+<div class="journey-card">
+
+<div class="journey-number">03 / ORDER</div>
+
+<div class="journey-icon">🍽</div>
+
+<h3>Choose</h3>
+
 <p>
-Your selections are prepared specially for your
-table and presented with the story behind them.
+Build your evening around signature dishes,
+rare coffee and handcrafted desserts.
 </p>
+
+</div>
+
+<div class="journey-card">
+
+<div class="journey-number">04 / REMEMBER</div>
+
+<div class="journey-icon">🥂</div>
+
+<h3>Experience</h3>
+
+<p>
+Relax, celebrate and leave with a memory
+worth returning for.
+</p>
+
 </div>
 
 </div>
@@ -485,207 +1226,344 @@ table and presented with the story behind them.
 
 <!-- MENU -->
 
-<section class="page menu" id="menu">
+<section class="section menu" id="menu">
 
-<div class="eyebrow">04 — SIGNATURE COLLECTION</div>
+<div class="kicker">
+04 — SIGNATURE MENU
+</div>
 
-<h2 class="title">
+<h2 class="section-title">
 THE<br>
-<span>MENU.</span>
+<span>COLLECTION.</span>
 </h2>
 
-<p class="desc">
-A curated selection of signature dishes, rare coffee
-and desserts crafted for the AURELIA experience.
+<p class="copy">
+A refined menu built around premium ingredients,
+specialty coffee and modern European techniques.
 </p>
 
-<div class="menuGrid">
+<div class="menu-grid">
 
 <div class="food">
-<div class="foodPic">🥩</div>
-<div class="foodInfo">
-<h3>Gold Reserve Steak</h3>
+
+<div class="food-image">🥩</div>
+
+<div class="food-info">
+
+<div class="food-row">
+<h3>Gold Reserve</h3>
 <span class="price">₹1,499</span>
 </div>
-<div class="stars">★★★★★ 4.9</div>
-<p>Premium grilled steak, truffle jus, roasted vegetables and smoked salt.</p>
-<button class="order" onclick="order('Gold Reserve Steak')">ADD TO EXPERIENCE</button>
+
+<div class="rating">★★★★★ 4.9</div>
+
+<p>
+Prime grilled steak, truffle jus, seasonal vegetables
+and smoked sea salt.
+</p>
+
+<button class="order-btn"
+onclick="addOrder('Gold Reserve')">
+ADD TO EXPERIENCE
+</button>
+
 </div>
 
+</div>
+
+
 <div class="food">
-<div class="foodPic">🍝</div>
-<div class="foodInfo">
-<h3>Truffle Pasta</h3>
+
+<div class="food-image">🍝</div>
+
+<div class="food-info">
+
+<div class="food-row">
+<h3>Black Truffle</h3>
 <span class="price">₹799</span>
 </div>
-<div class="stars">★★★★★ 4.8</div>
-<p>Fresh handmade pasta, black truffle, parmesan and cream.</p>
-<button class="order" onclick="order('Truffle Pasta')">ADD TO EXPERIENCE</button>
+
+<div class="rating">★★★★★ 4.8</div>
+
+<p>
+Fresh pasta, black truffle, parmesan and
+silky cream sauce.
+</p>
+
+<button class="order-btn"
+onclick="addOrder('Black Truffle Pasta')">
+ADD TO EXPERIENCE
+</button>
+
 </div>
 
+</div>
+
+
 <div class="food">
-<div class="foodPic">☕</div>
-<div class="foodInfo">
-<h3>Rare Origin Coffee</h3>
+
+<div class="food-image">☕</div>
+
+<div class="food-info">
+
+<div class="food-row">
+<h3>Rare Origin</h3>
 <span class="price">₹420</span>
 </div>
-<div class="stars">★★★★★ 5.0</div>
-<p>Single-origin specialty coffee brewed to order by our barista.</p>
-<button class="order" onclick="order('Rare Origin Coffee')">ADD TO EXPERIENCE</button>
+
+<div class="rating">★★★★★ 5.0</div>
+
+<p>
+Single-origin specialty coffee prepared
+fresh by our barista.
+</p>
+
+<button class="order-btn"
+onclick="addOrder('Rare Origin Coffee')">
+ADD TO EXPERIENCE
+</button>
+
 </div>
 
+</div>
+
+
 <div class="food">
-<div class="foodPic">🍰</div>
-<div class="foodInfo">
-<h3>Golden Chocolate</h3>
+
+<div class="food-image">🍰</div>
+
+<div class="food-info">
+
+<div class="food-row">
+<h3>Golden Cacao</h3>
 <span class="price">₹499</span>
 </div>
-<div class="stars">★★★★★ 4.9</div>
-<p>72% dark chocolate, vanilla cream, gold leaf and cacao crumble.</p>
-<button class="order" onclick="order('Golden Chocolate')">ADD TO EXPERIENCE</button>
+
+<div class="rating">★★★★★ 4.9</div>
+
+<p>
+Dark chocolate, vanilla cream, gold leaf
+and cacao crumble.
+</p>
+
+<button class="order-btn"
+onclick="addOrder('Golden Cacao')">
+ADD TO EXPERIENCE
+</button>
+
 </div>
 
-<div class="food">
-<div class="foodPic">🍣</div>
-<div class="foodInfo">
-<h3>Chef's Tasting</h3>
-<span class="price">₹1,299</span>
-</div>
-<div class="stars">★★★★★ 4.9</div>
-<p>A curated tasting sequence designed by our executive chef.</p>
-<button class="order" onclick="order('Chef’s Tasting')">ADD TO EXPERIENCE</button>
 </div>
 
+
 <div class="food">
-<div class="foodPic">🥐</div>
-<div class="foodInfo">
+
+<div class="food-image">🥐</div>
+
+<div class="food-info">
+
+<div class="food-row">
 <h3>Maison Croissant</h3>
 <span class="price">₹280</span>
 </div>
-<div class="stars">★★★★★ 4.8</div>
-<p>French butter pastry served warm with seasonal preserve.</p>
-<button class="order" onclick="order('Maison Croissant')">ADD TO EXPERIENCE</button>
+
+<div class="rating">★★★★★ 4.8</div>
+
+<p>
+French butter pastry served warm with
+seasonal preserve.
+</p>
+
+<button class="order-btn"
+onclick="addOrder('Maison Croissant')">
+ADD TO EXPERIENCE
+</button>
+
 </div>
 
 </div>
+
+
+<div class="food">
+
+<div class="food-image">🍣</div>
+
+<div class="food-info">
+
+<div class="food-row">
+<h3>Chef's Tasting</h3>
+<span class="price">₹1,299</span>
+</div>
+
+<div class="rating">★★★★★ 4.9</div>
+
+<p>
+A multi-course tasting sequence created
+by the executive chef.
+</p>
+
+<button class="order-btn"
+onclick="addOrder('Chef Tasting')">
+ADD TO EXPERIENCE
+</button>
+
+</div>
+
+</div>
+
+</div>
+
 </section>
 
 
 <!-- CHEF -->
 
-<section class="page chef" id="chef">
+<section class="section chef" id="chef">
 
-<div class="chefVisual">👨‍🍳</div>
+<div class="chef-card">
+👨‍🍳
+</div>
 
 <div>
 
-<div class="eyebrow">05 — THE KITCHEN</div>
+<div class="kicker">
+05 — THE CHEF
+</div>
 
-<h2 class="title">
-MEET<br>
-<span>THE CHEF.</span>
+<h2 class="section-title">
+CRAFTED<br>
+<span>PERSONALLY.</span>
 </h2>
 
-<p class="desc">
-Our executive chef leads a kitchen built around
-seasonality, technique and hospitality.
+<p class="copy">
+Our chef believes luxury dining is not about excess.
+It is about precision, ingredients and understanding
+what the guest wants to feel.
 </p>
 
 <div class="quote">
-“Food should create a memory before
-the guest leaves the table.”
+“Every plate should give you a reason
+to remember the evening.”
 </div>
 
-<button class="goldButton" onclick="chefMessage()">
-REQUEST CHEF'S RECOMMENDATION
+<button class="gold-btn"
+onclick="chefRecommendation()">
+ASK THE CHEF
 </button>
 
 </div>
+
 </section>
 
 
 <!-- PRIVATE -->
 
-<section class="page private" id="private">
+<section class="section private" id="private">
 
-<div class="privateBox">
+<div class="private-content">
 
-<div class="eyebrow">06 — PRIVATE DINING</div>
+<div class="kicker">
+06 — PRIVATE DINING
+</div>
 
-<h2 class="title">
+<h2 class="section-title">
 THE TABLE<br>
 <span>IS YOURS.</span>
 </h2>
 
-<p class="desc">
-For intimate dinners, celebrations, executive meetings
-and private events, AURELIA offers a completely
-personalised experience.
+<p class="copy">
+For intimate celebrations, executive dinners,
+proposals, private meetings and special occasions.
 </p>
 
-<div class="features">
+<div class="private-grid">
 
-<div class="feature">
-<strong>Private Room</strong>
-<small>Exclusive space for your guests.</small>
+<div class="private-box">
+<h3>Private Room</h3>
+<p>Exclusive dining environment for your guests.</p>
 </div>
 
-<div class="feature">
-<strong>Chef's Table</strong>
-<small>Front-row access to the kitchen.</small>
+<div class="private-box">
+<h3>Chef's Table</h3>
+<p>Watch the kitchen and interact with the chef.</p>
 </div>
 
-<div class="feature">
-<strong>Custom Menu</strong>
-<small>A menu designed around your preferences.</small>
+<div class="private-box">
+<h3>Personal Host</h3>
+<p>Dedicated service throughout your experience.</p>
 </div>
 
-<div class="feature">
-<strong>Personal Host</strong>
-<small>Dedicated service throughout your visit.</small>
+<div class="private-box">
+<h3>Custom Menu</h3>
+<p>Design your menu around your preferences.</p>
 </div>
 
 </div>
 
-<br>
+<br><br>
 
-<button class="goldButton" onclick="go('reserve')">
+<button class="gold-btn"
+onclick="scrollToId('reservation')">
 REQUEST PRIVATE DINING
 </button>
 
 </div>
+
 </section>
 
 
 <!-- REVIEWS -->
 
-<section class="page reviews" id="reviews">
+<section class="section reviews" id="reviews">
 
-<div class="eyebrow">07 — GUEST JOURNAL</div>
+<div class="kicker">
+07 — GUEST JOURNAL
+</div>
 
-<h2 class="title">
-THEY<br>
-<span>EXPERIENCED IT.</span>
+<h2 class="section-title">
+HEARD<br>
+<span>FROM THE TABLE.</span>
 </h2>
 
-<div class="cards">
+<div class="review-grid">
 
-<div class="card review">
+<div class="review">
+
 <div class="stars">★★★★★</div>
-<p>“The atmosphere, service and food felt like a completely different level of dining.”</p>
-<small>— ARJUN / DELHI</small>
+
+<p>
+“The entire evening felt incredibly
+considered. Not just dinner — an experience.”
+</p>
+
+<small>— ARJUN • DELHI</small>
+
 </div>
 
-<div class="card review">
+<div class="review">
+
 <div class="stars">★★★★★</div>
-<p>“The chef personally explained our tasting menu. Incredible attention to detail.”</p>
-<small>— ISHA / MUMBAI</small>
+
+<p>
+“The chef's table completely changed
+how I think about dining.”
+</p>
+
+<small>— ISHA • MUMBAI</small>
+
 </div>
 
-<div class="card review">
+<div class="review">
+
 <div class="stars">★★★★★</div>
-<p>“One of the most beautiful café experiences I've ever had.”</p>
-<small>— RAHUL / GURUGRAM</small>
+
+<p>
+“The atmosphere is beautiful.
+The service is even better.”
+</p>
+
+<small>— RAHUL • GURUGRAM</small>
+
 </div>
 
 </div>
@@ -695,33 +1573,35 @@ THEY<br>
 
 <!-- RESERVATION -->
 
-<section class="page reserve" id="reserve">
+<section class="section reservation" id="reservation">
 
 <div style="text-align:center">
 
-<div class="eyebrow">08 — RESERVATION</div>
+<div class="kicker">
+08 — RESERVATION
+</div>
 
-<h2 class="title">
+<h2 class="section-title">
 RESERVE<br>
-<span>YOUR TABLE.</span>
+<span>YOUR EVENING.</span>
 </h2>
 
-<p class="desc" style="margin:auto">
-Reservations are recommended for private dining
-and Chef's Table experiences.
+<p class="copy" style="margin:25px auto 0">
+Reservations are recommended for Chef's Table
+and private dining experiences.
 </p>
 
 </div>
 
 <div class="form">
 
-<input id="guestName" class="input" placeholder="Full Name">
+<input id="name" placeholder="Full Name">
 
-<input id="phone" class="input" placeholder="Phone Number">
+<input id="phone" placeholder="Phone Number">
 
-<input id="date" type="date" class="input">
+<input id="date" type="date">
 
-<select class="input">
+<select id="guests">
 <option>2 Guests</option>
 <option>3 Guests</option>
 <option>4 Guests</option>
@@ -729,14 +1609,15 @@ and Chef's Table experiences.
 <option>6+ Guests</option>
 </select>
 
-<select id="experienceSelect" class="input full">
+<select class="full" id="experienceType">
 <option>Classic Dining</option>
 <option>Chef's Table</option>
 <option>Private Dining</option>
 <option>Celebration</option>
 </select>
 
-<button class="goldButton" onclick="reserve()">
+<button class="gold-btn"
+onclick="reserveTable()">
 REQUEST RESERVATION
 </button>
 
@@ -745,49 +1626,58 @@ REQUEST RESERVATION
 </section>
 
 
-<!-- AI CONCIERGE -->
+<!-- AI -->
 
-<section class="page ai" id="ai">
+<section class="section concierge" id="concierge">
 
 <div style="text-align:center">
 
-<div class="eyebrow">09 — AURELIA CONCIERGE</div>
+<div class="kicker">
+09 — PRIVATE CONCIERGE
+</div>
 
-<h2 class="title">
-YOUR PRIVATE<br>
+<h2 class="section-title">
+YOUR<br>
 <span>CONCIERGE.</span>
 </h2>
 
-<p class="desc" style="margin:auto">
-Ask about food, prices, coffee, private dining,
+<p class="copy" style="margin:25px auto 0">
+Ask about our menu, coffee, private dining,
 chef recommendations or reservations.
 </p>
 
 </div>
 
-<div class="aiBox">
+<div class="ai-window">
 
-<div class="aiTop">
+<div class="ai-header">
+
 <strong>AURELIA CONCIERGE</strong>
-<span class="online">● ONLINE</span>
+
+<span class="online">
+● AVAILABLE
+</span>
+
 </div>
 
 <div class="chat" id="chat">
 
-<div class="msg bot">
-Welcome to AURELIA. I am your private concierge.
-How may I assist you?
+<div class="message bot">
+Welcome to AURELIA. What would you like to
+discover tonight?
 </div>
 
 </div>
 
-<div class="chatInput">
+<div class="chat-input">
 
-<input id="chatInput"
+<input
+id="chatInput"
 placeholder="Ask your concierge..."
-onkeydown="if(event.key==='Enter')sendMessage()">
+onkeydown="if(event.key==='Enter')sendChat()"
+>
 
-<button onclick="sendMessage()">SEND</button>
+<button onclick="sendChat()">SEND</button>
 
 </div>
 
@@ -796,28 +1686,30 @@ onkeydown="if(event.key==='Enter')sendMessage()">
 </section>
 
 
-<!-- FINAL CTA -->
+<!-- FINAL -->
 
-<section class="page" style="display:flex;align-items:center;justify-content:center;text-align:center">
+<section class="section final">
 
 <div>
 
-<div class="eyebrow">10 — YOUR EVENING AWAITS</div>
+<div class="kicker">
+10 — THE EVENING AWAITS
+</div>
 
-<h2 class="title">
+<h2 class="section-title">
 WELCOME TO<br>
 <span>AURELIA.</span>
 </h2>
 
-<br>
-
-<p class="desc" style="margin:auto">
-Where exceptional food meets an unforgettable atmosphere.
+<p class="copy" style="margin:25px auto">
+Exceptional food. Exceptional atmosphere.
+An experience worth remembering.
 </p>
 
 <br>
 
-<button class="goldButton" onclick="go('reserve')">
+<button class="gold-btn"
+onclick="scrollToId('reservation')">
 RESERVE YOUR EXPERIENCE
 </button>
 
@@ -826,630 +1718,1070 @@ RESERVE YOUR EXPERIENCE
 </section>
 
 
-<footer class="footer">
-<span>© 2026 AURELIA PRIVATE CAFÉ</span>
+<footer>
+
+<span>© 2026 AURELIA PRIVATE DINING HOUSE</span>
+
 <span>DINING • COFFEE • ART • EXPERIENCE</span>
+
 </footer>
 
 
 <script>
 
-/* LOADER */
+/* =========================
+   BASIC FUNCTIONS
+========================= */
+
+function scrollToId(id){
+  document.getElementById(id).scrollIntoView({
+    behavior:"smooth"
+  });
+}
+
+function showInfo(title,text){
+
+  const box=document.createElement("div");
+
+  box.style.cssText=`
+    position:fixed;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    z-index:99999;
+    width:min(90%,420px);
+    padding:30px;
+    background:#110d09;
+    border:1px solid #d6b06a;
+    box-shadow:0 30px 100px #000;
+  `;
+
+  box.innerHTML=`
+    <div style="color:#d6b06a;font-size:9px;letter-spacing:3px">
+      AURELIA EXPERIENCE
+    </div>
+
+    <h2 style="
+      font-family:Cormorant Garamond;
+      font-size:40px;
+      margin:12px 0;
+    ">${title}</h2>
+
+    <p style="
+      color:#aaa094;
+      font-size:12px;
+      line-height:1.8;
+    ">${text}</p>
+
+    <button onclick="this.parentElement.remove()" style="
+      margin-top:20px;
+      padding:11px 18px;
+      background:#d6b06a;
+      border:0;
+      border-radius:20px;
+    ">CLOSE</button>
+  `;
+
+  document.body.appendChild(box);
+}
+
+
+/* =========================
+   LOADER
+========================= */
 
 window.addEventListener("load",()=>{
-setTimeout(()=>{
-document.getElementById("loader").style.opacity="0";
-setTimeout(()=>{
-document.getElementById("loader").style.display="none";
-},900);
-},1600);
+
+  setTimeout(()=>{
+
+    const loader=document.getElementById("loader");
+
+    loader.style.opacity="0";
+
+    setTimeout(()=>{
+      loader.style.display="none";
+    },1000);
+
+  },1800);
+
 });
 
 
-/* NAV */
+/* =========================
+   FAIRY LIGHTS
+========================= */
 
-function go(id){
-document.getElementById(id).scrollIntoView({behavior:"smooth"});
-}
+const fairy=document.getElementById("fairyLights");
 
+for(let i=0;i<48;i++){
 
-/* FAIRY LIGHTS */
+  const bulb=document.createElement("span");
 
-function createLights(container,count=28){
+  bulb.style.left=(Math.random()*100)+"%";
+  bulb.style.top=(5+Math.random()*25)+"%";
+  bulb.style.animationDelay=(Math.random()*2)+"s";
 
-for(let i=0;i<count;i++){
-
-const b=document.createElement("span");
-
-b.className="bulb";
-
-b.style.left=(Math.random()*100)+"%";
-b.style.top=(15+Math.random()*65)+"px";
-b.style.animationDelay=(Math.random()*2)+"s";
-
-container.appendChild(b);
+  fairy.appendChild(bulb);
 
 }
 
-}
 
-createLights(
-document.getElementById("heroLights"),
-32
+/* =========================
+   HERO 3D
+========================= */
+
+const heroContainer=document.getElementById("heroCanvas");
+
+const heroScene=new THREE.Scene();
+
+const heroCamera=new THREE.PerspectiveCamera(
+  55,
+  innerWidth/innerHeight,
+  .1,
+  100
+);
+
+heroCamera.position.z=8;
+
+const heroRenderer=new THREE.WebGLRenderer({
+  antialias:true,
+  alpha:true
+});
+
+heroRenderer.setPixelRatio(
+  Math.min(devicePixelRatio,2)
+);
+
+heroRenderer.setSize(
+  innerWidth,
+  innerHeight
+);
+
+heroContainer.appendChild(
+  heroRenderer.domElement
 );
 
 
-/* HERO THREE.JS */
+/* GOLDEN PARTICLES */
 
-const scene=new THREE.Scene();
+const particleGeometry=new THREE.BufferGeometry();
 
-const camera=new THREE.PerspectiveCamera(
-60,
-innerWidth/innerHeight,
-.1,
-1000
+const particleCount=1800;
+
+const particlePositions=
+new Float32Array(particleCount*3);
+
+for(let i=0;i<particlePositions.length;i++){
+
+  particlePositions[i]=
+    (Math.random()-.5)*35;
+
+}
+
+particleGeometry.setAttribute(
+  "position",
+  new THREE.BufferAttribute(
+    particlePositions,3
+  )
 );
 
-const renderer=new THREE.WebGLRenderer({
-antialias:true,
-alpha:true
+const particleMaterial=
+new THREE.PointsMaterial({
+  color:0xd6b06a,
+  size:.035,
+  transparent:true,
+  opacity:.65
+});
+
+const particleSystem=
+new THREE.Points(
+  particleGeometry,
+  particleMaterial
+);
+
+heroScene.add(particleSystem);
+
+
+/* CENTRAL OBJECT */
+
+const heroObject=
+new THREE.Mesh(
+  new THREE.SphereGeometry(2.8,64,64),
+  new THREE.MeshStandardMaterial({
+    color:0x76552e,
+    metalness:1,
+    roughness:.2,
+    emissive:0x1b0e04
+  })
+);
+
+heroObject.position.set(4,0,-5);
+
+heroScene.add(heroObject);
+
+
+/* LIGHT */
+
+heroScene.add(
+  new THREE.AmbientLight(
+    0xffffff,.7
+  )
+);
+
+const heroLight=
+new THREE.PointLight(
+  0xd6b06a,
+  12,
+  30
+);
+
+heroLight.position.set(4,5,2);
+
+heroScene.add(heroLight);
+
+
+function heroLoop(){
+
+  requestAnimationFrame(heroLoop);
+
+  particleSystem.rotation.y+=.0004;
+
+  heroObject.rotation.y+=.003;
+  heroObject.rotation.x+=.001;
+
+  heroRenderer.render(
+    heroScene,
+    heroCamera
+  );
+
+}
+
+heroLoop();
+
+
+/* =========================
+   TRUE INTERACTIVE ROOM
+========================= */
+
+const viewer=
+document.getElementById("viewer");
+
+const viewerContainer=
+document.getElementById("viewerCanvas");
+
+const scene=
+new THREE.Scene();
+
+const camera=
+new THREE.PerspectiveCamera(
+  70,
+  viewer.clientWidth/viewer.clientHeight,
+  .1,
+  1000
+);
+
+
+/*
+IMPORTANT:
+
+The camera is placed inside
+the environment.
+
+OrbitControls provides:
+
+- mouse drag
+- touch swipe
+- pinch zoom
+- inertia
+- damping
+- mobile interaction
+*/
+
+const controls=
+new THREE.OrbitControls(
+  camera,
+  viewerContainer
+);
+
+controls.enableDamping=true;
+controls.dampingFactor=.055;
+
+controls.enableZoom=true;
+
+controls.zoomSpeed=.7;
+
+controls.enablePan=false;
+
+controls.rotateSpeed=-.25;
+
+controls.minDistance=.1;
+controls.maxDistance=5;
+
+controls.target.set(
+  0,
+  1.7,
+  -5
+);
+
+camera.position.set(
+  0,
+  1.7,
+  0
+);
+
+
+/* RENDERER */
+
+const renderer=
+new THREE.WebGLRenderer({
+  antialias:true,
+  alpha:false
 });
 
 renderer.setPixelRatio(
-Math.min(devicePixelRatio,2)
+  Math.min(devicePixelRatio,2)
 );
 
 renderer.setSize(
-innerWidth,
-innerHeight
+  viewer.clientWidth,
+  viewer.clientHeight
 );
 
-document.getElementById("hero3d").appendChild(renderer.domElement);
+renderer.outputEncoding=
+THREE.sRGBEncoding;
 
-
-/* GOLD PARTICLES */
-
-const geo=new THREE.BufferGeometry();
-
-const count=1800;
-
-const arr=new Float32Array(count*3);
-
-for(let i=0;i<arr.length;i++){
-arr[i]=(Math.random()-.5)*40;
-}
-
-geo.setAttribute(
-"position",
-new THREE.BufferAttribute(arr,3)
+viewerContainer.appendChild(
+  renderer.domElement
 );
 
-const particles=new THREE.Points(
-geo,
-new THREE.PointsMaterial({
-color:0xd1ad70,
-size:.035,
-transparent:true,
-opacity:.8
-})
-);
 
-scene.add(particles);
+/* ROOM MATERIALS */
 
-
-/* ORB */
-
-const orb=new THREE.Mesh(
-new THREE.SphereGeometry(3,64,64),
+const floorMaterial=
 new THREE.MeshStandardMaterial({
-color:0x916c38,
-metalness:1,
-roughness:.17,
-emissive:0x241507
-})
-);
-
-orb.position.set(5,1,-6);
-
-scene.add(orb);
-
-
-/* LIGHTING */
-
-scene.add(
-new THREE.AmbientLight(0xffffff,.7)
-);
-
-const light=new THREE.PointLight(
-0xd1ad70,10,30
-);
-
-light.position.set(4,5,2);
-
-scene.add(light);
-
-camera.position.z=8;
-
-
-function heroAnimation(){
-
-requestAnimationFrame(heroAnimation);
-
-particles.rotation.y+=.0005;
-orb.rotation.y+=.004;
-orb.rotation.x+=.002;
-
-renderer.render(scene,camera);
-
-}
-
-heroAnimation();
-
-
-/* ROOM */
-
-const room=document.getElementById("room3d");
-
-const rScene=new THREE.Scene();
-
-const rCamera=new THREE.PerspectiveCamera(
-70,
-room.clientWidth/room.clientHeight,
-.1,
-1000
-);
-
-const rRenderer=new THREE.WebGLRenderer({
-antialias:true
+  color:0x21160d,
+  roughness:.35,
+  metalness:.25
 });
 
-rRenderer.setPixelRatio(
-Math.min(devicePixelRatio,2)
-);
+const wallMaterial=
+new THREE.MeshStandardMaterial({
+  color:0x3a2616,
+  roughness:.6
+});
 
-rRenderer.setSize(
-room.clientWidth,
-room.clientHeight
-);
+const goldMaterial=
+new THREE.MeshStandardMaterial({
+  color:0xd6b06a,
+  metalness:1,
+  roughness:.18
+});
 
-room.appendChild(rRenderer.domElement);
-
-rCamera.position.set(0,3,10);
+const marbleMaterial=
+new THREE.MeshStandardMaterial({
+  color:0xd9d0c2,
+  roughness:.25,
+  metalness:.05
+});
 
 
 /* FLOOR */
 
-const floor=new THREE.Mesh(
-new THREE.PlaneGeometry(40,40),
-new THREE.MeshStandardMaterial({
-color:0x1b120b,
-roughness:.28,
-metalness:.35
-})
+const floor=
+new THREE.Mesh(
+  new THREE.PlaneGeometry(30,30),
+  floorMaterial
 );
 
 floor.rotation.x=-Math.PI/2;
 
-rScene.add(floor);
+scene.add(floor);
 
 
-/* WALLS */
+/* CEILING */
 
-function makeWall(x,y,z,sx,sy,sz){
-
-const w=new THREE.Mesh(
-new THREE.BoxGeometry(sx,sy,sz),
-new THREE.MeshStandardMaterial({
-color:0x2c1c10,
-roughness:.5
-})
+const ceiling=
+new THREE.Mesh(
+  new THREE.PlaneGeometry(30,30),
+  new THREE.MeshStandardMaterial({
+    color:0x0b0907,
+    roughness:1
+  })
 );
 
-w.position.set(x,y,z);
+ceiling.rotation.x=Math.PI/2;
+ceiling.position.y=7;
 
-rScene.add(w);
-
-}
-
-makeWall(0,4,-12,24,8,.4);
-makeWall(-12,4,0,.4,8,24);
-makeWall(12,4,0,.4,8,24);
+scene.add(ceiling);
 
 
-/* TABLES */
+/* WALL FUNCTION */
 
-for(let x=-6;x<=6;x+=6){
+function wall(
+  x,y,z,
+  width,height,depth
+){
 
-const table=new THREE.Mesh(
-new THREE.CylinderGeometry(1.4,1.4,.18,40),
-new THREE.MeshStandardMaterial({
-color:0xb08348,
-metalness:.8,
-roughness:.2
-})
-);
+  const w=
+  new THREE.Mesh(
+    new THREE.BoxGeometry(
+      width,height,depth
+    ),
+    wallMaterial
+  );
 
-table.position.set(x,1.7,-2);
+  w.position.set(
+    x,y,z
+  );
 
-rScene.add(table);
+  scene.add(w);
 
-const leg=new THREE.Mesh(
-new THREE.CylinderGeometry(.16,.2,1.7,20),
-new THREE.MeshStandardMaterial({
-color:0x17100a,
-metalness:.8
-})
-);
-
-leg.position.set(x,.8,-2);
-
-rScene.add(leg);
-
+  return w;
 }
 
 
-/* BAR */
+wall(0,3.5,-10,20,7,.3);
+wall(-10,3.5,0,.3,7,20);
+wall(10,3.5,0,.3,7,20);
 
-const bar=new THREE.Mesh(
-new THREE.BoxGeometry(8,2,1.2),
-new THREE.MeshStandardMaterial({
-color:0x5b3c20,
-metalness:.4,
-roughness:.25
-})
-);
 
-bar.position.set(0,1,-7);
+/* GOLD WALL PANELS */
 
-rScene.add(bar);
+for(let x=-8;x<=8;x+=4){
+
+  const panel=
+  new THREE.Mesh(
+    new THREE.BoxGeometry(
+      2.6,4,.08
+    ),
+    marbleMaterial
+  );
+
+  panel.position.set(
+    x,3.2,-9.8
+  );
+
+  scene.add(panel);
+
+  const frame=
+  new THREE.Mesh(
+    new THREE.BoxGeometry(
+      2.75,4.15,.05
+    ),
+    goldMaterial
+  );
+
+  frame.position.set(
+    x,3.2,-9.85
+  );
+
+  scene.add(frame);
+
+}
+
+
+/* TABLE FUNCTION */
+
+function createTable(x,z){
+
+  const top=
+  new THREE.Mesh(
+    new THREE.CylinderGeometry(
+      1.35,1.35,.16,48
+    ),
+    marbleMaterial
+  );
+
+  top.position.set(
+    x,1.65,z
+  );
+
+  scene.add(top);
+
+
+  const leg=
+  new THREE.Mesh(
+    new THREE.CylinderGeometry(
+      .13,.18,1.6,24
+    ),
+    goldMaterial
+  );
+
+  leg.position.set(
+    x,.8,z
+  );
+
+  scene.add(leg);
+
+
+  /* CHAIRS */
+
+  for(let a=0;a<Math.PI*2;a+=Math.PI/2){
+
+    const chair=
+    new THREE.Mesh(
+      new THREE.BoxGeometry(
+        .65,.8,.65
+      ),
+      new THREE.MeshStandardMaterial({
+        color:0x17120d,
+        roughness:.7
+      })
+    );
+
+    chair.position.set(
+      x+Math.sin(a)*2,
+      .55,
+      z+Math.cos(a)*2
+    );
+
+    chair.rotation.y=a;
+
+    scene.add(chair);
+
+  }
+
+}
+
+
+createTable(-4,-2);
+createTable(4,-2);
+createTable(-4,-7);
+createTable(4,-7);
 
 
 /* CHEF COUNTER */
 
-const counter=new THREE.Mesh(
-new THREE.BoxGeometry(5,2.5,1),
-new THREE.MeshStandardMaterial({
-color:0x3a2819,
-roughness:.3
-})
+const counter=
+new THREE.Mesh(
+  new THREE.BoxGeometry(
+    7,2.2,1.2
+  ),
+  new THREE.MeshStandardMaterial({
+    color:0x25170d,
+    roughness:.3,
+    metalness:.35
+  })
 );
 
-counter.position.set(0,1.25,5);
-
-rScene.add(counter);
-
-
-/* FAIRY LIGHTS IN 3D */
-
-for(let x=-10;x<=10;x+=1.2){
-
-const bulb=new THREE.Mesh(
-new THREE.SphereGeometry(.08,12,12),
-new THREE.MeshStandardMaterial({
-color:0xffd98b,
-emissive:0xffa928,
-emissiveIntensity:4
-})
+counter.position.set(
+  0,1.1,6
 );
 
-bulb.position.set(
-x,
-6.8,
--3+Math.sin(x)*.4
+scene.add(counter);
+
+
+/* BAR BACKDROP */
+
+const barBack=
+new THREE.Mesh(
+  new THREE.BoxGeometry(
+    8,5,.4
+  ),
+  wallMaterial
 );
 
-rScene.add(bulb);
-
-const glow=new THREE.PointLight(
-0xffc96e,
-.8,
-3
+barBack.position.set(
+  0,3.3,6.6
 );
 
-glow.position.copy(bulb.position);
+scene.add(barBack);
 
-rScene.add(glow);
+
+/* =========================
+   FAIRY LIGHT CANOPY
+========================= */
+
+for(let x=-9;x<=9;x+=.8){
+
+  const bulb=
+  new THREE.Mesh(
+    new THREE.SphereGeometry(
+      .075,16,16
+    ),
+    new THREE.MeshStandardMaterial({
+      color:0xffdf9b,
+      emissive:0xffb84e,
+      emissiveIntensity:4
+    })
+  );
+
+  bulb.position.set(
+    x,
+    6.5,
+    -3+Math.sin(x*.7)*.6
+  );
+
+  scene.add(bulb);
+
+  const glow=
+  new THREE.PointLight(
+    0xffc76d,
+    .45,
+    2.5
+  );
+
+  glow.position.copy(
+    bulb.position
+  );
+
+  scene.add(glow);
 
 }
 
 
-/* CUSTOMER */
+/* =========================
+   CHEF
+========================= */
 
-const customer=new THREE.Group();
-
-const body=new THREE.Mesh(
-new THREE.CapsuleGeometry(.35,1,6,12),
-new THREE.MeshStandardMaterial({
-color:0x242424
-})
-);
-
-body.position.y=1;
-
-customer.add(body);
-
-const head=new THREE.Mesh(
-new THREE.SphereGeometry(.35,20,20),
-new THREE.MeshStandardMaterial({
-color:0xc58b68
-})
-);
-
-head.position.y=2;
-
-customer.add(head);
-
-customer.position.set(-7,0,-3);
-
-rScene.add(customer);
+const chef=
+new THREE.Group();
 
 
-/* CHEF */
-
-const chef=new THREE.Group();
-
-const chefBody=new THREE.Mesh(
-new THREE.CapsuleGeometry(.4,1.2,6,12),
-new THREE.MeshStandardMaterial({
-color:0xf0eee8
-})
+const chefBody=
+new THREE.Mesh(
+  new THREE.CapsuleGeometry(
+    .38,1.2,8,16
+  ),
+  new THREE.MeshStandardMaterial({
+    color:0xf0ece4
+  })
 );
 
 chefBody.position.y=1.2;
 
 chef.add(chefBody);
 
-const chefHead=new THREE.Mesh(
-new THREE.SphereGeometry(.36,20,20),
-new THREE.MeshStandardMaterial({
-color:0xc98d6b
-})
+
+const chefHead=
+new THREE.Mesh(
+  new THREE.SphereGeometry(
+    .35,24,24
+  ),
+  new THREE.MeshStandardMaterial({
+    color:0xc58968
+  })
 );
 
-chefHead.position.y=2.3;
+chefHead.position.y=2.35;
 
 chef.add(chefHead);
 
-chef.position.set(0,0,4.3);
 
-rScene.add(chef);
-
-
-/* LIGHT */
-
-rScene.add(
-new THREE.AmbientLight(
-0xffffff,.35
-)
+chef.position.set(
+  0,0,5.2
 );
 
-const warm=new THREE.PointLight(
-0xffb85c,18,30
+scene.add(chef);
+
+
+/* =========================
+   CUSTOMER
+========================= */
+
+const customer=
+new THREE.Group();
+
+
+const customerBody=
+new THREE.Mesh(
+  new THREE.CapsuleGeometry(
+    .35,1.1,8,16
+  ),
+  new THREE.MeshStandardMaterial({
+    color:0x26201a
+  })
 );
 
-warm.position.set(0,6,0);
+customerBody.position.y=1.1;
 
-rScene.add(warm);
-
-
-/* DRAG CONTROL */
-
-let dragging=false;
-let previousX=0;
-let rotation=0;
-
-room.addEventListener("pointerdown",e=>{
-dragging=true;
-previousX=e.clientX;
-});
-
-window.addEventListener("pointerup",()=>{
-dragging=false;
-});
-
-window.addEventListener("pointermove",e=>{
-
-if(!dragging)return;
-
-rotation+=(e.clientX-previousX)*.005;
-
-previousX=e.clientX;
-
-});
+customer.add(customerBody);
 
 
-/* ANIMATE CUSTOMER */
-
-let walk=0;
-
-function roomAnimation(){
-
-requestAnimationFrame(roomAnimation);
-
-rScene.rotation.y=rotation;
-
-walk+=.012;
-
-customer.position.x=-7+
-(Math.sin(walk)*2);
-
-customer.position.z=-3+
-(Math.cos(walk)*1.2);
-
-customer.rotation.y=
-Math.sin(walk)*.5;
-
-chef.rotation.y=
-Math.sin(walk*.7)*.15;
-
-rRenderer.render(
-rScene,
-rCamera
+const customerHead=
+new THREE.Mesh(
+  new THREE.SphereGeometry(
+    .34,24,24
+  ),
+  new THREE.MeshStandardMaterial({
+    color:0xc58a69
+  })
 );
 
-}
+customerHead.position.y=2.2;
 
-roomAnimation();
+customer.add(customerHead);
 
 
-/* RESIZE */
-
-window.addEventListener("resize",()=>{
-
-camera.aspect=innerWidth/innerHeight;
-camera.updateProjectionMatrix();
-
-renderer.setSize(innerWidth,innerHeight);
-
-rCamera.aspect=
-room.clientWidth/room.clientHeight;
-
-rCamera.updateProjectionMatrix();
-
-rRenderer.setSize(
-room.clientWidth,
-room.clientHeight
+customer.position.set(
+  -7,0,-4
 );
+
+scene.add(customer);
+
+
+/* =========================
+   LIGHTING
+========================= */
+
+scene.add(
+  new THREE.HemisphereLight(
+    0xffe6c0,
+    0x080604,
+    1
+  )
+);
+
+
+const mainLight=
+new THREE.PointLight(
+  0xffb65b,
+  15,
+  25
+);
+
+mainLight.position.set(
+  0,5,1
+);
+
+scene.add(mainLight);
+
+
+/* TABLE LIGHTS */
+
+[-4,4].forEach(x=>{
+
+  const l=
+  new THREE.PointLight(
+    0xffcf83,
+    4,
+    8
+  );
+
+  l.position.set(
+    x,4,-2
+  );
+
+  scene.add(l);
 
 });
 
 
-/* ORDER */
+/* =========================
+   CUSTOMER WALK CYCLE
+========================= */
 
-function order(item){
+let customerTime=0;
 
-alert(
-item+
-" has been added to your dining experience."
+function animateRoom(){
+
+  requestAnimationFrame(
+    animateRoom
+  );
+
+  customerTime+=.006;
+
+  customer.position.x=
+    -7+
+    ((Math.sin(customerTime)+1)/2)*5;
+
+  customer.position.z=
+    -4+
+    Math.sin(customerTime*.7)*2;
+
+  customer.rotation.y=
+    Math.sin(customerTime)*.5;
+
+  chef.rotation.y=
+    Math.sin(customerTime*.5)*.1;
+
+  controls.update();
+
+  renderer.render(
+    scene,
+    camera
+  );
+
+}
+
+animateRoom();
+
+
+/* =========================
+   ROOM CONTROLS
+========================= */
+
+function viewerZoom(amount){
+
+  camera.position.multiplyScalar(
+    amount>0 ? .85 : 1.15
+  );
+
+  const distance=
+    camera.position.length();
+
+  if(distance<.4){
+    camera.position.setLength(.4);
+  }
+
+  if(distance>4){
+    camera.position.setLength(4);
+  }
+
+}
+
+
+function resetViewer(){
+
+  controls.reset();
+
+  camera.position.set(
+    0,1.7,0
+  );
+
+  controls.target.set(
+    0,1.7,-5
+  );
+
+}
+
+
+/* =========================
+   RESPONSIVE 360 VIEW
+========================= */
+
+function resizeAll(){
+
+  heroCamera.aspect=
+    innerWidth/innerHeight;
+
+  heroCamera.updateProjectionMatrix();
+
+  heroRenderer.setSize(
+    innerWidth,
+    innerHeight
+  );
+
+
+  camera.aspect=
+    viewer.clientWidth/
+    viewer.clientHeight;
+
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(
+    viewer.clientWidth,
+    viewer.clientHeight
+  );
+
+}
+
+window.addEventListener(
+  "resize",
+  resizeAll
 );
 
-}
 
+/* =========================
+   MENU
+========================= */
 
-/* CHEF */
+function addOrder(item){
 
-function chefMessage(){
-
-go("ai");
-
-setTimeout(()=>{
-
-addBot(
-"Our chef recommends the Chef's Tasting experience. Tell me what flavours you enjoy and I can suggest a selection."
-);
-
-},500);
+  showInfo(
+    "ADDED TO EXPERIENCE",
+    item+
+    " has been added to your AURELIA dining experience. Your concierge can help build the rest of your evening."
+  );
 
 }
 
 
-/* RESERVATION */
+/* =========================
+   CHEF
+========================= */
 
-function reserve(){
+function chefRecommendation(){
 
-const name=
-document.getElementById("guestName").value;
+  scrollToId("concierge");
 
-const phone=
-document.getElementById("phone").value;
+  setTimeout(()=>{
 
-const date=
-document.getElementById("date").value;
+    addBot(
+      "Our chef recommends the Chef's Tasting for a complete AURELIA experience. Tell me whether you prefer vegetarian, seafood, coffee or dessert and I will guide you."
+    );
 
-if(!name||!phone||!date){
-
-alert("Please complete your reservation details.");
-
-return;
-
-}
-
-alert(
-"Thank you, "+name+
-". Your reservation request has been received. Our concierge will contact you shortly."
-);
+  },600);
 
 }
 
 
-/* AI CONCIERGE */
+/* =========================
+   RESERVATION
+========================= */
+
+function reserveTable(){
+
+  const name=
+    document.getElementById("name").value.trim();
+
+  const phone=
+    document.getElementById("phone").value.trim();
+
+  const date=
+    document.getElementById("date").value;
+
+  if(!name || !phone || !date){
+
+    alert(
+      "Please complete your name, phone number and date."
+    );
+
+    return;
+  }
+
+  showInfo(
+    "REQUEST RECEIVED",
+    "Thank you, "+
+    name+
+    ". Your reservation request has been received. Our concierge team will contact you to confirm your table."
+  );
+
+}
+
+
+/* =========================
+   AI CONCIERGE
+========================= */
 
 function addBot(text){
 
-const chat=
-document.getElementById("chat");
+  const chat=
+    document.getElementById("chat");
 
-const msg=
-document.createElement("div");
+  const div=
+    document.createElement("div");
 
-msg.className="msg bot";
+  div.className=
+    "message bot";
 
-msg.textContent=text;
+  div.textContent=text;
 
-chat.appendChild(msg);
+  chat.appendChild(div);
 
-chat.scrollTop=chat.scrollHeight;
-
-}
-
-
-function sendMessage(){
-
-const input=
-document.getElementById("chatInput");
-
-const text=input.value.trim();
-
-if(!text)return;
-
-const chat=
-document.getElementById("chat");
-
-const user=
-document.createElement("div");
-
-user.className="msg user";
-
-user.textContent=text;
-
-chat.appendChild(user);
-
-input.value="";
-
-setTimeout(()=>{
-
-addBot(
-aiReply(text)
-);
-
-},500);
+  chat.scrollTop=
+    chat.scrollHeight;
 
 }
 
 
-function aiReply(text){
+function sendChat(){
 
-const t=text.toLowerCase();
+  const input=
+    document.getElementById("chatInput");
 
-if(t.includes("menu")||t.includes("food"))
-return "Our signature menu includes Gold Reserve Steak, Truffle Pasta, Rare Origin Coffee, Golden Chocolate and the Chef's Tasting.";
+  const text=
+    input.value.trim();
 
-if(t.includes("price")||t.includes("cost"))
-return "Our signature selections currently range from ₹280 to ₹1,499. Private dining experiences can be customised.";
+  if(!text)return;
 
-if(t.includes("chef"))
-return "Our chef specialises in seasonal tasting experiences. I recommend the Chef's Table for a more personal evening.";
 
-if(t.includes("private")||t.includes("vip"))
-return "Our private dining experience includes an exclusive room, personal host and customised menu.";
+  const chat=
+    document.getElementById("chat");
 
-if(t.includes("coffee"))
-return "Our Rare Origin Coffee is a single-origin specialty coffee prepared to order by our barista.";
 
-if(t.includes("book")||t.includes("reserve")||t.includes("table"))
-return "You can reserve your table in our reservation section. We recommend booking ahead for the Chef's Table.";
+  const user=
+    document.createElement("div");
 
-return "I can help you with our menu, prices, chef recommendations, coffee, private dining and reservations.";
+  user.className=
+    "message user";
+
+  user.textContent=
+    text;
+
+  chat.appendChild(user);
+
+  input.value="";
+
+
+  setTimeout(()=>{
+
+    addBot(
+      conciergeReply(text)
+    );
+
+  },450);
+
+}
+
+
+function conciergeReply(text){
+
+  const t=
+    text.toLowerCase();
+
+
+  if(
+    t.includes("menu") ||
+    t.includes("food") ||
+    t.includes("dish")
+  ){
+
+    return "Our signature collection includes Gold Reserve, Black Truffle Pasta, Rare Origin Coffee, Golden Cacao, Maison Croissant and our Chef's Tasting.";
+
+  }
+
+
+  if(
+    t.includes("price") ||
+    t.includes("cost")
+  ){
+
+    return "Signature dishes currently range from ₹280 to ₹1,499. Private dining and Chef's Table experiences can be customised.";
+
+  }
+
+
+  if(
+    t.includes("chef")
+  ){
+
+    return "For the most personal experience, I recommend our Chef's Table, where you can meet the chef and experience a curated menu.";
+
+  }
+
+
+  if(
+    t.includes("private") ||
+    t.includes("vip")
+  ){
+
+    return "Our private dining includes an exclusive room, dedicated host and a customised menu for your guests.";
+
+  }
+
+
+  if(
+    t.includes("coffee")
+  ){
+
+    return "Our Rare Origin Coffee is a specialty single-origin selection prepared fresh by our barista.";
+
+  }
+
+
+  if(
+    t.includes("book") ||
+    t.includes("reserve") ||
+    t.includes("table")
+  ){
+
+    return "You can request your table in our reservation section. Chef's Table and private dining are best reserved in advance.";
+
+  }
+
+
+  return "I can help you discover our menu, prices, Chef's Table, private dining, coffee and reservations. What would you like to explore?";
 
 }
 

@@ -1,0 +1,313 @@
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  width:100%;
+  min-height:100vh;
+  overflow-x:hidden;
+  background:#02070d;
+  color:#fff;
+  font-family:Arial, sans-serif;
+}
+
+#app,
+#world,
+main,
+section{
+  width:100%;
+  max-width:100%;
+}
+
+header,
+.navbar,
+nav{
+  width:100%;
+  max-width:1200px;
+  margin:auto;
+}
+
+/* 3D WORLD */
+#world,
+#scene,
+#three-container,
+.canvas-wrap{
+  position:relative;
+  width:100%;
+  height:clamp(420px,70vh,800px);
+  min-height:420px;
+  overflow:hidden;
+}
+
+canvas{
+  display:block;
+  width:100% !important;
+  height:100% !important;
+  max-width:100%;
+}
+
+/* MAIN CONTAINERS */
+.container,
+section .inner{
+  width:min(1200px,92%);
+  margin:auto;
+}
+
+/* NAVIGATION */
+nav{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  padding:18px 24px;
+}
+
+nav ul{
+  display:flex;
+  align-items:center;
+  gap:25px;
+  list-style:none;
+}
+
+nav a{
+  color:#fff;
+  text-decoration:none;
+}
+
+.logo{
+  font-size:22px;
+  font-weight:700;
+  letter-spacing:2px;
+}
+
+/* BUTTONS */
+button{
+  max-width:100%;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+
+/* HERO */
+.hero{
+  width:100%;
+  min-height:70vh;
+  display:flex;
+  align-items:center;
+  padding:80px 5%;
+}
+
+.hero-content{
+  width:min(1200px,100%);
+  margin:auto;
+}
+
+.hero h1{
+  font-size:clamp(42px,8vw,110px);
+  line-height:.9;
+  max-width:1000px;
+}
+
+.hero p{
+  max-width:650px;
+  font-size:clamp(15px,2vw,20px);
+  line-height:1.6;
+}
+
+/* GRIDS */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:25px;
+}
+
+.card{
+  width:100%;
+  padding:30px;
+  border-radius:20px;
+}
+
+/* MOBILE CONTROLS */
+.controls{
+  position:absolute;
+  right:20px;
+  bottom:20px;
+  z-index:20;
+  display:flex;
+  gap:8px;
+}
+
+.controls button{
+  width:48px;
+  height:48px;
+  border-radius:12px;
+}
+
+/* TABLET */
+@media(max-width:900px){
+
+  nav ul{
+    gap:12px;
+  }
+
+  .grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .hero{
+    min-height:60vh;
+    padding:60px 5%;
+  }
+
+}
+
+/* MOBILE */
+@media(max-width:600px){
+
+  body{
+    font-size:14px;
+  }
+
+  nav{
+    padding:14px 16px;
+    flex-wrap:wrap;
+  }
+
+  nav ul{
+    width:100%;
+    justify-content:center;
+    overflow-x:auto;
+    padding:8px 0;
+    gap:18px;
+    scrollbar-width:none;
+  }
+
+  nav ul::-webkit-scrollbar{
+    display:none;
+  }
+
+  nav a{
+    font-size:11px;
+    white-space:nowrap;
+  }
+
+  .logo{
+    font-size:18px;
+  }
+
+  #world,
+  #scene,
+  #three-container,
+  .canvas-wrap{
+    height:60vh;
+    min-height:380px;
+  }
+
+  .hero{
+    min-height:auto;
+    padding:70px 20px;
+  }
+
+  .hero h1{
+    font-size:clamp(40px,14vw,70px);
+  }
+
+  .hero p{
+    font-size:15px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .card{
+    padding:22px;
+  }
+
+  .controls{
+    right:12px;
+    bottom:12px;
+    gap:5px;
+  }
+
+  .controls button{
+    width:42px;
+    height:42px;
+  }
+}
+
+/* VERY SMALL PHONES */
+@media(max-width:380px){
+
+  nav{
+    padding:12px;
+  }
+
+  #world,
+  #scene,
+  #three-container,
+  .canvas-wrap{
+    height:55vh;
+    min-height:330px;
+  }
+
+  .hero{
+    padding:50px 16px;
+  }
+}
+
+/* TOUCH DEVICES */
+@media(pointer:coarse){
+
+  button,
+  a{
+    min-height:42px;
+  }
+
+}
+
+/* SAFE MOBILE VIEW */
+img,
+video,
+iframe{
+  max-width:100%;
+  height:auto;
+}
+</style>
+renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    alpha: true
+});
+
+renderer.setPixelRatio(
+    Math.min(window.devicePixelRatio, 2)
+);
+
+renderer.setSize(
+    window.innerWidth,
+    window.innerHeight,
+    false
+);
+
+renderer.domElement.style.width = "100%";
+renderer.domElement.style.height = "100%";
+});
+
+window.addEventListener("resize", function () {
+    if (typeof camera !== "undefined" && typeof renderer !== "undefined") {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight, false);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    }
+});
+
+</script>
+</body>
+</html>

@@ -1,313 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>LUMIÈRE — Luxury 3D Café</title>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
 <style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
-html{
-  scroll-behavior:smooth;
-}
-
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
 body{
-  width:100%;
-  min-height:100vh;
-  overflow-x:hidden;
-  background:#02070d;
-  color:#fff;
-  font-family:Arial, sans-serif;
+font-family:Arial,Helvetica,sans-serif;
+background:#05070b;
+color:#fff;
+overflow-x:hidden
 }
-
-#app,
-#world,
-main,
-section{
-  width:100%;
-  max-width:100%;
-}
-
-header,
-.navbar,
-nav{
-  width:100%;
-  max-width:1200px;
-  margin:auto;
-}
-
-/* 3D WORLD */
-#world,
-#scene,
-#three-container,
-.canvas-wrap{
-  position:relative;
-  width:100%;
-  height:clamp(420px,70vh,800px);
-  min-height:420px;
-  overflow:hidden;
-}
-
-canvas{
-  display:block;
-  width:100% !important;
-  height:100% !important;
-  max-width:100%;
-}
-
-/* MAIN CONTAINERS */
-.container,
-section .inner{
-  width:min(1200px,92%);
-  margin:auto;
-}
-
-/* NAVIGATION */
-nav{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:20px;
-  padding:18px 24px;
-}
-
-nav ul{
-  display:flex;
-  align-items:center;
-  gap:25px;
-  list-style:none;
-}
-
-nav a{
-  color:#fff;
-  text-decoration:none;
-}
-
-.logo{
-  font-size:22px;
-  font-weight:700;
-  letter-spacing:2px;
-}
-
-/* BUTTONS */
+a{text-decoration:none;color:inherit}
 button{
-  max-width:100%;
-  cursor:pointer;
-  touch-action:manipulation;
+border:0;
+cursor:pointer;
+font:inherit
+}
+
+/* NAV */
+nav{
+position:fixed;
+top:14px;
+left:50%;
+transform:translateX(-50%);
+width:min(1200px,94%);
+height:64px;
+z-index:100;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 22px;
+border:1px solid rgba(255,255,255,.16);
+border-radius:22px;
+background:rgba(7,10,15,.72);
+backdrop-filter:blur(18px);
+box-shadow:0 10px 50px rgba(0,0,0,.4)
+}
+.logo{
+font-size:21px;
+font-weight:800;
+letter-spacing:4px
+}
+.logo span{color:#62e6ff}
+.navlinks{
+display:flex;
+gap:22px;
+font-size:12px;
+letter-spacing:1px;
+color:#bbb
+}
+.navlinks a:hover{color:#fff}
+.cta{
+background:linear-gradient(135deg,#fff,#8feaff);
+color:#061018;
+padding:11px 18px;
+border-radius:30px;
+font-weight:800
 }
 
 /* HERO */
-.hero{
-  width:100%;
-  min-height:70vh;
-  display:flex;
-  align-items:center;
-  padding:80px 5%;
+#hero{
+min-height:100vh;
+position:relative
 }
-
-.hero-content{
-  width:min(1200px,100%);
-  margin:auto;
+#scene{
+position:absolute;
+inset:0;
+z-index:0
 }
-
-.hero h1{
-  font-size:clamp(42px,8vw,110px);
-  line-height:.9;
-  max-width:1000px;
+.heroText{
+position:absolute;
+z-index:5;
+left:6%;
+top:24%;
+max-width:650px;
+pointer-events:none
 }
-
-.hero p{
-  max-width:650px;
-  font-size:clamp(15px,2vw,20px);
-  line-height:1.6;
+.badge{
+display:inline-block;
+padding:8px 13px;
+border:1px solid rgba(98,230,255,.5);
+border-radius:30px;
+font-size:11px;
+letter-spacing:2px;
+color:#7deaff;
+background:rgba(0,200,255,.06)
 }
-
-/* GRIDS */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:25px;
+.heroText h1{
+font-size:clamp(48px,8vw,105px);
+line-height:.86;
+margin:22px 0;
+letter-spacing:-5px
 }
-
-.card{
-  width:100%;
-  padding:30px;
-  border-radius:20px;
+.heroText h1 span{
+color:#62e6ff;
+text-shadow:0 0 35px #00cfff
 }
-
-/* MOBILE CONTROLS */
+.heroText p{
+max-width:550px;
+color:#c3c8cf;
+font-size:17px;
+line-height:1.7
+}
+.heroButtons{
+margin-top:25px;
+display:flex;
+gap:12px;
+flex-wrap:wrap;
+pointer-events:auto
+}
+.btn{
+padding:14px 22px;
+border-radius:30px;
+background:#fff;
+color:#071018;
+font-weight:800
+}
+.btn.alt{
+background:rgba(255,255,255,.06);
+border:1px solid rgba(255,255,255,.2);
+color:white
+}
 .controls{
-  position:absolute;
-  right:20px;
-  bottom:20px;
-  z-index:20;
-  display:flex;
-  gap:8px;
+position:absolute;
+right:25px;
+bottom:25px;
+z-index:10;
+display:flex;
+gap:8px
 }
-
 .controls button{
-  width:48px;
-  height:48px;
-  border-radius:12px;
+width:48px;
+height:48px;
+border-radius:14px;
+background:rgba(0,0,0,.55);
+border:1px solid #18cfff;
+color:#fff
 }
 
-/* TABLET */
-@media(max-width:900px){
+/* SECTIONS */
+section{
+padding:110px 6%;
+position:relative
+}
+.dark{background:#070b11}
+.light{
+background:#f6f7f4;
+color:#101317
+}
+.sectionTitle{
+max-width:800px;
+margin-bottom:45px
+}
+.kicker{
+font-size:11px;
+letter-spacing:3px;
+color:#10cfff;
+font-weight:800
+}
+.sectionTitle h2{
+font-size:clamp(38px,6vw,75px);
+line-height:.95;
+margin:15px 0
+}
+.sectionTitle p{
+color:#89919b;
+line-height:1.7;
+max-width:650px
+}
 
-  nav ul{
-    gap:12px;
-  }
+/* CARDS */
+.grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px
+}
+.card{
+border:1px solid rgba(255,255,255,.1);
+border-radius:26px;
+padding:28px;
+background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.025));
+min-height:210px;
+transition:.3s;
+position:relative;
+overflow:hidden
+}
+.card:hover{
+transform:translateY(-8px);
+border-color:#27d9ff;
+box-shadow:0 20px 60px rgba(0,200,255,.12)
+}
+.card .icon{
+font-size:38px;
+margin-bottom:20px
+}
+.card h3{font-size:23px;margin-bottom:10px}
+.card p{color:#9ca5ae;line-height:1.6}
 
-  .grid{
-    grid-template-columns:repeat(2,1fr);
-  }
+/* MENU */
+.menuGrid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:18px
+}
+.food{
+background:white;
+border-radius:25px;
+overflow:hidden;
+box-shadow:0 15px 50px rgba(0,0,0,.08);
+transition:.3s
+}
+.food:hover{transform:translateY(-7px)}
+.foodPic{
+height:170px;
+display:grid;
+place-items:center;
+font-size:70px;
+background:linear-gradient(135deg,#fff,#dff9ff)
+}
+.foodInfo{padding:20px}
+.foodInfo h3{margin-bottom:7px}
+.price{
+font-weight:800;
+font-size:20px;
+margin:12px 0
+}
+.order{
+width:100%;
+padding:11px;
+border-radius:15px;
+background:#071018;
+color:white
+}
 
-  .hero{
-    min-height:60vh;
-    padding:60px 5%;
-  }
+/* LIVE */
+.live{
+display:grid;
+grid-template-columns:1.3fr .7fr;
+gap:25px
+}
+.liveBox{
+min-height:400px;
+border-radius:30px;
+background:
+radial-gradient(circle at 50% 20%,rgba(0,220,255,.15),transparent 30%),
+#080d14;
+border:1px solid rgba(255,255,255,.1);
+padding:30px;
+position:relative;
+overflow:hidden
+}
+.people{
+position:absolute;
+inset:100px 30px 30px
+}
+.person{
+position:absolute;
+font-size:45px;
+animation:walk 7s linear infinite
+}
+.person:nth-child(1){top:20%;left:5%}
+.person:nth-child(2){top:50%;left:30%;animation-delay:2s}
+.person:nth-child(3){top:25%;left:60%;animation-delay:4s}
+.person:nth-child(4){top:65%;left:80%;animation-delay:1s}
+@keyframes walk{
+0%{transform:translateX(-40px)}
+50%{transform:translateX(100px)}
+100%{transform:translateX(-40px)}
+}
+.stat{
+display:grid;
+place-items:center;
+height:100%;
+text-align:center
+}
+.stat strong{
+font-size:90px;
+color:#62e6ff;
+text-shadow:0 0 30px #00cfff
+}
+.stat span{color:#999}
 
+/* REVIEWS */
+.review{
+padding:25px;
+border-radius:24px;
+background:#fff;
+box-shadow:0 10px 40px rgba(0,0,0,.07)
+}
+.stars{color:#00a9d4;letter-spacing:3px;margin-bottom:15px}
+
+/* ROBOT */
+.robotBox{
+min-height:450px;
+display:grid;
+place-items:center;
+background:
+radial-gradient(circle,#173d4a,transparent 35%),
+#050a0f;
+border-radius:35px;
+overflow:hidden;
+border:1px solid rgba(0,220,255,.2)
+}
+.robot{
+font-size:150px;
+filter:drop-shadow(0 0 35px #00d9ff);
+animation:robotFloat 3s ease-in-out infinite
+}
+@keyframes robotFloat{
+50%{transform:translateY(-20px) rotate(2deg)}
+}
+
+/* AI */
+.ai{
+max-width:800px;
+margin:auto;
+padding:30px;
+border-radius:30px;
+background:#090e15;
+border:1px solid rgba(0,220,255,.2)
+}
+.chat{
+height:250px;
+overflow:auto;
+padding:15px
+}
+.msg{
+padding:12px 15px;
+border-radius:16px;
+background:#111a24;
+margin-bottom:10px;
+line-height:1.5
+}
+.msg.bot{border-left:3px solid #00d9ff}
+.aiInput{
+display:flex;
+gap:10px
+}
+.aiInput input{
+flex:1;
+padding:15px;
+border-radius:15px;
+border:1px solid #26323d;
+background:#05080d;
+color:white
+}
+.aiInput button{
+padding:0 20px;
+border-radius:15px;
+background:#62e6ff
+}
+
+/* GAMES */
+.gameGrid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px
+}
+.game{
+padding:30px;
+border-radius:28px;
+background:#080d14;
+border:1px solid rgba(255,255,255,.1)
+}
+.game button{
+margin-top:18px;
+padding:12px 18px;
+border-radius:20px;
+background:#62e6ff
+}
+
+/* DRAW */
+#draw{
+width:100%;
+height:400px;
+border-radius:25px;
+background:#fff;
+touch-action:none;
+display:block
+}
+.drawControls{
+margin-top:15px;
+display:flex;
+gap:10px;
+flex-wrap:wrap
+}
+
+/* FOOTER */
+footer{
+padding:60px 6%;
+background:#030508;
+color:#77808a;
+text-align:center
 }
 
 /* MOBILE */
+@media(max-width:900px){
+.navlinks{display:none}
+nav{height:58px}
+.heroText{
+left:6%;
+right:6%;
+top:18%
+}
+.heroText h1{
+letter-spacing:-3px
+}
+.grid,
+.menuGrid,
+.gameGrid{
+grid-template-columns:1fr 1fr
+}
+.live{grid-template-columns:1fr}
+section{padding:80px 5%}
+}
+
 @media(max-width:600px){
-
-  body{
-    font-size:14px;
-  }
-
-  nav{
-    padding:14px 16px;
-    flex-wrap:wrap;
-  }
-
-  nav ul{
-    width:100%;
-    justify-content:center;
-    overflow-x:auto;
-    padding:8px 0;
-    gap:18px;
-    scrollbar-width:none;
-  }
-
-  nav ul::-webkit-scrollbar{
-    display:none;
-  }
-
-  nav a{
-    font-size:11px;
-    white-space:nowrap;
-  }
-
-  .logo{
-    font-size:18px;
-  }
-
-  #world,
-  #scene,
-  #three-container,
-  .canvas-wrap{
-    height:60vh;
-    min-height:380px;
-  }
-
-  .hero{
-    min-height:auto;
-    padding:70px 20px;
-  }
-
-  .hero h1{
-    font-size:clamp(40px,14vw,70px);
-  }
-
-  .hero p{
-    font-size:15px;
-  }
-
-  .grid{
-    grid-template-columns:1fr;
-  }
-
-  .card{
-    padding:22px;
-  }
-
-  .controls{
-    right:12px;
-    bottom:12px;
-    gap:5px;
-  }
-
-  .controls button{
-    width:42px;
-    height:42px;
-  }
+.heroText h1{font-size:55px}
+.heroText p{font-size:14px}
+.grid,
+.menuGrid,
+.gameGrid{
+grid-template-columns:1fr
 }
-
-/* VERY SMALL PHONES */
-@media(max-width:380px){
-
-  nav{
-    padding:12px;
-  }
-
-  #world,
-  #scene,
-  #three-container,
-  .canvas-wrap{
-    height:55vh;
-    min-height:330px;
-  }
-
-  .hero{
-    padding:50px 16px;
-  }
+.heroButtons .btn{width:100%;text-align:center}
+.controls{
+bottom:15px;
+right:15px
 }
-
-/* TOUCH DEVICES */
-@media(pointer:coarse){
-
-  button,
-  a{
-    min-height:42px;
-  }
-
+.controls button{
+width:42px;
+height:42px
 }
-
-/* SAFE MOBILE VIEW */
-img,
-video,
-iframe{
-  max-width:100%;
-  height:auto;
+.stat strong{font-size:65px}
+.robot{font-size:100px}
+section{padding:65px 5%}
+.card{min-height:auto}
 }
 </style>
-renderer = new THREE.WebGLRenderer({
-    antialias: true,
-    alpha: true
+</head>
+
+<body>
+
+<nav>
+<div class="logo">LUMI<span>ÈRE</span></div>
+
+<div class="navlinks">
+<a href="#experience">EXPERIENCE</a>
+<a href="#menu">MENU</a>
+<a href="#robot">ROBOT</a>
+<a href="#games">GAMES</a>
+<a href="#ai">AI</a>
+</div>
+
+<a class="cta" href="#menu">ORDER</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+
+<div id="scene"></div>
+
+<div class="heroText">
+<div class="badge">NEXT-GENERATION LUXURY CAFÉ</div>
+
+<h1>
+ENTER<br>
+THE <span>CAFÉ.</span>
+</h1>
+
+<p>
+A cinematic 3D café experience where guests meet robots,
+explore the room, order food, play interactive games and
+connect with an intelligent digital concierge.
+</p>
+
+<div class="heroButtons">
+<a class="btn" href="#menu">EXPLORE MENU</a>
+<a class="btn alt" href="#experience">ENTER EXPERIENCE</a>
+</div>
+</div>
+
+<div class="controls">
+<button onclick="moveCamera(0,-1)">↑</button>
+<button onclick="moveCamera(-1,0)">←</button>
+<button onclick="moveCamera(0,1)">↓</button>
+<button onclick="moveCamera(1,0)">→</button>
+</div>
+
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience" class="dark">
+
+<div class="sectionTitle">
+<div class="kicker">01 — THE EXPERIENCE</div>
+<h2>MORE THAN<br>A CAFÉ.</h2>
+<p>
+Walk into a digital hospitality universe designed around
+food, technology, entertainment and human connection.
+Explore the 3D environment using your mouse, touch or VR headset.
+</p>
+</div>
+
+<div class="grid">
+
+<div class="card">
+<div class="icon">🥂</div>
+<h3>Luxury Dining</h3>
+<p>Premium dining spaces, cinematic lighting and an immersive atmosphere.</p>
+</div>
+
+<div class="card">
+<div class="icon">🤖</div>
+<h3>Robot Service</h3>
+<p>Meet your digital waiter and experience technology-led hospitality.</p>
+</div>
+
+<div class="card">
+<div class="icon">🥽</div>
+<h3>VR Ready</h3>
+<p>Designed as a browser-based 3D environment with touch and desktop controls.</p>
+</div>
+
+<div class="card">
+<div class="icon">✨</div>
+<h3>Fairy Light Lounge</h3>
+<p>Ambient glowing lights create a premium evening café atmosphere.</p>
+</div>
+
+<div class="card">
+<div class="icon">👨‍🍳</div>
+<h3>Chef Experience</h3>
+<p>Follow your order from customer request to chef preparation.</p>
+</div>
+
+<div class="card">
+<div class="icon">🎮</div>
+<h3>Play Zone</h3>
+<p>Interactive mini-games turn a normal café visit into an experience.</p>
+</div>
+
+</div>
+</section>
+
+<!-- MENU -->
+<section id="menu" class="light">
+
+<div class="sectionTitle">
+<div class="kicker">02 — SIGNATURE MENU</div>
+<h2>ORDER<br>SOMETHING ICONIC.</h2>
+<p>Choose your experience. Your order is sent to the virtual kitchen.</p>
+</div>
+
+<div class="menuGrid">
+
+<div class="food">
+<div class="foodPic">🍔</div>
+<div class="foodInfo">
+<h3>Lumière Burger</h3>
+<p>Truffle cheese • brioche • signature sauce</p>
+<div class="price">₹699</div>
+<button class="order" onclick="orderFood('Lumière Burger')">ORDER</button>
+</div>
+</div>
+
+<div class="food">
+<div class="foodPic">🍕</div>
+<div class="foodInfo">
+<h3>Truffle Pizza</h3>
+<p>Wild mushroom • mozzarella • truffle oil</p>
+<div class="price">₹849</div>
+<button class="order" onclick="orderFood('Truffle Pizza')">ORDER</button>
+</div>
+</div>
+
+<div class="food">
+<div class="foodPic">🥗</div>
+<div class="foodInfo">
+<h3>Green Bowl</h3>
+<p>Avocado • greens • seeds • citrus dressing</p>
+<div class="price">₹549</div>
+<button class="order" onclick="orderFood('Green Bowl')">ORDER</button>
+</div>
+</div>
+
+<div class="food">
+<div class="foodPic">☕</div>
+<div class="foodInfo">
+<h3>Signature Coffee</h3>
+<p>Arabica • slow roasted • velvet crema</p>
+<div class="price">₹299</div>
+<button class="order" onclick="orderFood('Signature Coffee')">ORDER</button>
+</div>
+</div>
+
+</div>
+</section>
+
+<!-- LIVE CAFE -->
+<section class="dark">
+
+<div class="sectionTitle">
+<div class="kicker">03 — LIVE CAFÉ</div>
+<h2>THE ROOM<br>IS ALIVE.</h2>
+<p>
+Customers arrive, walk toward the counter, interact with the
+robot waiter and leave reviews in real time.
+</p>
+</div>
+
+<div class="live">
+
+<div class="liveBox">
+<h3>LIVE WALK-IN EXPERIENCE</h3>
+<div class="people">
+<div class="person">🧑</div>
+<div class="person">👩</div>
+<div class="person">🧔</div>
+<div class="person">👨</div>
+</div>
+</div>
+
+<div class="liveBox stat">
+<div>
+<strong id="customerCount">27</strong>
+<span>GUESTS CURRENTLY INSIDE</span>
+</div>
+</div>
+
+</div>
+</section>
+
+<!-- ROBOT -->
+<section id="robot" class="dark">
+
+<div class="sectionTitle">
+<div class="kicker">04 — ROBOT HOSPITALITY</div>
+<h2>MEET YOUR<br>DIGITAL WAITER.</h2>
+<p>
+The robot welcomes customers, explains the menu and guides
+them through the digital café experience.
+</p>
+</div>
+
+<div class="robotBox">
+<div class="robot">🤖</div>
+</div>
+
+</section>
+
+<!-- REVIEWS -->
+<section class="light">
+
+<div class="sectionTitle">
+<div class="kicker">05 — CUSTOMER VOICE</div>
+<h2>LIVE REVIEWS.</h2>
+</div>
+
+<div class="grid">
+
+<div class="review">
+<div class="stars">★★★★★</div>
+<h3>“Felt like stepping into the future.”</h3>
+<p>— Aarav, Mumbai</p>
+</div>
+
+<div class="review">
+<div class="stars">★★★★★</div>
+<h3>“The robot experience was incredible.”</h3>
+<p>— Riya, Delhi</p>
+</div>
+
+<div class="review">
+<div class="stars">★★★★★</div>
+<h3>“More than food — it was entertainment.”</h3>
+<p>— Kabir, Bangalore</p>
+</div>
+
+</div>
+</section>
+
+<!-- GAMES -->
+<section id="games" class="dark">
+
+<div class="sectionTitle">
+<div class="kicker">06 — PLAY LAB</div>
+<h2>CAFÉ<br>MEETS GAMING.</h2>
+<p>Quick browser games designed for guests while they wait for food.</p>
+</div>
+
+<div class="gameGrid">
+
+<div class="game">
+<h3>🏎️ Café Drive</h3>
+<p>Drive through the neon city using your keyboard or touch.</p>
+<button onclick="startDrive()">PLAY</button>
+</div>
+
+<div class="game">
+<h3>🥗 Healthy Choice</h3>
+<p>Pick healthy foods and build your perfect meal.</p>
+<button onclick="healthGame()">PLAY</button>
+</div>
+
+<div class="game">
+<h3>👨‍🏫 Smart Teacher</h3>
+<p>Answer quick questions and earn experience points.</p>
+<button onclick="teacherGame()">PLAY</button>
+</div>
+
+</div>
+</section>
+
+<!-- AI -->
+<section id="ai" class="dark">
+
+<div class="sectionTitle">
+<div class="kicker">07 — AI CONCIERGE</div>
+<h2>ASK<br>THE CAFÉ.</h2>
+</div>
+
+<div class="ai">
+
+<div class="chat" id="chat">
+<div class="msg bot">
+🤖 Welcome to Lumière. Ask me about the menu,
+games, healthy choices or today's experience.
+</div>
+</div>
+
+<div class="aiInput">
+<input id="aiInput" placeholder="Ask the café...">
+<button onclick="askAI()">SEND</button>
+</div>
+
+</div>
+</section>
+
+<!-- DRAW -->
+<section class="light">
+
+<div class="sectionTitle">
+<div class="kicker">08 — VIRTUAL PEN</div>
+<h2>DRAW<br>ANYTHING.</h2>
+<p>Use your mouse, finger or stylus to create digital art.</p>
+</div>
+
+<canvas id="draw"></canvas>
+
+<div class="drawControls">
+<button class="btn" onclick="clearCanvas()">CLEAR</button>
+</div>
+
+</section>
+
+<!-- CHEF -->
+<section class="dark">
+
+<div class="sectionTitle">
+<div class="kicker">09 — CHEF STUDIO</div>
+<h2>FROM ORDER<br>TO PLATE.</h2>
+<p id="orderStatus">
+The virtual kitchen is ready for your order.
+</p>
+</div>
+
+<div class="grid">
+
+<div class="card">
+<div class="icon">🧑‍🍳</div>
+<h3>Chef receives order</h3>
+<p>Every order enters the virtual kitchen workflow.</p>
+</div>
+
+<div class="card">
+<div class="icon">🔥</div>
+<h3>Preparation</h3>
+<p>Ingredients are prepared and your dish moves through the kitchen.</p>
+</div>
+
+<div class="card">
+<div class="icon">🍽️</div>
+<h3>Ready to serve</h3>
+<p>Your order is presented to the guest.</p>
+</div>
+
+</div>
+</section>
+
+<footer>
+<h2>LUMIÈRE</h2>
+<p>Luxury hospitality. Interactive technology. A new kind of café.</p>
+<br>
+© 2026 Lumière Experience
+</footer>
+
+<script>
+
+/* =========================
+   3D WORLD
+========================= */
+
+let scene,camera,renderer,controls;
+
+function init3D(){
+
+scene=new THREE.Scene();
+scene.background=new THREE.Color(0x030508);
+
+camera=new THREE.PerspectiveCamera(
+60,
+window.innerWidth/window.innerHeight,
+.1,
+1000
+);
+
+camera.position.set(0,5,14);
+
+renderer=new THREE.WebGLRenderer({
+antialias:true,
+alpha:false
 });
 
-renderer.setPixelRatio(
-    Math.min(window.devicePixelRatio, 2)
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.setSize(window.innerWidth,window.innerHeight);
+document.getElementById("scene").appendChild(renderer.domElement);
+
+controls=new THREE.OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true;
+controls.dampingFactor=.06;
+controls.minDistance=5;
+controls.maxDistance=28;
+controls.maxPolarAngle=Math.PI*.48;
+
+/* LIGHTS */
+
+const ambient=new THREE.AmbientLight(0xffffff,.7);
+scene.add(ambient);
+
+const blue=new THREE.PointLight(0x00d9ff,8,35);
+blue.position.set(0,8,3);
+scene.add(blue);
+
+const warm=new THREE.PointLight(0xffaa55,7,25);
+warm.position.set(-8,5,-5);
+scene.add(warm);
+
+/* FLOOR */
+
+const floor=new THREE.Mesh(
+new THREE.PlaneGeometry(50,50),
+new THREE.MeshStandardMaterial({
+color:0x15191d,
+metalness:.5,
+roughness:.45
+})
 );
+
+floor.rotation.x=-Math.PI/2;
+scene.add(floor);
+
+/* TABLE */
+
+function cube(x,y,z,sx,sy,sz,color){
+
+const m=new THREE.Mesh(
+new THREE.BoxGeometry(sx,sy,sz),
+new THREE.MeshStandardMaterial({
+color,
+metalness:.25,
+roughness:.35
+})
+);
+
+m.position.set(x,y,z);
+scene.add(m);
+return m;
+}
+
+for(let x=-9;x<=9;x+=6){
+
+cube(x,2,-5,3.5,.3,2,0x39271e);
+
+cube(x-1.4,.9,-5, .25,2,.25,0x151515);
+cube(x+1.4,.9,-5, .25,2,.25,0x151515);
+
+}
+
+/* COUNTER */
+
+cube(0,1.5,-11,14,3,1.5,0x18252d);
+
+/* BACK WALL */
+
+cube(0,5,-13,30,10,.5,0x07131b);
+
+/* ROBOT */
+
+const robotBody=cube(0,2,-4,1.5,2,1.1,0x8feaff);
+
+const head=cube(0,3.5,-4,1.4,1.1,1,0xddeff5);
+
+const eye1=cube(-.3,3.55,-4.55,.16,.16,.05,0x00d9ff);
+const eye2=cube(.3,3.55,-4.55,.16,.16,.05,0x00d9ff);
+
+/* FAIRY LIGHTS */
+
+for(let i=-10;i<=10;i+=2){
+
+const bulb=new THREE.Mesh(
+new THREE.SphereGeometry(.13,12,12),
+new THREE.MeshBasicMaterial({color:0xffd27a})
+);
+
+bulb.position.set(i,6,-9);
+scene.add(bulb);
+
+const light=new THREE.PointLight(0xffb35c,1,4);
+light.position.copy(bulb.position);
+scene.add(light);
+
+}
+
+/* FLOATING HOLOGRAM */
+
+const holo=new THREE.Mesh(
+new THREE.TorusGeometry(2.5,.025,8,80),
+new THREE.MeshBasicMaterial({color:0x00d9ff})
+);
+
+holo.position.set(0,4,-7);
+holo.rotation.x=Math.PI/2;
+scene.add(holo);
+
+/* ANIMATION */
+
+function animate(){
+
+requestAnimationFrame(animate);
+
+holo.rotation.z+=.003;
+
+robotBody.position.y=2+Math.sin(Date.now()*.002)*.08;
+head.position.y=3.5+Math.sin(Date.now()*.002)*.08;
+
+controls.update();
+
+renderer.render(scene,camera);
+
+}
+
+animate();
+
+}
+
+function moveCamera(x,z){
+camera.position.x+=x;
+camera.position.z+=z;
+controls.target.x+=x;
+controls.target.z+=z;
+}
+
+/* RESPONSIVE 3D */
+
+function resize3D(){
+
+if(!camera||!renderer)return;
+
+camera.aspect=window.innerWidth/window.innerHeight;
+camera.updateProjectionMatrix();
 
 renderer.setSize(
-    window.innerWidth,
-    window.innerHeight,
-    false
+window.innerWidth,
+window.innerHeight
 );
 
-renderer.domElement.style.width = "100%";
-renderer.domElement.style.height = "100%";
-});
+renderer.setPixelRatio(
+Math.min(window.devicePixelRatio,2)
+);
 
-window.addEventListener("resize", function () {
-    if (typeof camera !== "undefined" && typeof renderer !== "undefined") {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight, false);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    }
+}
+
+window.addEventListener("resize",resize3D);
+window.addEventListener("orientationchange",resize3D);
+
+init3D();
+
+/* =========================
+   ORDER SYSTEM
+========================= */
+
+function orderFood(food){
+
+document.getElementById("orderStatus").innerHTML=
+"👨‍🍳 Chef received your order for <b>"+food+
+"</b> — preparing it now.";
+
+alert(
+"ORDER CONFIRMED\n\n"+
+food+
+"\n\n👨‍🍳 Chef is preparing your order."
+);
+
+}
+
+/* =========================
+   LIVE CUSTOMERS
+========================= */
+
+let customers=27;
+
+setInterval(()=>{
+
+customers+=Math.random()>.5?1:-1;
+
+if(customers<12)customers=12;
+if(customers>99)customers=99;
+
+document.getElementById("customerCount").textContent=customers;
+
+},4000);
+
+/* =========================
+   AI
+========================= */
+
+function askAI(){
+
+const input=document.getElementById("aiInput");
+const chat=document.getElementById("chat");
+
+const text=input.value.trim();
+
+if(!text)return;
+
+chat.innerHTML+=
+'<div class="msg"><b>You:</b> '+text+'</div>';
+
+let answer=
+"Welcome to Lumière. I can help you explore the menu, games, chef experience and café.";
+
+const q=text.toLowerCase();
+
+if(q.includes("menu")||q.includes("food"))
+answer="Our signature menu includes the Lumière Burger, Truffle Pizza, Green Bowl and Signature Coffee.";
+
+else if(q.includes("game"))
+answer="Try Café Drive, Healthy Choice or Smart Teacher in our Play Lab.";
+
+else if(q.includes("robot"))
+answer="Our digital waiter guides guests through ordering and the café experience.";
+
+else if(q.includes("healthy"))
+answer="For a lighter option, try our Green Bowl with avocado, greens and citrus dressing.";
+
+chat.innerHTML+=
+'<div class="msg bot"><b>🤖 Lumière:</b> '+answer+'</div>';
+
+chat.scrollTop=chat.scrollHeight;
+input.value="";
+
+}
+
+/* =========================
+   MINI GAMES
+========================= */
+
+function startDrive(){
+
+alert(
+"🏎️ CAFÉ DRIVE\n\n"+
+"Mini-game activated!\n\n"+
+"Use your keyboard arrows to imagine driving through the neon city."
+);
+
+}
+
+function healthGame(){
+
+const answer=prompt(
+"🥗 HEALTHY CHOICE\n\n"+
+"Which is generally the healthier everyday choice?\n\n"+
+"A) Green Bowl\n"+
+"B) Sugary Soda\n"+
+"C) Extra Fries"
+);
+
+if(answer&&answer.toLowerCase().startsWith("a"))
+alert("✅ Correct! +100 Wellness XP");
+else
+alert("Try again! Think fresh vegetables and balanced nutrition.");
+
+}
+
+function teacherGame(){
+
+const answer=prompt(
+"👨‍🏫 SMART TEACHER\n\n"+
+"What is 12 × 8?"
+);
+
+if(answer==="96")
+alert("🎓 Correct! +100 Learning XP");
+else
+alert("Not quite. The answer is 96.");
+
+}
+
+/* =========================
+   VIRTUAL PEN
+========================= */
+
+const canvas=document.getElementById("draw");
+const ctx=canvas.getContext("2d");
+
+function resizeCanvas(){
+
+const rect=canvas.getBoundingClientRect();
+
+canvas.width=rect.width*devicePixelRatio;
+canvas.height=rect.height*devicePixelRatio;
+
+ctx.scale(devicePixelRatio,devicePixelRatio);
+
+}
+
+resizeCanvas();
+
+window.addEventListener("resize",resizeCanvas);
+
+let drawing=false;
+
+function point(e){
+
+const r=canvas.getBoundingClientRect();
+
+if(e.touches){
+return {
+x:e.touches[0].clientX-r.left,
+y:e.touches[0].clientY-r.top
+};
+}
+
+return {
+x:e.clientX-r.left,
+y:e.clientY-r.top
+};
+
+}
+
+function startDraw(e){
+
+drawing=true;
+
+const p=point(e);
+
+ctx.beginPath();
+ctx.moveTo(p.x,p.y);
+
+}
+
+function draw(e){
+
+if(!drawing)return;
+
+e.preventDefault();
+
+const p=point(e);
+
+ctx.lineWidth=4;
+ctx.lineCap="round";
+ctx.strokeStyle="#071018";
+
+ctx.lineTo(p.x,p.y);
+ctx.stroke();
+
+}
+
+function stopDraw(){
+drawing=false;
+}
+
+canvas.addEventListener("mousedown",startDraw);
+canvas.addEventListener("mousemove",draw);
+canvas.addEventListener("mouseup",stopDraw);
+canvas.addEventListener("mouseleave",stopDraw);
+
+canvas.addEventListener("touchstart",startDraw);
+canvas.addEventListener("touchmove",draw);
+canvas.addEventListener("touchend",stopDraw);
+
+function clearCanvas(){
+
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+}
+
+/* KEYBOARD */
+
+window.addEventListener("keydown",e=>{
+
+if(e.key==="ArrowUp")moveCamera(0,-1);
+if(e.key==="ArrowDown")moveCamera(0,1);
+if(e.key==="ArrowLeft")moveCamera(-1,0);
+if(e.key==="ArrowRight")moveCamera(1,0);
+
 });
 
 </script>
+
 </body>
 </html>
